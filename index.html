@@ -8,37 +8,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Add this at the end of <head> section -->
     <script src="auth-check.js"></script>
-    <!-- PWA Manifest -->
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#000000">
-
-<!-- iOS Support -->
-<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-<!-- Viewport -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- PWA Registration with Error Handling -->
-<script>
-// Service Worker Registration
+    <script>
+// Production-ready service worker registration
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js')
+    const swUrl = '/sw.js';
+    
+    navigator.serviceWorker.register(swUrl)
       .then(function(registration) {
-        console.log('SW registered: ', registration);
+        console.log('✅ SW registered successfully on scope:', registration.scope);
+        
+        // Check if SW is controlling the page
+        if (navigator.serviceWorker.controller) {
+          console.log('🎯 SW is controlling the page');
+        } else {
+          console.log('⚠️ SW registered but not controlling the page');
+        }
+        
+        // Check cache after registration
+        setTimeout(() => {
+          caches.open('vercel-app-v1').then(cache => {
+            cache.keys().then(requests => {
+              console.log(`📦 Production cache: ${requests.length} files`);
+            });
+          });
+        }, 3000);
       })
       .catch(function(error) {
-        console.log('SW registration failed: ', error);
+        console.log('❌ SW registration failed:', error);
       });
   });
 }
-
-// Debug: Log service worker state
-navigator.serviceWorker.getRegistrations().then(registrations => {
-  console.log('Service Worker Registrations:', registrations.length);
-});
 </script>
     <style>
         :root {
