@@ -76,6 +76,10 @@ const urlsToCache = [
   '/yr1/bc/bce2014.html',
   '/yr1/bc/bio-chem.2013.html',
   '/yr1/bc/bio-chem.2015.html',
+  
+  
+  // JAVASCRIPT
+  '/auth-check.js',
 ];
 
 self.addEventListener('install', event => {
