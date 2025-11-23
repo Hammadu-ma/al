@@ -16,7 +16,7 @@
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
 
-<!-- iOS Meta Tags -->
+<!-- iOS Support -->
 <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -24,22 +24,25 @@
 <!-- Viewport -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- PWA Registration with Error Handling -->
 <script>
-// Service Worker
+// Service Worker Registration
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js')
+      .then(function(registration) {
+        console.log('SW registered: ', registration);
+      })
+      .catch(function(error) {
+        console.log('SW registration failed: ', error);
+      });
+  });
 }
 
-// Redirect if already logged in
-if (localStorage.getItem('userLoggedIn')) {
-  window.location.href = '/dashboard.html';
-}
-
-// After successful registration, call this function
-function registrationSuccess() {
-  localStorage.setItem('userLoggedIn', 'true');
-  window.location.href = '/dashboard.html';
-}
+// Debug: Log service worker state
+navigator.serviceWorker.getRegistrations().then(registrations => {
+  console.log('Service Worker Registrations:', registrations.length);
+});
 </script>
     <style>
         :root {
