@@ -61,9 +61,6 @@
             -webkit-touch-callout: none;
             touch-action: manipulation;
         }
-        html {
-            touch-action: none;
-        }
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--background);
@@ -72,13 +69,14 @@
             font-size: 16px;
             transition: var(--transition);
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden;
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
             touch-action: pan-x pan-y;
         }
-        
-        /* Header */
+        html {
+            touch-action: none;
+        }
         .header {
             position: fixed;
             top: 0;
@@ -88,7 +86,6 @@
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
         }
         .header-container {
             display: flex;
@@ -145,34 +142,34 @@
             background: var(--primary-dark);
             border-color: var(--primary-dark);
         }
-        
-        /* Main Content */
         .main-content {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 80px 1rem 2rem;
+            padding: 80px 1rem 1rem;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: calc(100vh - 80px);
+            overflow: hidden;
         }
-        
-        /* Registration Container */
         .registration-container {
             background: var(--surface);
             border-radius: var(--radius);
             box-shadow: var(--shadow-lg);
             width: 100%;
             max-width: 500px;
-            overflow: hidden;
-            transition: var(--transition);
-            margin-bottom: 2rem;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            overflow-x: hidden;
         }
         .registration-header {
             background: var(--gradient);
             color: white;
             padding: 1.5rem;
             text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         .registration-header h1 {
             font-size: 1.5rem;
@@ -190,14 +187,6 @@
         .registration-body {
             padding: 1.5rem;
         }
-        
-        /* Trial Options */
-        .trial-options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
         .trial-option {
             display: flex;
             align-items: center;
@@ -205,16 +194,17 @@
             padding: 1rem;
             border: 1px solid var(--border);
             border-radius: var(--radius);
+            margin: 1rem 0;
             cursor: pointer;
             transition: var(--transition);
         }
         .trial-option:hover {
-            border-color: var(--primary-light);
-            background: rgba(37, 99, 235, 0.05);
+            border-color: var(--trial-color);
+            background: rgba(16, 185, 129, 0.05);
         }
         .trial-option.selected {
-            border-color: var(--primary);
-            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--trial-color);
+            background: rgba(16, 185, 129, 0.1);
         }
         .trial-option .radio {
             width: 20px;
@@ -226,13 +216,13 @@
             justify-content: center;
         }
         .trial-option.selected .radio {
-            border-color: var(--primary);
+            border-color: var(--trial-color);
         }
         .trial-option.selected .radio::after {
             content: '';
             width: 10px;
             height: 10px;
-            background: var(--primary);
+            background: var(--trial-color);
             border-radius: 50%;
         }
         .trial-option-content {
@@ -254,8 +244,6 @@
             font-size: 0.75rem;
             font-weight: 600;
         }
-        
-        /* Price Info */
         .price-info {
             text-align: center;
             margin: 1rem 0;
@@ -263,8 +251,6 @@
             font-weight: 600;
             font-size: 1.1rem;
         }
-        
-        /* Account Section */
         .account-section {
             margin: 1.5rem 0;
             padding: 1rem;
@@ -338,142 +324,6 @@
             margin-top: 0.5rem;
             text-align: center;
         }
-        
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-        .input-group {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .input-group i {
-            position: absolute;
-            left: 1rem;
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-        select, input {
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: var(--surface);
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: border-color 0.3s;
-            width: 100%;
-        }
-        select:focus, input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-        
-        /* File Upload */
-        .file-upload {
-            position: relative;
-            padding: 1rem;
-            border: 2px dashed var(--border);
-            border-radius: var(--radius);
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.3s;
-        }
-        .file-upload:hover {
-            border-color: var(--primary-light);
-        }
-        .file-upload i {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .file-upload input {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .file-upload span {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-        .receipt-preview {
-            margin-top: 1rem;
-            max-width: 100%;
-            max-height: 150px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            display: none;
-        }
-        
-        /* Submit Button */
-        .submit-btn {
-            background: var(--gradient);
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 600;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            position: relative;
-            width: 100%;
-            margin-top: 1rem;
-        }
-        .submit-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        }
-        .submit-btn.loading::after {
-            content: '';
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid white;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s linear infinite;
-            margin-left: 8px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Error Message */
-        .error {
-            color: var(--error);
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-            text-align: center;
-        }
-        
-        /* Login Link */
-        .login-link {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: var(--text-secondary);
-        }
-        .login-link a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Temporary Login Section */
         .temp-login-section {
             margin: 1.5rem 0;
             padding: 1rem;
@@ -512,51 +362,75 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
         }
-        
-        /* Verification Section */
-        .verification-section {
-            display: none;
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            background: rgba(16, 185, 129, 0.05);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
+        .form-group {
+            margin-bottom: 1.25rem;
         }
-        .verification-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
+        .input-group {
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
         }
-        .verification-title i {
-            color: var(--success);
-        }
-        .verification-description {
+        .input-group i {
+            position: absolute;
+            left: 1rem;
             color: var(--text-secondary);
-            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        select, input {
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            width: 100%;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .file-upload {
+            position: relative;
+            padding: 1rem;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .file-upload:hover {
+            border-color: var(--primary-light);
+        }
+        .file-upload i {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .file-upload input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-upload span {
+            color: var(--text-secondary);
             font-size: 0.9rem;
         }
-        .verification-input {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+        .receipt-preview {
+            margin-top: 1rem;
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            display: none;
         }
-        .verification-input input {
-            flex: 1;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: 0.2rem;
-        }
-        .verification-actions {
-            display: flex;
-            gap: 1rem;
-        }
-        .verify-btn {
-            background: var(--success);
+        .submit-btn {
+            background: var(--gradient);
             color: white;
             border: none;
             padding: 0.75rem;
@@ -564,17 +438,97 @@
             cursor: pointer;
             transition: var(--transition);
             font-weight: 600;
-            flex: 1;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            position: relative;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        .submit-btn.loading::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid white;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .error {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+        }
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+        .modal-content {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: var(--radius);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease-out;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-content h2 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-size: 1.75rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
         }
-        .verify-btn:hover {
-            background: #059669;
-            transform: translateY(-2px);
+        .modal-content h2 i {
+            color: var(--primary);
         }
-        .back-btn {
+        .back-btn, .cancel-btn, .ok-btn {
             background: var(--surface);
             color: var(--text-primary);
             border: 1px solid var(--border);
@@ -583,44 +537,38 @@
             cursor: pointer;
             transition: var(--transition);
             font-weight: 600;
-            flex: 1;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
+            margin-top: 1rem;
+            width: 100%;
         }
-        .back-btn:hover {
+        .back-btn:hover, .cancel-btn:hover, .ok-btn:hover {
             background: var(--primary-light);
             color: white;
             border-color: var(--primary-light);
         }
-        
-        /* Trial Info Section */
-        .trial-info-section {
-            display: none;
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            background: rgba(16, 185, 129, 0.05);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
+        .ok-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
         }
-        .trial-info-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
+        .ok-btn:hover {
+            background: var(--primary-dark);
+        }
+        .button-group {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .trial-info-title i {
-            color: var(--trial-color);
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
         }
         .trial-features {
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
-            margin: 1rem 0;
+            margin: 1.5rem 0;
         }
         .trial-feature {
             display: flex;
@@ -634,10 +582,18 @@
             color: var(--trial-color);
             font-size: 1.1rem;
         }
+        .trial-timer {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--trial-color);
+            text-align: center;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
         .trial-actions {
             display: flex;
             gap: 1rem;
-            margin-top: 1.5rem;
+            justify-content: center;
         }
         .trial-btn {
             background: var(--trial-gradient);
@@ -651,8 +607,6 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            flex: 1;
-            justify-content: center;
         }
         .trial-btn:hover {
             background: var(--trial-dark);
@@ -667,144 +621,35 @@
         .trial-btn.secondary:hover {
             background: rgba(16, 185, 129, 0.1);
         }
-        
-        /* Temporary Password Section */
-        .temp-password-section {
-            display: none;
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            background: rgba(139, 92, 246, 0.05);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-        }
-        .temp-password-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .temp-password-title i {
-            color: var(--purple);
-        }
-        .temp-password-description {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-        
-        /* Additional Info Section */
-        .additional-info {
-            width: 100%;
-            max-width: 500px;
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: var(--surface);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-        .info-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .info-title i {
-            color: var(--primary);
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .info-card {
-            padding: 1rem;
-            background: rgba(37, 99, 235, 0.05);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-        .info-card i {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-        .info-card h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-        .info-card p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        .faq-section {
-            margin-top: 1.5rem;
-        }
-        .faq-item {
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: var(--surface);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-        }
-        .faq-question {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .faq-question i {
-            color: var(--primary);
-        }
-        .faq-answer {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-        
-        /* Footer */
-        .footer {
-            width: 100%;
-            max-width: 500px;
-            margin-top: 2rem;
-            padding: 1.5rem;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border);
-        }
-        
-        /* Responsive Styles */
         @media (max-width: 768px) {
             .header-container {
                 padding: 0.75rem;
             }
             .main-content {
                 padding: 70px 0.75rem 1rem;
+                height: calc(100vh - 70px);
             }
             .registration-body {
                 padding: 1.25rem;
             }
-            .trial-actions, .verification-actions {
-                flex-direction: column;
-            }
-            .info-grid {
-                grid-template-columns: 1fr;
+            .modal-content {
+                padding: 1.5rem;
+                width: 95%;
             }
         }
         @media (max-width: 480px) {
             .registration-header h1 {
                 font-size: 1.25rem;
+            }
+            .modal-content h2 {
+                font-size: 1.5rem;
+            }
+            .trial-actions {
+                flex-direction: column;
+            }
+            .trial-btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -837,23 +682,21 @@
             </div>
             <div class="registration-body">
                 <!-- Free Trial Option -->
-                <div class="trial-options">
-                    <div class="trial-option" id="trialOption">
-                        <div class="radio"></div>
-                        <div class="trial-option-content">
-                            <div class="trial-option-title">Free Trial Access</div>
-                            <div class="trial-option-desc">Get 3 days of free access to all programs</div>
-                        </div>
-                        <div class="trial-option-badge">FREE</div>
+                <div class="trial-option" id="trialOption">
+                    <div class="radio"></div>
+                    <div class="trial-option-content">
+                        <div class="trial-option-title">Free Trial Access</div>
+                        <div class="trial-option-desc">Get 3 days of free access to all programs</div>
                     </div>
-                    
-                    <!-- Regular Registration Option -->
-                    <div class="trial-option selected" id="regularOption">
-                        <div class="radio"></div>
-                        <div class="trial-option-content">
-                            <div class="trial-option-title">Full Program Access</div>
-                            <div class="trial-option-desc">Pay once and get permanent access to selected program</div>
-                        </div>
+                    <div class="trial-option-badge">FREE</div>
+                </div>
+                
+                <!-- Regular Registration Option -->
+                <div class="trial-option selected" id="regularOption">
+                    <div class="radio"></div>
+                    <div class="trial-option-content">
+                        <div class="trial-option-title">Full Program Access</div>
+                        <div class="trial-option-desc">Pay once and get permanent access to selected program</div>
                     </div>
                 </div>
                 
@@ -955,98 +798,6 @@
                     <div id="regError" class="error"></div>
                 </form>
                 
-                <!-- Trial Info Section -->
-                <div class="trial-info-section" id="trialInfoSection">
-                    <h3 class="trial-info-title"><i class="fas fa-gift"></i> Start Your Free Trial</h3>
-                    <p class="trial-description">Get 3 days of full access to all programs completely free!</p>
-                    
-                    <div class="trial-features">
-                        <div class="trial-feature">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Access to all 7 medical programs</span>
-                        </div>
-                        <div class="trial-feature">
-                            <i class="fas fa-clock"></i>
-                            <span>3 days of unlimited access</span>
-                        </div>
-                        <div class="trial-feature">
-                            <i class="fas fa-book-medical"></i>
-                            <span>All quizzes and study materials</span>
-                        </div>
-                        <div class="trial-feature">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Track your progress and scores</span>
-                        </div>
-                    </div>
-                    
-                    <p style="font-size: 0.9rem; color: var(--text-secondary); text-align: center; margin: 1rem 0;">
-                        No payment required. Start learning immediately!
-                    </p>
-                    
-                    <div class="trial-actions">
-                        <button class="trial-btn" id="startTrialBtn">
-                            <i class="fas fa-play"></i> Start Free Trial
-                        </button>
-                        <button class="trial-btn secondary" id="cancelTrialBtn">
-                            <i class="fas fa-times"></i> Maybe Later
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Verification Section -->
-                <div class="verification-section" id="verificationSection">
-                    <h3 class="verification-title"><i class="fas fa-lock"></i> Enter Verification Code</h3>
-                    <p class="verification-description">
-                        Please enter the 6-digit verification code sent to your phone
-                    </p>
-                    
-                    <div class="verification-input">
-                        <input id="verifyCode" placeholder="6-digit code" maxlength="6" required>
-                    </div>
-                    
-                    <div class="verification-actions">
-                        <button class="verify-btn" id="verifyBtn">
-                            <i class="fas fa-check-circle"></i> Verify
-                        </button>
-                        <button class="back-btn" id="backBtn">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </button>
-                    </div>
-                    
-                    <div id="verifyError" class="error"></div>
-                </div>
-                
-                <!-- Temporary Password Section -->
-                <div class="temp-password-section" id="tempPasswordSection">
-                    <h3 class="temp-password-title"><i class="fas fa-key"></i> Admin Password Login</h3>
-                    <p class="temp-password-description">
-                        Enter your phone number and temporary password provided by admin
-                    </p>
-                    
-                    <form id="tempPasswordForm">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <i class="fas fa-phone"></i>
-                                <input id="tempPhone" type="tel" placeholder="Your registered phone number" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <i class="fas fa-lock"></i>
-                                <input id="tempPassword" type="text" placeholder="Temporary password from admin" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="submit-btn" id="tempLoginBtn">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </button>
-                        <div id="tempLoginError" class="error"></div>
-                    </form>
-                    
-                    <button class="back-btn" id="backToRegBtn">
-                        <i class="fas fa-arrow-left"></i> Back to Registration
-                    </button>
-                </div>
-                
                 <!-- Temporary Password Login Section -->
                 <div class="temp-login-section">
                     <h3 class="temp-login-title"><i class="fas fa-key"></i> Admin Password Login</h3>
@@ -1064,73 +815,150 @@
                 </div>
             </div>
         </div>
+    </main>
 
-        <!-- Additional Information Section -->
-        <div class="additional-info">
-            <h2 class="info-title"><i class="fas fa-info-circle"></i> Why Choose ALIF?</h2>
-            <div class="info-grid">
-                <div class="info-card">
-                    <i class="fas fa-brain"></i>
-                    <h3>Comprehensive Content</h3>
-                    <p>Thousands of medical questions covering all major disciplines</p>
+    <!-- Free Trial Modal -->
+    <div id="trialModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2><i class="fas fa-gift"></i> Start Your Free Trial</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                Get 3 days of full access to all programs completely free!
+            </p>
+            
+            <div class="trial-features">
+                <div class="trial-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Access to all 7 medical programs</span>
                 </div>
-                <div class="info-card">
-                    <i class="fas fa-chart-line"></i>
-                    <h3>Track Progress</h3>
-                    <p>Monitor your performance with detailed analytics</p>
-                </div>
-                <div class="info-card">
-                    <i class="fas fa-mobile-alt"></i>
-                    <h3>Mobile Friendly</h3>
-                    <p>Study anytime, anywhere on any device</p>
-                </div>
-                <div class="info-card">
+                <div class="trial-feature">
                     <i class="fas fa-clock"></i>
-                    <h3>Flexible Learning</h3>
-                    <p>Learn at your own pace with 24/7 access</p>
+                    <span>3 days of unlimited access</span>
+                </div>
+                <div class="trial-feature">
+                    <i class="fas fa-book-medical"></i>
+                    <span>All quizzes and study materials</span>
+                </div>
+                <div class="trial-feature">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Track your progress and scores</span>
                 </div>
             </div>
             
-            <div class="faq-section">
-                <h2 class="info-title"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <i class="fas fa-question"></i>
-                        How long does the free trial last?
-                    </div>
-                    <div class="faq-answer">
-                        The free trial provides 3 days of full access to all programs and features.
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <i class="fas fa-question"></i>
-                        What payment methods are accepted?
-                    </div>
-                    <div class="faq-answer">
-                        We accept payments through CBE, Awash Bank, and Tele birr. Please use your name as the payment reference.
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <i class="fas fa-question"></i>
-                        How long does verification take?
-                    </div>
-                    <div class="faq-answer">
-                        Verification is typically completed within 24 hours after payment confirmation.
-                    </div>
-                </div>
+            <div class="trial-timer" id="trialCountdown">
+                72:00:00
+            </div>
+            
+            <p style="font-size: 0.9rem; color: var(--text-secondary); text-align: center; margin: 1rem 0;">
+                No payment required. Start learning immediately!
+            </p>
+            
+            <div class="trial-actions">
+                <button class="trial-btn" id="startTrialBtn">
+                    <i class="fas fa-play"></i> Start Free Trial
+                </button>
+                <button class="trial-btn secondary" id="cancelTrialBtn">
+                    <i class="fas fa-times"></i> Maybe Later
+                </button>
             </div>
         </div>
+    </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            <p>&copy; 2023 ALIF Medical Quiz Platform. All rights reserved.</p>
-            <p style="margin-top: 0.5rem; font-size: 0.8rem;">Designed for medical students and professionals</p>
+    <!-- Temporary Password Login Modal -->
+    <div id="tempPasswordModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2><i class="fas fa-key"></i> Admin Password Login</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                Enter your phone number and temporary password provided by admin
+            </p>
+            
+            <form id="tempPasswordForm">
+                <div class="form-group">
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input id="tempPhone" type="tel" placeholder="Your registered phone number" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input id="tempPassword" type="text" placeholder="Temporary password from admin" required>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn" id="tempLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <div id="tempLoginError" class="error"></div>
+            </form>
+            
+            <button class="back-btn" id="backToRegBtn">
+                <i class="fas fa-arrow-left"></i> Back to Registration
+            </button>
         </div>
-    </main>
+    </div>
 
+    <!-- Verification Modal -->
+    <div id="verifyModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2><i class="fas fa-lock"></i> Enter Verification Code</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                Please enter the 6-digit verification code sent to your phone
+            </p>
+            
+            <div class="form-group">
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input id="verifyCode" placeholder="6-digit code" maxlength="6" required>
+                </div>
+            </div>
+            
+            <button class="submit-btn" id="verifyBtn">
+                <i class="fas fa-check-circle"></i> Verify
+            </button>
+            
+            <button class="back-btn" id="backBtn">
+                <i class="fas fa-arrow-left"></i> Back to Registration
+            </button>
+            
+            <div id="verifyError" class="error"></div>
+        </div>
+    </div>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  // Check if running inside Telegram
+  const tg = window.Telegram?.WebApp;
+
+  // --- 1️⃣ Handle Telegram Mini App Back Button ---
+  if (tg) {
+    tg.ready(); // Initialize Telegram SDK
+    tg.BackButton.show();
+
+    tg.BackButton.onClick(() => {
+      console.log("Telegram back button pressed");
+      handleBackAction();
+    });
+  }
+
+  // --- 2️⃣ Handle Browser/Phone Back Button ---
+  window.addEventListener('popstate', () => {
+    console.log("Browser back button pressed");
+    handleBackAction();
+  });
+
+  // --- 3️⃣ Function to handle back action globally ---
+  function handleBackAction() {
+    // Example actions (customize as you wish):
+    // Go back if possible, otherwise go to home page
+    if (document.referrer && window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = '/'; // or your home page route
+    }
+  }
+
+  // --- 4️⃣ Optional: Prevent unwanted exits ---
+  // This ensures pressing back doesn’t immediately close the app
+  history.pushState(null, '', location.href);
+</script>
     <script>
         // Firebase User Manager
         class FirebaseUserManager {
@@ -1377,15 +1205,15 @@
         const uploadText = document.getElementById('uploadText');
         const regError = document.getElementById('regError');
         const tempPasswordLoginBtn = document.getElementById('tempPasswordLoginBtn');
-        const tempPasswordSection = document.getElementById('tempPasswordSection');
+        const tempPasswordModal = document.getElementById('tempPasswordModal');
         const tempPasswordForm = document.getElementById('tempPasswordForm');
         const tempLoginBtn = document.getElementById('tempLoginBtn');
         const tempLoginError = document.getElementById('tempLoginError');
         const backToRegBtn = document.getElementById('backToRegBtn');
-        const trialInfoSection = document.getElementById('trialInfoSection');
+        const trialModal = document.getElementById('trialModal');
         const startTrialBtn = document.getElementById('startTrialBtn');
         const cancelTrialBtn = document.getElementById('cancelTrialBtn');
-        const verificationSection = document.getElementById('verificationSection');
+        const verifyModal = document.getElementById('verifyModal');
         const verifyBtn = document.getElementById('verifyBtn');
         const verifyError = document.getElementById('verifyError');
         const backBtn = document.getElementById('backBtn');
@@ -1487,10 +1315,9 @@
         regForm.addEventListener('submit', async e => {
             e.preventDefault();
             
-            // If trial is selected, show trial info section instead
+            // If trial is selected, show trial modal instead
             if (isTrialSelected) {
-                trialInfoSection.style.display = 'block';
-                regForm.style.display = 'none';
+                trialModal.style.display = 'flex';
                 return;
             }
             
@@ -1545,7 +1372,7 @@
                         localStorage.setItem('codeTimestamp', new Date().getTime());
                         
                         regForm.style.display = 'none';
-                        verificationSection.style.display = 'block';
+                        verifyModal.style.display = 'flex';
                         regError.textContent = '';
                     } else {
                         regError.textContent = 'Error sending to Telegram: ' + data.description;
@@ -1617,8 +1444,9 @@
                         localStorage.setItem('tempUserData', JSON.stringify(userData));
                         localStorage.setItem('codeTimestamp', new Date().getTime());
                         
-                        trialInfoSection.style.display = 'none';
-                        verificationSection.style.display = 'block';
+                        trialModal.style.display = 'none';
+                        regForm.style.display = 'none';
+                        verifyModal.style.display = 'flex';
                         regError.textContent = '';
                     } else {
                         regError.textContent = 'Error sending to Telegram: ' + data.description;
@@ -1636,20 +1464,17 @@
 
         // Cancel trial button
         cancelTrialBtn.addEventListener('click', () => {
-            trialInfoSection.style.display = 'none';
-            regForm.style.display = 'block';
+            trialModal.style.display = 'none';
         });
 
         // Temporary password login button
         tempPasswordLoginBtn.addEventListener('click', () => {
-            regForm.style.display = 'none';
-            tempPasswordSection.style.display = 'block';
+            tempPasswordModal.style.display = 'flex';
         });
 
-        // Back to registration from temp password section
+        // Back to registration from temp password modal
         backToRegBtn.addEventListener('click', () => {
-            tempPasswordSection.style.display = 'none';
-            regForm.style.display = 'block';
+            tempPasswordModal.style.display = 'none';
         });
 
         // Temporary password form submission
@@ -1727,7 +1552,7 @@
 
         // Back button to return to registration form
         backBtn.addEventListener('click', () => {
-            verificationSection.style.display = 'none';
+            verifyModal.style.display = 'none';
             regForm.style.display = 'block';
             verifyError.textContent = '';
         });
