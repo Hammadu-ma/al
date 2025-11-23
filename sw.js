@@ -30,9 +30,8 @@ const urlsToCache = [
   // Add all other Micro files...
   
   // CSS, JS, and other assets - UPDATE WITH YOUR ACTUAL PATHS
-  '/styles/main.css',
-  '/scripts/app.js', 
-  '/images/logo.png',
+  '/auth-check.js', 
+  '/logo.png',
   
   // Offline page
   '/offline.html'
