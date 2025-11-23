@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>ALIFO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #60a5fa;
+            --primary-dark: #3b82f6;
+            --primary-light: #93c5fd;
+            --secondary: #94a3b8;
+            --success: #22c55e;
+            --error: #ef4444;
+            --warning: #eab308;
+            --info: #0ea5e9;
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+            --radius: 12px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --gradient: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+        }
+        body.light-mode {
+            --background: #f3f4f6;
+            --surface: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-tertiary: #9ca3af;
+            --border: #d1d5db;
+        }
+        body.dark-mode {
+            --background: #0f172a;
+            --surface: #1e293b;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #6b7280;
+            --border: #334155;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+            transition: var(--transition);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            /* Enable scrolling on mobile */
+            touch-action: pan-y;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        html {
+            /* Enable scrolling on mobile */
+            touch-action: pan-y;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            height: 100%;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--background);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: var(--transition);
+        }
+        .theme-toggle:hover {
+            color: var(--primary);
+        }
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 1rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            /* Ensure content can scroll */
+            overflow: visible;
+        }
+        .content-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            /* Ensure content can scroll */
+            overflow: visible;
+        }
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+        .logo-section i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            animation: pulse 2s infinite;
+        }
+        .logo-section span {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .message {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            background: rgba(96, 165, 250, 0.05);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+            color: var(--text-secondary);
+        }
+        .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .animation-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 2.5rem 0;
+            gap: 1.5rem;
+        }
+        .medical-icon {
+            width: 100px;
+            height: 100px;
+            background: rgba(96, 165, 250, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: var(--primary);
+        }
+        .medical-icon:nth-child(1) {
+            animation-delay: 0s;
+        }
+        .medical-icon:nth-child(2) {
+            animation-delay: 1s;
+            color: var(--info);
+        }
+        .medical-icon:nth-child(3) {
+            animation-delay: 2s;
+            color: var(--success);
+        }
+        .comment-box {
+            background: rgba(96, 165, 250, 0.05);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-top: 1.5rem;
+            text-align: left;
+            border-left: 4px solid var(--info);
+            width: 100%;
+        }
+        .comment-box h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .comment-box p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            text-decoration: none;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+        }
+        .pulse-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 2rem 0;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: pulse-dot 1.5s ease-in-out infinite both;
+        }
+        .dot:nth-child(2) {
+            animation-delay: 0.3s;
+            background: var(--info);
+        }
+        .dot:nth-child(3) {
+            animation-delay: 0.6s;
+            background: var(--success);
+        }
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .floating-element {
+            position: absolute;
+            background: rgba(96, 165, 250, 0.1);
+            border-radius: 50%;
+            animation: float-element 15s linear infinite;
+        }
+        .floating-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        .floating-element:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 70%;
+            left: 80%;
+            animation-delay: -5s;
+        }
+        .floating-element:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 50%;
+            left: 5%;
+            animation-delay: -10s;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(5deg);
+            }
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+        @keyframes pulse-dot {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.7;
+            }
+        }
+        @keyframes float-element {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(20px, 30px) rotate(90deg);
+            }
+            50% {
+                transform: translate(0, 60px) rotate(180deg);
+            }
+            75% {
+                transform: translate(-20px, 30px) rotate(270deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 5rem 1rem 1rem;
+            }
+            .content-card {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            .message {
+                font-size: 1rem;
+            }
+            .medical-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            .logo-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .logo-section span {
+                font-size: 1.5rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 4.5rem 0.75rem 1rem;
+            }
+            .content-card {
+                padding: 1.25rem;
+            }
+            h1 {
+                font-size: 1.75rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .message {
+                padding: 1.25rem;
+            }
+            .medical-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 1.75rem;
+            }
+            .animation-container {
+                gap: 1rem;
+            }
+            .comment-box {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM2MGE1ZmEiLz4KPHBhdGggZD0iTTE2IDE1SDE4VjI1SDE2VjE1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTIyIDE1SDI0VjI1SDIyVjE1WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==" alt="ALIFO Logo">
+                <span>ALIFO</span>
+            </div>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="content-card">
+            <div class="floating-elements">
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+            </div>
+            
+            <div class="logo-section">
+                <i class="fas fa-stethoscope"></i>
+                <span>ALIFO Speaking!</span>
+            </div>
+            
+            <h1>Questions Coming Soon!</h1>
+            
+            <div class="subtitle">
+                We're preparing valuable medical content for you
+            </div>
+            
+            <div class="pulse-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            
+            <div class="message">
+                Our team is working diligently to compile comprehensive medical questions and resources 
+                to help you excel in your studies. <span class="highlight">We are working on it and we will deliver this so soon!</span>
+            </div>
+            
+            <div class="animation-container">
+                <div class="medical-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="medical-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="medical-icon">
+                    <i class="fas fa-bone"></i>
+                </div>
+            </div>
+            
+            <div class="comment-box">
+                <h3><i class="fas fa-comment-medical"></i> Special Requests?</h3>
+                <p>If you have specific medical topics or question types you'd like us to focus on, please let us know through the comment box in your profile. We value your input!</p>
+            </div>
+        </div>
+    </main>
+     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  // Check if running inside Telegram
+  const tg = window.Telegram?.WebApp;
+
+  // --- 1️⃣ Handle Telegram Mini App Back Button ---
+  if (tg) {
+    tg.ready(); // Initialize Telegram SDK
+    tg.BackButton.show();
+
+    tg.BackButton.onClick(() => {
+      console.log("Telegram back button pressed");
+      handleBackAction();
+    });
+  }
+
+  // --- 2️⃣ Handle Browser/Phone Back Button ---
+  window.addEventListener('popstate', () => {
+    console.log("Browser back button pressed");
+    handleBackAction();
+  });
+
+  // --- 3️⃣ Function to handle back action globally ---
+  function handleBackAction() {
+    // Example actions (customize as you wish):
+    // Go back if possible, otherwise go to home page
+    if (document.referrer && window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = '/'; // or your home page route
+    }
+  }
+
+  // --- 4️⃣ Optional: Prevent unwanted exits ---
+  // This ensures pressing back doesn’t immediately close the app
+  history.pushState(null, '', location.href);
+</script>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to dark mode
+        const savedTheme = localStorage.getItem('theme') || 'dark-mode';
+        document.body.className = savedTheme;
+        updateThemeIcon(savedTheme);
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode';
+            const newTheme = currentTheme === 'dark-mode' ? 'light-mode' : 'dark-mode';
+            
+            document.body.classList.remove(currentTheme);
+            document.body.classList.add(newTheme);
+            
+            updateThemeIcon(newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+            if (theme === 'dark-mode') {
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                themeIcon.className = 'fas fa-moon';
+            }
+        }
+        
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const medicalIcons = document.querySelectorAll('.medical-icon');
+            
+            medicalIcons.forEach(icon => {
+                icon.addEventListener('mouseover', function() {
+                    this.style.transform = 'scale(1.2)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+                
+                icon.addEventListener('mouseout', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+            
+            // Remove the scroll animation that might interfere with mobile scrolling
+            // const container = document.querySelector('.content-card');
+            // window.addEventListener('scroll', function() {
+            //     const scrolled = window.pageYOffset;
+            //     const rate = scrolled * -0.3;
+            //     container.style.transform = `translateY(${rate}px)`;
+            // });
+        });
+    </script>
+</body>
+</html>
