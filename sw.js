@@ -9,6 +9,7 @@ const urlsToCache = [
   '/offline.html',
   '/manifest.json',
   '/notifications.html',
+  '/404.html',
   
   // Year 1 main pages
   '/yr1/ps.html',
