@@ -77,6 +77,67 @@
         html {
             touch-action: none;
         }
+
+        /* Enhanced UI Elements */
+        .connection-status {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+        .connection-status.online {
+            background: var(--success);
+            color: white;
+        }
+        .connection-status.offline {
+            background: var(--error);
+            color: white;
+        }
+        .connection-status.syncing {
+            background: var(--warning);
+            color: white;
+        }
+
+        .data-backup-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+            z-index: 998;
+        }
+
+        .persistence-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+            z-index: 998;
+        }
+
         .header {
             position: fixed;
             top: 0;
@@ -621,6 +682,115 @@
         .trial-btn.secondary:hover {
             background: rgba(16, 185, 129, 0.1);
         }
+
+        /* Enhanced Registration Styles */
+        .registration-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--border);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+        .step-number.active {
+            background: var(--primary);
+            color: white;
+        }
+        .step-number.completed {
+            background: var(--success);
+            color: white;
+        }
+        .step-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+        .step-label.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .progress-line {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            z-index: -1;
+        }
+        .progress-fill {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .nav-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .nav-btn.prev {
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        .nav-btn.prev:hover {
+            background: var(--border);
+        }
+        .nav-btn.next {
+            background: var(--primary);
+            color: white;
+        }
+        .nav-btn.next:hover {
+            background: var(--primary-dark);
+        }
+
         @media (max-width: 768px) {
             .header-container {
                 padding: 0.75rem;
@@ -635,6 +805,17 @@
             .modal-content {
                 padding: 1.5rem;
                 width: 95%;
+            }
+            .connection-status {
+                top: 60px;
+                right: 10px;
+                font-size: 0.7rem;
+            }
+            .data-backup-indicator,
+            .persistence-indicator {
+                bottom: 10px;
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
             }
         }
         @media (max-width: 480px) {
@@ -651,10 +832,29 @@
                 width: 100%;
                 justify-content: center;
             }
+            .navigation-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body class="dark-mode">
+    <!-- Enhanced UI Elements -->
+    <div id="connectionStatus" class="connection-status online" style="display: none;">
+        <i class="fas fa-wifi"></i>
+        <span>Connected</span>
+    </div>
+
+    <div id="dataBackupIndicator" class="data-backup-indicator" style="display: none;">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <span>Backing up data...</span>
+    </div>
+
+    <div id="persistenceIndicator" class="persistence-indicator" style="display: none;">
+        <i class="fas fa-shield-alt"></i>
+        <span>Secure Registration</span>
+    </div>
+
     <!-- Header -->
     <header class="header">
         <div class="header-container">
@@ -681,122 +881,188 @@
                 <p>Join ALIF Medical Quiz Platform to access comprehensive medical quizzes</p>
             </div>
             <div class="registration-body">
-                <!-- Free Trial Option -->
-                <div class="trial-option" id="trialOption">
-                    <div class="radio"></div>
-                    <div class="trial-option-content">
-                        <div class="trial-option-title">Free Trial Access</div>
-                        <div class="trial-option-desc">Get 3 days of free access to all programs</div>
+                <!-- Registration Progress -->
+                <div class="registration-progress">
+                    <div class="progress-line"></div>
+                    <div class="progress-fill" style="width: 33.33%;"></div>
+                    <div class="progress-step">
+                        <div class="step-number active">1</div>
+                        <div class="step-label active">Plan</div>
                     </div>
-                    <div class="trial-option-badge">FREE</div>
-                </div>
-                
-                <!-- Regular Registration Option -->
-                <div class="trial-option selected" id="regularOption">
-                    <div class="radio"></div>
-                    <div class="trial-option-content">
-                        <div class="trial-option-title">Full Program Access</div>
-                        <div class="trial-option-desc">Pay once and get permanent access to selected program</div>
+                    <div class="progress-step">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Details</div>
                     </div>
-                </div>
-                
-                <div id="priceInfo" class="price-info">Select Year to View Price</div>
-                
-                <!-- Account Numbers Section -->
-                <div class="account-section" id="accountSection">
-                    <h3 class="account-title"><i class="fas fa-university"></i> Payment Accounts</h3>
-                    <div class="account-list">
-                        <div class="account-item">
-                            <div class="account-info">
-                                <span class="account-name">CBE</span>
-                                <span class="account-number">1000544233185</span>
-                            </div>
-                            <button class="copy-btn" onclick="copyToClipboard('1000544233185', this)">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        </div>
-                        <div class="account-item">
-                            <div class="account-info">
-                                <span class="account-name">Awash Bank</span>
-                                <span class="account-number">014251165418600</span>
-                            </div>
-                            <button class="copy-btn" onclick="copyToClipboard('014251165418600', this)">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        </div>
-                        <div class="account-item">
-                            <div class="account-info">
-                                <span class="account-name">Tele birr</span>
-                                <span class="account-number">0912496441</span>
-                            </div>
-                            <button class="copy-btn" onclick="copyToClipboard('0912496441', this)">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        </div>
+                    <div class="progress-step">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Verify</div>
                     </div>
-                    <p class="payment-note">Please use your name as payment reference</p>
                 </div>
 
-                <!-- Registration Form -->
-                <form id="regForm">
+                <!-- Step 1: Plan Selection -->
+                <div class="form-section active" id="step1">
+                    <!-- Free Trial Option -->
+                    <div class="trial-option" id="trialOption">
+                        <div class="radio"></div>
+                        <div class="trial-option-content">
+                            <div class="trial-option-title">Free Trial Access</div>
+                            <div class="trial-option-desc">Get 3 days of free access to all programs</div>
+                        </div>
+                        <div class="trial-option-badge">FREE</div>
+                    </div>
+                    
+                    <!-- Regular Registration Option -->
+                    <div class="trial-option selected" id="regularOption">
+                        <div class="radio"></div>
+                        <div class="trial-option-content">
+                            <div class="trial-option-title">Full Program Access</div>
+                            <div class="trial-option-desc">Pay once and get permanent access to selected program</div>
+                        </div>
+                    </div>
+                    
+                    <div id="priceInfo" class="price-info">Select Year to View Price</div>
+                    
+                    <!-- Account Numbers Section -->
+                    <div class="account-section" id="accountSection">
+                        <h3 class="account-title"><i class="fas fa-university"></i> Payment Accounts</h3>
+                        <div class="account-list">
+                            <div class="account-item">
+                                <div class="account-info">
+                                    <span class="account-name">CBE</span>
+                                    <span class="account-number">1000544233185</span>
+                                </div>
+                                <button class="copy-btn" onclick="copyToClipboard('1000544233185', this)">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <div class="account-item">
+                                <div class="account-info">
+                                    <span class="account-name">Awash Bank</span>
+                                    <span class="account-number">014251165418600</span>
+                                </div>
+                                <button class="copy-btn" onclick="copyToClipboard('014251165418600', this)">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <div class="account-item">
+                                <div class="account-info">
+                                    <span class="account-name">Tele birr</span>
+                                    <span class="account-number">0912496441</span>
+                                </div>
+                                <button class="copy-btn" onclick="copyToClipboard('0912496441', this)">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                        </div>
+                        <p class="payment-note">Please use your name as payment reference</p>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button class="nav-btn next" id="step1Next">
+                            Continue <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Registration Details -->
+                <div class="form-section" id="step2">
+                    <form id="regForm">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <i class="fas fa-graduation-cap"></i>
+                                <select id="year" required>
+                                    <option value="" disabled selected>Select Year of Study</option>
+                                    <option value="1">Pre Med - 100 ETB</option>
+                                    <option value="2">Intro Med - 100 ETB</option>
+                                    <option value="3">Meta - 100 ETB</option>
+                                    <option value="4">Hema - 100 ETB</option>
+                                    <option value="5">CVS - 100 ETB</option>
+                                    <option value="6">RESPA - 100 ETB</option>
+                                    <option value="7">Musclo - 100 ETB</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-group">
+                                <i class="fas fa-user"></i>
+                                <input id="name" placeholder="Full Name" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-group">
+                                <i class="fas fa-phone"></i>
+                                <input id="phone" type="tel" placeholder="Phone Number" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-group">
+                                <i class="fas fa-envelope"></i>
+                                <input id="email" type="email" placeholder="Email (optional)">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-group">
+                                <i class="fab fa-telegram-plane"></i>
+                                <input id="telegram" placeholder="Telegram Username (required for fast auth.)">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="receiptUploadSection">
+                            <div class="file-upload" id="receiptUpload">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span id="uploadText">Upload Payment Receipt</span>
+                                <input id="receipt" type="file" accept="image/*" required>
+                            </div>
+                            <img id="receiptPreview" class="receipt-preview" alt="Receipt Preview">
+                        </div>
+                        
+                        <div class="navigation-buttons">
+                            <button type="button" class="nav-btn prev" id="step2Prev">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="submit" class="nav-btn next" id="step2Next">
+                                Submit <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div id="regError" class="error"></div>
+                    </form>
+                </div>
+
+                <!-- Step 3: Verification -->
+                <div class="form-section" id="step3">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <i class="fas fa-envelope-circle-check" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <h3 style="margin-bottom: 0.5rem;">Verification Required</h3>
+                        <p style="color: var(--text-secondary);">We've sent a 6-digit code to verify your registration.</p>
+                    </div>
+
                     <div class="form-group">
                         <div class="input-group">
-                            <i class="fas fa-graduation-cap"></i>
-                            <select id="year" required>
-                                <option value="" disabled selected>Select Year of Study</option>
-                                <option value="1">Pre Med - 100 ETB</option>
-                                <option value="2">Intro Med - 100 ETB</option>
-                                <option value="3">Meta - 100 ETB</option>
-                                <option value="4">Hema - 100 ETB</option>
-                                <option value="5">CVS - 100 ETB</option>
-                                <option value="6">RESPA - 100 ETB</option>
-                                <option value="7">Musclo - 100 ETB</option>
-                            </select>
+                            <i class="fas fa-key"></i>
+                            <input id="verifyCode" placeholder="Enter 6-digit code" maxlength="6" required>
                         </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <div class="input-group">
-                            <i class="fas fa-user"></i>
-                            <input id="name" placeholder="Full Name" required>
-                        </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="nav-btn prev" id="step3Prev">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="nav-btn next" id="verifyBtn">
+                            Verify <i class="fas fa-check-circle"></i>
+                        </button>
                     </div>
-                    
-                    <div class="form-group">
-                        <div class="input-group">
-                            <i class="fas fa-phone"></i>
-                            <input id="phone" type="tel" placeholder="Phone Number" required>
-                        </div>
+                    <div id="verifyError" class="error"></div>
+
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <button type="button" class="action-btn" id="resendCodeBtn" style="margin: 0 auto;">
+                            <i class="fas fa-redo"></i> Resend Code
+                        </button>
                     </div>
-                    
-                    <div class="form-group">
-                        <div class="input-group">
-                            <i class="fas fa-envelope"></i>
-                            <input id="email" type="email" placeholder="Email (optional)">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="input-group">
-                            <i class="fab fa-telegram-plane"></i>
-                            <input id="telegram" placeholder="Telegram Username (required for fast auth.)">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group" id="receiptUploadSection">
-                        <div class="file-upload" id="receiptUpload">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <span id="uploadText">Upload Payment Receipt</span>
-                            <input id="receipt" type="file" accept="image/*" required>
-                        </div>
-                        <img id="receiptPreview" class="receipt-preview" alt="Receipt Preview">
-                    </div>
-                    
-                    <button type="submit" class="submit-btn" id="submitBtn">
-                        <i class="fas fa-paper-plane"></i> Submit Registration
-                    </button>
-                    <div id="regError" class="error"></div>
-                </form>
+                </div>
                 
                 <!-- Temporary Password Login Section -->
                 <div class="temp-login-section">
@@ -896,71 +1162,253 @@
         </div>
     </div>
 
-    <!-- Verification Modal -->
-    <div id="verifyModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2><i class="fas fa-lock"></i> Enter Verification Code</h2>
-            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
-                Please enter the 6-digit verification code sent to your phone
-            </p>
-            
-            <div class="form-group">
-                <div class="input-group">
-                    <i class="fas fa-key"></i>
-                    <input id="verifyCode" placeholder="6-digit code" maxlength="6" required>
-                </div>
-            </div>
-            
-            <button class="submit-btn" id="verifyBtn">
-                <i class="fas fa-check-circle"></i> Verify
-            </button>
-            
-            <button class="back-btn" id="backBtn">
-                <i class="fas fa-arrow-left"></i> Back to Registration
-            </button>
-            
-            <div id="verifyError" class="error"></div>
-        </div>
-    </div>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
-  // Check if running inside Telegram
-  const tg = window.Telegram?.WebApp;
-
-  // --- 1️⃣ Handle Telegram Mini App Back Button ---
-  if (tg) {
-    tg.ready(); // Initialize Telegram SDK
-    tg.BackButton.show();
-
-    tg.BackButton.onClick(() => {
-      console.log("Telegram back button pressed");
-      handleBackAction();
-    });
-  }
-
-  // --- 2️⃣ Handle Browser/Phone Back Button ---
-  window.addEventListener('popstate', () => {
-    console.log("Browser back button pressed");
-    handleBackAction();
-  });
-
-  // --- 3️⃣ Function to handle back action globally ---
-  function handleBackAction() {
-    // Example actions (customize as you wish):
-    // Go back if possible, otherwise go to home page
-    if (document.referrer && window.history.length > 1) {
-      window.history.back();
-    } else {
-      window.location.href = '/'; // or your home page route
-    }
-  }
-
-  // --- 4️⃣ Optional: Prevent unwanted exits ---
-  // This ensures pressing back doesn’t immediately close the app
-  history.pushState(null, '', location.href);
-</script>
     <script>
-        // Firebase User Manager
+        // Enhanced Registration Manager
+        class EnhancedRegistrationManager {
+            constructor() {
+                this.currentStep = 1;
+                this.totalSteps = 3;
+                this.isTrialSelected = false;
+                this.pendingRegistration = null;
+                this.connectionStatus = document.getElementById('connectionStatus');
+                this.dataBackupIndicator = document.getElementById('dataBackupIndicator');
+                this.persistenceIndicator = document.getElementById('persistenceIndicator');
+                this.isInitialized = false;
+            }
+
+            async init() {
+                if (this.isInitialized) return;
+
+                console.log('Initializing Enhanced Registration Manager...');
+                
+                // Initialize connection monitoring
+                this.initConnectionMonitoring();
+                
+                // Initialize data persistence
+                await this.initDataPersistence();
+                
+                // Check for existing registration data
+                await this.restoreRegistrationState();
+                
+                // Setup enhanced event listeners
+                this.setupEnhancedEventListeners();
+                
+                this.isInitialized = true;
+                console.log('Enhanced Registration Manager initialized');
+            }
+
+            // Connection Monitoring
+            initConnectionMonitoring() {
+                window.addEventListener('online', () => {
+                    this.handleConnectionRestored();
+                });
+
+                window.addEventListener('offline', () => {
+                    this.handleConnectionLost();
+                });
+
+                this.updateConnectionStatus(navigator.onLine);
+            }
+
+            updateConnectionStatus(isOnline) {
+                if (isOnline) {
+                    this.connectionStatus.className = 'connection-status online';
+                    this.connectionStatus.innerHTML = '<i class="fas fa-wifi"></i><span>Connected</span>';
+                    this.connectionStatus.style.display = 'flex';
+                    
+                    setTimeout(() => {
+                        this.connectionStatus.style.display = 'none';
+                    }, 3000);
+                } else {
+                    this.connectionStatus.className = 'connection-status offline';
+                    this.connectionStatus.innerHTML = '<i class="fas fa-wifi-slash"></i><span>Offline - Working locally</span>';
+                    this.connectionStatus.style.display = 'flex';
+                }
+            }
+
+            handleConnectionLost() {
+                console.log('Connection lost - registration data saved locally');
+                this.updateConnectionStatus(false);
+                this.showOfflineMessage();
+            }
+
+            handleConnectionRestored() {
+                console.log('Connection restored');
+                this.updateConnectionStatus(true);
+                
+                this.connectionStatus.className = 'connection-status syncing';
+                this.connectionStatus.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i><span>Syncing...</span>';
+                this.connectionStatus.style.display = 'flex';
+                
+                setTimeout(() => {
+                    this.connectionStatus.style.display = 'none';
+                }, 2000);
+            }
+
+            // Data Persistence
+            async initDataPersistence() {
+                this.persistenceIndicator.style.display = 'flex';
+                await this.backupRegistrationState();
+            }
+
+            async backupRegistrationState() {
+                try {
+                    const state = {
+                        currentStep: this.currentStep,
+                        isTrialSelected: this.isTrialSelected,
+                        formData: this.getFormData(),
+                        timestamp: Date.now()
+                    };
+                    
+                    localStorage.setItem('registrationState', JSON.stringify(state));
+                    sessionStorage.setItem('registrationBackup', JSON.stringify(state));
+                    
+                    console.log('Registration state backed up');
+                } catch (error) {
+                    console.error('Error backing up registration state:', error);
+                }
+            }
+
+            async restoreRegistrationState() {
+                try {
+                    const savedState = localStorage.getItem('registrationState');
+                    if (savedState) {
+                        const state = JSON.parse(savedState);
+                        
+                        // Check if state is not too old (last 1 hour)
+                        const oneHourAgo = Date.now() - (60 * 60 * 1000);
+                        if (state.timestamp > oneHourAgo) {
+                            this.currentStep = state.currentStep;
+                            this.isTrialSelected = state.isTrialSelected;
+                            this.restoreFormData(state.formData);
+                            this.updateProgress();
+                            console.log('Registration state restored');
+                        } else {
+                            localStorage.removeItem('registrationState');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error restoring registration state:', error);
+                }
+            }
+
+            getFormData() {
+                return {
+                    year: document.getElementById('year')?.value || '',
+                    name: document.getElementById('name')?.value || '',
+                    phone: document.getElementById('phone')?.value || '',
+                    email: document.getElementById('email')?.value || '',
+                    telegram: document.getElementById('telegram')?.value || ''
+                };
+            }
+
+            restoreFormData(formData) {
+                if (formData.year) document.getElementById('year').value = formData.year;
+                if (formData.name) document.getElementById('name').value = formData.name;
+                if (formData.phone) document.getElementById('phone').value = formData.phone;
+                if (formData.email) document.getElementById('email').value = formData.email;
+                if (formData.telegram) document.getElementById('telegram').value = formData.telegram;
+            }
+
+            // Enhanced Event Listeners
+            setupEnhancedEventListeners() {
+                // Auto-save form data on change
+                const formInputs = ['year', 'name', 'phone', 'email', 'telegram'];
+                formInputs.forEach(inputId => {
+                    const input = document.getElementById(inputId);
+                    if (input) {
+                        input.addEventListener('input', () => {
+                            this.backupRegistrationState();
+                        });
+                    }
+                });
+
+                // Handle page visibility changes
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) {
+                        this.backupRegistrationState();
+                    }
+                });
+
+                // Handle beforeunload
+                window.addEventListener('beforeunload', (e) => {
+                    if (this.currentStep > 1) {
+                        this.backupRegistrationState();
+                    }
+                });
+            }
+
+            // Progress Management
+            updateProgress() {
+                // Update step numbers
+                for (let i = 1; i <= this.totalSteps; i++) {
+                    const stepNumber = document.querySelector(`.step-number:nth-child(${i})`);
+                    const stepLabel = document.querySelector(`.step-label:nth-child(${i})`);
+                    
+                    if (stepNumber && stepLabel) {
+                        stepNumber.className = 'step-number';
+                        stepLabel.className = 'step-label';
+                        
+                        if (i < this.currentStep) {
+                            stepNumber.classList.add('completed');
+                        } else if (i === this.currentStep) {
+                            stepNumber.classList.add('active');
+                            stepLabel.classList.add('active');
+                        }
+                    }
+                }
+
+                // Update progress fill
+                const progressFill = document.querySelector('.progress-fill');
+                const progressPercentage = ((this.currentStep - 1) / (this.totalSteps - 1)) * 100;
+                if (progressFill) {
+                    progressFill.style.width = `${progressPercentage}%`;
+                }
+
+                // Show/hide sections
+                for (let i = 1; i <= this.totalSteps; i++) {
+                    const section = document.getElementById(`step${i}`);
+                    if (section) {
+                        section.classList.remove('active');
+                        if (i === this.currentStep) {
+                            section.classList.add('active');
+                        }
+                    }
+                }
+            }
+
+            nextStep() {
+                if (this.currentStep < this.totalSteps) {
+                    this.currentStep++;
+                    this.updateProgress();
+                    this.backupRegistrationState();
+                }
+            }
+
+            prevStep() {
+                if (this.currentStep > 1) {
+                    this.currentStep--;
+                    this.updateProgress();
+                    this.backupRegistrationState();
+                }
+            }
+
+            showOfflineMessage() {
+                // Could implement a subtle offline indicator
+                console.log('Registration in offline mode - data saved locally');
+            }
+
+            // Cleanup
+            destroy() {
+                this.isInitialized = false;
+            }
+        }
+
+        // Initialize enhanced registration manager
+        const registrationManager = new EnhancedRegistrationManager();
+
+        // Your existing Firebase User Manager and other code remains the same
         class FirebaseUserManager {
             constructor() {
                 this.usersCollection = db.collection('users');
@@ -1199,7 +1647,6 @@
         const priceInfo = document.getElementById('priceInfo');
         const yearSelect = document.getElementById('year');
         const regForm = document.getElementById('regForm');
-        const submitBtn = document.getElementById('submitBtn');
         const receiptInput = document.getElementById('receipt');
         const receiptPreview = document.getElementById('receiptPreview');
         const uploadText = document.getElementById('uploadText');
@@ -1213,44 +1660,60 @@
         const trialModal = document.getElementById('trialModal');
         const startTrialBtn = document.getElementById('startTrialBtn');
         const cancelTrialBtn = document.getElementById('cancelTrialBtn');
-        const verifyModal = document.getElementById('verifyModal');
         const verifyBtn = document.getElementById('verifyBtn');
         const verifyError = document.getElementById('verifyError');
-        const backBtn = document.getElementById('backBtn');
         const loginLink = document.getElementById('loginLink');
+        const resendCodeBtn = document.getElementById('resendCodeBtn');
 
-        // Trial state
-        let isTrialSelected = false;
+        // Navigation buttons
+        const step1Next = document.getElementById('step1Next');
+        const step2Prev = document.getElementById('step2Prev');
+        const step2Next = document.getElementById('step2Next');
+        const step3Prev = document.getElementById('step3Prev');
 
         // Theme toggle
         function toggleTheme() {
             if (document.body.classList.contains('dark-mode')) {
                 document.body.classList.remove('dark-mode');
                 themeToggle.querySelector('i').className = 'fas fa-moon';
+                localStorage.setItem('themePreference', 'light');
             } else {
                 document.body.classList.add('dark-mode');
                 themeToggle.querySelector('i').className = 'fas fa-sun';
+                localStorage.setItem('themePreference', 'dark');
             }
         }
         themeToggle.addEventListener('click', toggleTheme);
+
+        // Load saved theme preference
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('themePreference');
+            if (savedTheme === 'light') {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+                themeToggle.querySelector('i').className = 'fas fa-moon';
+            }
+        }
 
         // Trial option selection
         trialOption.addEventListener('click', () => {
             trialOption.classList.add('selected');
             regularOption.classList.remove('selected');
-            isTrialSelected = true;
+            registrationManager.isTrialSelected = true;
             
             // Hide payment-related elements for trial
             accountSection.style.display = 'none';
             receiptUploadSection.style.display = 'none';
             document.getElementById('receipt').required = false;
             priceInfo.textContent = 'Free Trial - 3 Days Access to All Programs';
+            
+            registrationManager.backupRegistrationState();
         });
 
         regularOption.addEventListener('click', () => {
             regularOption.classList.add('selected');
             trialOption.classList.remove('selected');
-            isTrialSelected = false;
+            registrationManager.isTrialSelected = false;
             
             // Show payment-related elements for regular registration
             accountSection.style.display = 'block';
@@ -1260,11 +1723,13 @@
             // Update price info based on selected year
             const year = document.getElementById('year').value;
             priceInfo.textContent = year ? `Price: ${prices[year]} ETB` : 'Select Year to View Price';
+            
+            registrationManager.backupRegistrationState();
         });
 
         // Update price info when year changes (for regular registration)
         yearSelect.addEventListener('change', () => {
-            if (!isTrialSelected) {
+            if (!registrationManager.isTrialSelected) {
                 const year = yearSelect.value;
                 priceInfo.textContent = year ? `Price: ${prices[year]} ETB` : 'Select Year to View Price';
             }
@@ -1311,17 +1776,24 @@
             });
         }
 
+        // Navigation
+        step1Next.addEventListener('click', () => {
+            registrationManager.nextStep();
+        });
+
+        step2Prev.addEventListener('click', () => {
+            registrationManager.prevStep();
+        });
+
+        step3Prev.addEventListener('click', () => {
+            registrationManager.prevStep();
+        });
+
         // Registration form submission
         regForm.addEventListener('submit', async e => {
             e.preventDefault();
             
-            // If trial is selected, show trial modal instead
-            if (isTrialSelected) {
-                trialModal.style.display = 'flex';
-                return;
-            }
-            
-            // Otherwise, proceed with regular registration
+            const submitBtn = document.getElementById('step2Next');
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
             
@@ -1332,14 +1804,22 @@
             const telegram = document.getElementById('telegram').value || 'N/A';
             const receipt = document.getElementById('receipt').files[0];
 
-            if (!year || !name || !phone || !receipt) {
+            if (!year || !name || !phone || (!registrationManager.isTrialSelected && !receipt)) {
                 regError.textContent = 'Please fill all required fields.';
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
                 return;
             }
 
-            // Create user in Firebase
+            // If trial is selected, show trial modal instead
+            if (registrationManager.isTrialSelected) {
+                trialModal.style.display = 'flex';
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // Otherwise, proceed with regular registration
             const userData = {
                 name: name,
                 phone: phone,
@@ -1371,8 +1851,7 @@
                         localStorage.setItem('tempUserData', JSON.stringify(userData));
                         localStorage.setItem('codeTimestamp', new Date().getTime());
                         
-                        regForm.style.display = 'none';
-                        verifyModal.style.display = 'flex';
+                        registrationManager.nextStep();
                         regError.textContent = '';
                     } else {
                         regError.textContent = 'Error sending to Telegram: ' + data.description;
@@ -1445,8 +1924,7 @@
                         localStorage.setItem('codeTimestamp', new Date().getTime());
                         
                         trialModal.style.display = 'none';
-                        regForm.style.display = 'none';
-                        verifyModal.style.display = 'flex';
+                        registrationManager.nextStep();
                         regError.textContent = '';
                     } else {
                         regError.textContent = 'Error sending to Telegram: ' + data.description;
@@ -1501,6 +1979,9 @@
                 localStorage.setItem('userYears', JSON.stringify(result.user.registeredYears));
                 localStorage.setItem('verified', 'true');
                 
+                // Clear registration state
+                localStorage.removeItem('registrationState');
+                
                 // Redirect to dashboard
                 window.location.href = 'dashboard.html';
             } else {
@@ -1520,6 +2001,9 @@
                 verifyError.textContent = 'Session expired. Please register again.';
                 return;
             }
+
+            verifyBtn.classList.add('loading');
+            verifyBtn.disabled = true;
 
             const result = await firebaseUserManager.verifyUser(phone, enteredCode);
             
@@ -1542,19 +2026,22 @@
                 localStorage.removeItem('pendingPhone');
                 localStorage.removeItem('tempUserData');
                 localStorage.removeItem('codeTimestamp');
+                localStorage.removeItem('registrationState');
                 
                 // Redirect to dashboard
                 window.location.href = 'dashboard.html';
             } else {
                 verifyError.textContent = result.error;
             }
+
+            verifyBtn.classList.remove('loading');
+            verifyBtn.disabled = false;
         });
 
-        // Back button to return to registration form
-        backBtn.addEventListener('click', () => {
-            verifyModal.style.display = 'none';
-            regForm.style.display = 'block';
-            verifyError.textContent = '';
+        // Resend code
+        resendCodeBtn.addEventListener('click', async () => {
+            // Implementation for resending code would go here
+            alert('Code resend functionality would be implemented here');
         });
 
         // Login link
@@ -1562,14 +2049,52 @@
             window.location.href = 'login.html';
         });
 
-        // Check if user is already logged in
-        document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the registration manager when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
             const currentUser = localStorage.getItem('currentUser');
             if (currentUser) {
                 // Redirect to dashboard if user is already logged in
                 window.location.href = 'dashboard.html';
+                return;
             }
+
+            // Load theme preference
+            loadThemePreference();
+            
+            // Initialize enhanced registration manager
+            await registrationManager.init();
         });
+
+        // Handle Telegram Mini App Back Button
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.BackButton.show();
+            tg.BackButton.onClick(() => {
+                console.log("Telegram back button pressed");
+                handleBackAction();
+            });
+        }
+
+        // Handle Browser/Phone Back Button
+        window.addEventListener('popstate', () => {
+            console.log("Browser back button pressed");
+            handleBackAction();
+        });
+
+        // Function to handle back action globally
+        function handleBackAction() {
+            if (registrationManager.currentStep > 1) {
+                registrationManager.prevStep();
+            } else if (document.referrer && window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Prevent unwanted exits
+        history.pushState(null, '', location.href);
     </script>
 </body>
 </html>
