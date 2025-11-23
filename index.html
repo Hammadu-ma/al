@@ -897,12 +897,12 @@
         </div>
     </footer>
     <script>
- if ('serviceWorker' in navigator) {
-   navigator.serviceWorker.register('/service-worker.js')
-   .then(() => console.log("Service Worker Registered"));
- }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/service-worker.js")
+    .then(() => console.log("SW registered"))
+    .catch(err => console.log("SW error:", err));
+}
 </script>
-
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         // Check if running inside Telegram
