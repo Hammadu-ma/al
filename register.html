@@ -12,6 +12,35 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="auth-check.js"></script>
+    <!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
+
+<!-- iOS Meta Tags -->
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<!-- Viewport -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+
+// Redirect if already logged in
+if (localStorage.getItem('userLoggedIn')) {
+  window.location.href = '/dashboard.html';
+}
+
+// After successful registration, call this function
+function registrationSuccess() {
+  localStorage.setItem('userLoggedIn', 'true');
+  window.location.href = '/dashboard.html';
+}
+</script>
     <style>
         :root {
             --primary: #2563eb;
@@ -2086,5 +2115,6 @@
         // Prevent unwanted exits
         history.pushState(null, '', location.href);
     </script>
+    
 </body>
 </html>
