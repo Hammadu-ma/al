@@ -1,70 +1,95 @@
-const CACHE_NAME = 'debug-cache-v1';
+const CACHE_NAME = 'working-cache-v1';
 
-// Start with ONLY 2 files to test
+// Only cache files we know exist
 const urlsToCache = [
   '/',
+  '/index.html',
+  '/dashboard.html',
   '/offline.html'
 ];
 
 self.addEventListener('install', event => {
-  console.log('🔧 DEBUG: Starting installation...');
+  console.log('🚀 SW INSTALL: Starting...');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('🔧 DEBUG: Cache opened successfully');
+        console.log('📦 Cache opened, beginning file caching...');
         
-        // Cache files one by one to see which fail
+        // Cache each file individually with error handling
         const cachePromises = urlsToCache.map(url => {
-          return fetch(url)
+          return fetch(url, { cache: 'no-cache' })
             .then(response => {
               if (!response.ok) {
-                throw new Error(`HTTP ${response.status} for ${url}`);
+                throw new Error(`Bad status: ${response.status}`);
               }
-              console.log(`✅ DEBUG: Successfully fetched ${url}`);
-              return cache.put(url, response);
+              // Clone the response before using it
+              const responseClone = response.clone();
+              return cache.put(url, responseClone);
+            })
+            .then(() => {
+              console.log(`✅ Cached: ${url}`);
+              return true;
             })
             .catch(error => {
-              console.log(`❌ DEBUG: Failed to cache ${url}:`, error.message);
-              return Promise.resolve(); // Continue despite errors
+              console.log(`⚠️ Failed to cache ${url}:`, error.message);
+              return false; // Don't stop other files from caching
             });
         });
         
-        return Promise.all(cachePromises);
+        return Promise.all(cachePromises).then(results => {
+          const successful = results.filter(Boolean).length;
+          console.log(`🎉 Caching complete: ${successful}/${urlsToCache.length} files cached`);
+        });
       })
       .then(() => {
-        console.log('🔧 DEBUG: Installation completed');
+        console.log('✨ Skip waiting called');
         return self.skipWaiting();
       })
       .catch(error => {
-        console.log('🔧 DEBUG: Installation failed completely:', error);
+        console.log('💥 Installation failed:', error);
       })
   );
 });
 
 self.addEventListener('fetch', event => {
-  if (event.request.mode === 'navigate') {
-    console.log('🔧 DEBUG: Fetching page:', event.request.url);
+  const url = new URL(event.request.url);
+  
+  // Only handle same-origin navigation requests
+  if (url.origin === location.origin && event.request.mode === 'navigate') {
+    console.log('🔄 Handling navigation to:', url.pathname);
     
     event.respondWith(
       caches.match(event.request)
-        .then(cached => {
-          if (cached) {
-            console.log('✅ DEBUG: Serving from cache');
-            return cached;
+        .then(cachedResponse => {
+          // Return cached version if available
+          if (cachedResponse) {
+            console.log('✅ Serving from cache:', url.pathname);
+            return cachedResponse;
           }
-          console.log('🌐 DEBUG: Fetching from network');
-          return fetch(event.request);
-        })
-        .catch(() => {
-          console.log('❌ DEBUG: Offline - no cache');
-          return new Response('Offline - no cached version');
+          
+          // Otherwise fetch from network
+          console.log('🌐 Fetching from network:', url.pathname);
+          return fetch(event.request)
+            .then(networkResponse => {
+              // Cache the successful response
+              if (networkResponse.ok) {
+                const responseToCache = networkResponse.clone();
+                caches.open(CACHE_NAME)
+                  .then(cache => cache.put(event.request, responseToCache));
+              }
+              return networkResponse;
+            })
+            .catch(error => {
+              console.log('❌ Network failed, showing offline page');
+              return caches.match('/offline.html');
+            });
         })
     );
   }
 });
 
 self.addEventListener('activate', event => {
-  console.log('🔧 DEBUG: Service Worker activated!');
+  console.log('🔥 SW ACTIVATE: Ready for action!');
   event.waitUntil(self.clients.claim());
 });
