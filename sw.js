@@ -9,6 +9,7 @@ const urlsToCache = [
   '/offline.html',
   '/manifest.json',
   '/sw.js',
+  '/notifications.html',
   
   // Assets (add these if they exist)
   // '/css/styles.css',
