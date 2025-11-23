@@ -11,7 +11,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <!-- Add this at the end of <head> section -->
     <script src="auth-check.js"></script>
     <style>
         :root {
@@ -76,6 +75,67 @@
         html {
             touch-action: none;
         }
+
+        /* Enhanced UI Elements */
+        .connection-status {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+        .connection-status.online {
+            background: var(--success);
+            color: white;
+        }
+        .connection-status.offline {
+            background: var(--error);
+            color: white;
+        }
+        .connection-status.syncing {
+            background: var(--warning);
+            color: white;
+        }
+
+        .data-backup-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+            z-index: 998;
+        }
+
+        .persistence-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+            z-index: 998;
+        }
+
         .header {
             position: fixed;
             top: 0;
@@ -934,6 +994,17 @@
                 padding: 1.5rem;
                 width: 95%;
             }
+            .connection-status {
+                top: 60px;
+                right: 10px;
+                font-size: 0.7rem;
+            }
+            .data-backup-indicator,
+            .persistence-indicator {
+                bottom: 10px;
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
+            }
         }
         @media (max-width: 480px) {
             .profile-pic {
@@ -961,6 +1032,22 @@
     </style>
 </head>
 <body class="dark-mode">
+    <!-- Enhanced UI Elements -->
+    <div id="connectionStatus" class="connection-status online" style="display: none;">
+        <i class="fas fa-wifi"></i>
+        <span>Connected</span>
+    </div>
+
+    <div id="dataBackupIndicator" class="data-backup-indicator" style="display: none;">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <span>Backing up data...</span>
+    </div>
+
+    <div id="persistenceIndicator" class="persistence-indicator" style="display: none;">
+        <i class="fas fa-shield-alt"></i>
+        <span>Profile Protected</span>
+    </div>
+
     <!-- Header -->
     <header class="header">
         <div class="header-container">
@@ -1188,109 +1275,458 @@
             <div id="logoutError" class="error"></div>
         </div>
     </div>
+
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
-  // Check if running inside Telegram
-  const tg = window.Telegram?.WebApp;
-
-  // --- 1️⃣ Handle Telegram Mini App Back Button ---
-  if (tg) {
-    tg.ready(); // Initialize Telegram SDK
-    tg.BackButton.show();
-
-    tg.BackButton.onClick(() => {
-      console.log("Telegram back button pressed");
-      handleBackAction();
-    });
-  }
-
-  // --- 2️⃣ Handle Browser/Phone Back Button ---
-  window.addEventListener('popstate', () => {
-    console.log("Browser back button pressed");
-    handleBackAction();
-  });
-
-  // --- 3️⃣ Function to handle back action globally ---
-  function handleBackAction() {
-    // Example actions (customize as you wish):
-    // Go back if possible, otherwise go to home page
-    if (document.referrer && window.history.length > 1) {
-      window.history.back();
-    } else {
-      window.location.href = '/'; // or your home page route
-    }
-  }
-
-  // --- 4️⃣ Optional: Prevent unwanted exits ---
-  // This ensures pressing back doesn’t immediately close the app
-  history.pushState(null, '', location.href);
-</script>
     <script>
-        // DOM Elements
-        const themeToggle = document.getElementById('themeToggle');
-        const dashboardBtn = document.getElementById('dashboardBtn');
-        const adminBtn = document.getElementById('adminBtn');
-        const logout = document.getElementById('logout');
-        const profilePicInput = document.getElementById('profilePicInput');
-        const profilePic = document.getElementById('profilePic');
-        const profileName = document.getElementById('profileName');
-        const profilePhone = document.getElementById('profilePhone');
-        const profileEmail = document.getElementById('profileEmail');
-        const profileTelegram = document.getElementById('profileTelegram');
-        const profileLocation = document.getElementById('profileLocation');
-        const profileStatus = document.getElementById('profileStatus');
-        const profilePlan = document.getElementById('profilePlan');
-        const profileYears = document.getElementById('profileYears');
-        const addYearBtn = document.getElementById('addYearBtn');
-        const quizCount = document.getElementById('quizCount');
-        const scoreAverage = document.getElementById('scoreAverage');
-        const studyTime = document.getElementById('studyTime');
-        const profileTrialStatus = document.getElementById('profileTrialStatus');
-        const trialTimeRemaining = document.getElementById('trialTimeRemaining');
-        const sendCommentBtn = document.getElementById('sendCommentBtn');
-        const commentBox = document.getElementById('commentBox');
-        const commentError = document.getElementById('commentError');
-        const profileLogoutBtn = document.getElementById('profileLogoutBtn');
-        const backToMainBtn = document.getElementById('backToMainBtn');
-        const addModal = document.getElementById('addModal');
-        const addForm = document.getElementById('addForm');
-        const addError = document.getElementById('addError');
-        const addReceiptInput = document.getElementById('addReceipt');
-        const addReceiptPreview = document.getElementById('addReceiptPreview');
-        const addUploadText = document.getElementById('addUploadText');
-        const addSubmitBtn = document.getElementById('addSubmitBtn');
-        const logoutModal = document.getElementById('logoutModal');
-        const logoutError = document.getElementById('logoutError');
-        const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
-
-        // Firebase User Manager
-        class FirebaseUserManager {
+        // Enhanced Profile Manager
+        class EnhancedProfileManager {
             constructor() {
-                this.usersCollection = db.collection('users');
+                this.isInitialized = false;
+                this.connectionStatus = document.getElementById('connectionStatus');
+                this.dataBackupIndicator = document.getElementById('dataBackupIndicator');
+                this.persistenceIndicator = document.getElementById('persistenceIndicator');
+                this.backupInterval = null;
+                this.healthCheckInterval = null;
+                this.trialTimerInterval = null;
+                this.currentUser = null;
             }
 
-            // Check if trial has expired
+            async init() {
+                if (this.isInitialized) return;
+
+                console.log('Initializing Enhanced Profile Manager...');
+                
+                // Initialize connection monitoring
+                this.initConnectionMonitoring();
+                
+                // Initialize data persistence
+                await this.initDataPersistence();
+                
+                // Initialize health checks
+                this.initHealthChecks();
+                
+                // Setup enhanced event listeners
+                this.setupEnhancedEventListeners();
+                
+                // Load user data
+                await this.loadUserData();
+                
+                this.isInitialized = true;
+                console.log('Enhanced Profile Manager initialized');
+            }
+
+            // Connection Monitoring
+            initConnectionMonitoring() {
+                window.addEventListener('online', () => {
+                    this.handleConnectionRestored();
+                });
+
+                window.addEventListener('offline', () => {
+                    this.handleConnectionLost();
+                });
+
+                this.updateConnectionStatus(navigator.onLine);
+            }
+
+            updateConnectionStatus(isOnline) {
+                if (isOnline) {
+                    this.connectionStatus.className = 'connection-status online';
+                    this.connectionStatus.innerHTML = '<i class="fas fa-wifi"></i><span>Connected</span>';
+                    this.connectionStatus.style.display = 'flex';
+                    
+                    setTimeout(() => {
+                        this.connectionStatus.style.display = 'none';
+                    }, 3000);
+                } else {
+                    this.connectionStatus.className = 'connection-status offline';
+                    this.connectionStatus.innerHTML = '<i class="fas fa-wifi-slash"></i><span>Offline - Working locally</span>';
+                    this.connectionStatus.style.display = 'flex';
+                }
+            }
+
+            handleConnectionLost() {
+                console.log('Connection lost - profile data saved locally');
+                this.updateConnectionStatus(false);
+                this.showOfflineMessage();
+            }
+
+            handleConnectionRestored() {
+                console.log('Connection restored - syncing profile data');
+                this.updateConnectionStatus(true);
+                
+                this.connectionStatus.className = 'connection-status syncing';
+                this.connectionStatus.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i><span>Syncing profile...</span>';
+                this.connectionStatus.style.display = 'flex';
+                
+                // Sync user data
+                this.syncUserData();
+                
+                setTimeout(() => {
+                    this.connectionStatus.style.display = 'none';
+                }, 2000);
+            }
+
+            // Data Persistence
+            async initDataPersistence() {
+                this.persistenceIndicator.style.display = 'flex';
+                await this.backupProfileData();
+            }
+
+            async backupProfileData() {
+                try {
+                    const profileData = {
+                        profilePic: localStorage.getItem('profilePic'),
+                        userStats: {
+                            quizCount: localStorage.getItem('quizCount') || '0',
+                            scoreAverage: localStorage.getItem('scoreAverage') || '0%',
+                            studyTime: localStorage.getItem('studyTime') || '0h'
+                        },
+                        backupTimestamp: Date.now()
+                    };
+                    
+                    localStorage.setItem('profileBackup', JSON.stringify(profileData));
+                    sessionStorage.setItem('profileBackup', JSON.stringify(profileData));
+                    
+                    console.log('Profile data backed up');
+                } catch (error) {
+                    console.error('Error backing up profile data:', error);
+                }
+            }
+
+            async restoreProfileData() {
+                try {
+                    const savedData = localStorage.getItem('profileBackup');
+                    if (savedData) {
+                        const profileData = JSON.parse(savedData);
+                        
+                        // Restore profile picture
+                        if (profileData.profilePic) {
+                            document.getElementById('profilePic').src = profileData.profilePic;
+                        }
+                        
+                        // Restore stats
+                        if (profileData.userStats) {
+                            document.getElementById('quizCount').textContent = profileData.userStats.quizCount;
+                            document.getElementById('scoreAverage').textContent = profileData.userStats.scoreAverage;
+                            document.getElementById('studyTime').textContent = profileData.userStats.studyTime;
+                        }
+                        
+                        console.log('Profile data restored from backup');
+                    }
+                } catch (error) {
+                    console.error('Error restoring profile data:', error);
+                }
+            }
+
+            // Health Checks
+            initHealthChecks() {
+                // Check system health every 3 minutes
+                this.healthCheckInterval = setInterval(() => {
+                    this.performHealthCheck();
+                }, 3 * 60 * 1000);
+            }
+
+            async performHealthCheck() {
+                try {
+                    // Check localStorage integrity
+                    const currentUser = localStorage.getItem('currentUser');
+                    if (currentUser) {
+                        JSON.parse(currentUser); // This will throw if corrupted
+                    }
+                    
+                    // Check connection to Firebase
+                    await this.checkFirebaseConnection();
+                    
+                    // Check user session validity
+                    await this.checkSessionValidity();
+                    
+                    console.log('Profile health check passed');
+                } catch (error) {
+                    console.error('Profile health check failed:', error);
+                    this.handleHealthCheckFailure(error);
+                }
+            }
+
+            async checkFirebaseConnection() {
+                return new Promise((resolve, reject) => {
+                    const timeout = setTimeout(() => {
+                        reject(new Error('Firebase connection timeout'));
+                    }, 5000);
+
+                    db.collection('health').doc('check').get()
+                        .then(() => {
+                            clearTimeout(timeout);
+                            resolve(true);
+                        })
+                        .catch(reject);
+                });
+            }
+
+            async checkSessionValidity() {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                if (!currentUser.id) return;
+
+                try {
+                    const userDoc = await db.collection('users').doc(currentUser.id).get();
+                    if (!userDoc.exists) {
+                        throw new Error('User session invalid');
+                    }
+                } catch (error) {
+                    throw new Error('Session validation failed');
+                }
+            }
+
+            handleHealthCheckFailure(error) {
+                console.warn('Profile health check failure:', error.message);
+                this.showRecoveryMessage();
+            }
+
+            // Enhanced Event Listeners
+            setupEnhancedEventListeners() {
+                // Auto-save profile picture changes
+                document.getElementById('profilePicInput').addEventListener('change', () => {
+                    this.backupProfileData();
+                });
+
+                // Handle page visibility changes
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) {
+                        this.backupProfileData();
+                    } else {
+                        this.syncUserData();
+                    }
+                });
+
+                // Listen for auth check events
+                document.addEventListener('userUpdated', (e) => {
+                    this.handleUserUpdate(e.detail);
+                });
+
+                document.addEventListener('trialExpired', () => {
+                    this.handleTrialExpired();
+                });
+            }
+
+            // User Data Management
+            async loadUserData() {
+                this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                
+                if (!this.currentUser.id) {
+                    window.location.href = 'register.html';
+                    return;
+                }
+
+                // Try to restore from backup first
+                await this.restoreProfileData();
+                
+                // Then load fresh data
+                await this.syncUserData();
+                
+                // Start trial timer if applicable
+                this.startTrialTimer();
+            }
+
+            async syncUserData() {
+                try {
+                    const userDoc = await db.collection('users').doc(this.currentUser.id).get();
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        this.currentUser = { ...userData, id: userDoc.id };
+                        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                        
+                        this.updateProfileUI();
+                        this.backupProfileData();
+                    }
+                } catch (error) {
+                    console.error('Error syncing user data:', error);
+                    // Use cached data if sync fails
+                    this.updateProfileUI();
+                }
+            }
+
+            updateProfileUI() {
+                const user = this.currentUser;
+                
+                // Update basic info
+                document.getElementById('profileName').textContent = user.name || 'N/A';
+                document.getElementById('profilePhone').textContent = user.phone || 'N/A';
+                document.getElementById('profileEmail').textContent = user.email || 'N/A';
+                document.getElementById('profileTelegram').textContent = user.telegram || 'N/A';
+                
+                // Status badge
+                document.getElementById('profileStatus').innerHTML = 
+                    `<span class="status-badge status-${user.status}">${user.status.toUpperCase()}</span>`;
+                
+                // Plan badge
+                document.getElementById('profilePlan').innerHTML = 
+                    `<span class="plan-badge plan-${user.plan}">${user.plan.toUpperCase()}</span>`;
+                
+                // Programs
+                const yearNames = {
+                    '1': '<span class="futuristic-program"><i class="fas fa-flask"></i> <strong>PRE MED</strong></span>',
+                    '2': '<span class="futuristic-program"><i class="fas fa-user-md"></i> <strong>INTRO MED</strong></span>', 
+                    '3': '<span class="futuristic-program"><i class="fas fa-fire"></i> <strong>META</strong></span>',
+                    '4': '<span class="futuristic-program"><i class="fas fa-droplet"></i> <strong>HEMA</strong></span>',
+                    '5': '<span class="futuristic-program"><i class="fas fa-heart-pulse"></i> <strong>CVS</strong></span>',
+                    '6': '<span class="futuristic-program"><i class="fas fa-wind"></i> <strong>RESPA</strong></span>',
+                    '7': '<span class="futuristic-program"><i class="fas fa-running"></i> <strong>MUSCLO</strong></span>'
+                };
+
+                const programNames = (user.registeredYears || []).map(year => 
+                    yearNames[year] || `<span class="futuristic-program"><strong>Year ${year}</strong></span>`
+                );
+                
+                document.getElementById('profileYears').innerHTML = 
+                    programNames.join('') || '<span style="color: var(--text-tertiary);">No programs registered</span>';
+                
+                // Trial status
+                this.updateTrialStatus();
+                
+                // Admin button
+                if (user.role === 'admin') {
+                    document.getElementById('adminBtn').style.display = 'inline-flex';
+                }
+            }
+
+            updateTrialStatus() {
+                const user = this.currentUser;
+                const trialStatus = document.getElementById('profileTrialStatus');
+                
+                if (user.plan === 'trial' && user.trialEndDate && !this.isTrialExpired(user.trialEndDate)) {
+                    trialStatus.style.display = 'flex';
+                    const remainingTime = this.getTrialRemainingTime(user.trialEndDate);
+                    document.getElementById('trialTimeRemaining').textContent = this.formatTrialTime(remainingTime);
+                } else {
+                    trialStatus.style.display = 'none';
+                }
+            }
+
+            startTrialTimer() {
+                const user = this.currentUser;
+                if (user.plan === 'trial' && user.trialEndDate) {
+                    // Clear any existing interval
+                    if (this.trialTimerInterval) {
+                        clearInterval(this.trialTimerInterval);
+                    }
+                    
+                    // Update timer immediately
+                    this.updateTrialTimer();
+                    
+                    // Update timer every second
+                    this.trialTimerInterval = setInterval(() => {
+                        this.updateTrialTimer();
+                    }, 1000);
+                }
+            }
+
+            updateTrialTimer() {
+                const user = this.currentUser;
+                if (user.trialEndDate) {
+                    const remainingTime = this.getTrialRemainingTime(user.trialEndDate);
+                    
+                    if (remainingTime <= 0) {
+                        clearInterval(this.trialTimerInterval);
+                        this.handleTrialExpired();
+                    } else {
+                        document.getElementById('trialTimeRemaining').textContent = this.formatTrialTime(remainingTime);
+                    }
+                }
+            }
+
             isTrialExpired(trialEndDate) {
                 return new Date().getTime() > trialEndDate;
             }
 
-            // Get remaining trial time in milliseconds
             getTrialRemainingTime(trialEndDate) {
                 return Math.max(0, trialEndDate - new Date().getTime());
             }
 
-            // Format trial time for display
             formatTrialTime(ms) {
                 const days = Math.floor(ms / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((ms % (1000 * 60)) / 1000);
                 
                 if (days > 0) {
                     return `${days}d ${hours}h ${minutes}m`;
                 } else {
-                    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
                 }
+            }
+
+            handleUserUpdate(user) {
+                console.log('User data updated in profile:', user.name);
+                this.currentUser = user;
+                this.updateProfileUI();
+            }
+
+            handleTrialExpired() {
+                console.log('Trial expired - updating profile UI');
+                document.getElementById('profileTrialStatus').style.display = 'none';
+                // Additional trial expired handling can be added here
+            }
+
+            showOfflineMessage() {
+                console.log('Profile in offline mode - using cached data');
+            }
+
+            showRecoveryMessage() {
+                const message = document.createElement('div');
+                message.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: var(--surface);
+                    border: 2px solid var(--warning);
+                    border-radius: var(--radius);
+                    padding: 2rem;
+                    text-align: center;
+                    z-index: 10000;
+                    box-shadow: var(--shadow);
+                    max-width: 300px;
+                `;
+                message.innerHTML = `
+                    <h3 style="color: var(--warning); margin-bottom: 1rem;">
+                        <i class="fas fa-exclamation-triangle"></i> Profile Sync Issue
+                    </h3>
+                    <p style="margin-bottom: 1rem;">There was an issue syncing your profile data.</p>
+                    <button onclick="location.reload()" style="
+                        background: var(--primary);
+                        color: white;
+                        border: none;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: var(--radius);
+                        cursor: pointer;
+                        font-weight: 600;
+                    ">
+                        Refresh Profile
+                    </button>
+                `;
+                document.body.appendChild(message);
+            }
+
+            // Cleanup
+            destroy() {
+                if (this.backupInterval) {
+                    clearInterval(this.backupInterval);
+                }
+                if (this.healthCheckInterval) {
+                    clearInterval(this.healthCheckInterval);
+                }
+                if (this.trialTimerInterval) {
+                    clearInterval(this.trialTimerInterval);
+                }
+                this.isInitialized = false;
+            }
+        }
+
+        // Initialize enhanced profile manager
+        const profileManager = new EnhancedProfileManager();
+
+        // Your existing Firebase User Manager
+        class FirebaseUserManager {
+            constructor() {
+                this.usersCollection = db.collection('users');
             }
 
             // Add year to user
@@ -1327,70 +1763,53 @@
 
         const firebaseUserManager = new FirebaseUserManager();
 
+        // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const dashboardBtn = document.getElementById('dashboardBtn');
+        const adminBtn = document.getElementById('adminBtn');
+        const logout = document.getElementById('logout');
+        const profilePicInput = document.getElementById('profilePicInput');
+        const profilePic = document.getElementById('profilePic');
+        const addYearBtn = document.getElementById('addYearBtn');
+        const sendCommentBtn = document.getElementById('sendCommentBtn');
+        const commentBox = document.getElementById('commentBox');
+        const commentError = document.getElementById('commentError');
+        const profileLogoutBtn = document.getElementById('profileLogoutBtn');
+        const backToMainBtn = document.getElementById('backToMainBtn');
+        const addModal = document.getElementById('addModal');
+        const addForm = document.getElementById('addForm');
+        const addError = document.getElementById('addError');
+        const addReceiptInput = document.getElementById('addReceipt');
+        const addReceiptPreview = document.getElementById('addReceiptPreview');
+        const addUploadText = document.getElementById('addUploadText');
+        const addSubmitBtn = document.getElementById('addSubmitBtn');
+        const logoutModal = document.getElementById('logoutModal');
+        const logoutError = document.getElementById('logoutError');
+        const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+
         // Theme toggle
         function toggleTheme() {
             if (document.body.classList.contains('dark-mode')) {
                 document.body.classList.remove('dark-mode');
                 document.body.classList.add('light-mode');
                 themeToggle.querySelector('i').className = 'fas fa-moon';
+                localStorage.setItem('themePreference', 'light');
             } else {
                 document.body.classList.remove('light-mode');
                 document.body.classList.add('dark-mode');
                 themeToggle.querySelector('i').className = 'fas fa-sun';
+                localStorage.setItem('themePreference', 'dark');
             }
         }
         themeToggle.addEventListener('click', toggleTheme);
 
-        // Load profile data
-        function loadProfile() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if (currentUser) {
-                profileName.textContent = currentUser.name || 'N/A';
-                profilePhone.textContent = currentUser.phone || 'N/A';
-                profileEmail.textContent = currentUser.email || 'N/A';
-                profileTelegram.textContent = currentUser.telegram || 'N/A';
-                profileLocation.textContent = currentUser.location || 'N/A';
-                
-                // Status badge
-                profileStatus.innerHTML = `<span class="status-badge status-${currentUser.status}">${currentUser.status.toUpperCase()}</span>`;
-                
-                // Plan badge
-                profilePlan.innerHTML = `<span class="plan-badge plan-${currentUser.plan}">${currentUser.plan.toUpperCase()}</span>`;
-                
-                // Programs
-                const yearNames = {
-                    '1': '<span class="futuristic-program"><i class="fas fa-flask"></i> <strong>PRE MED</strong></span>',
-                    '2': '<span class="futuristic-program"><i class="fas fa-user-md"></i> <strong>INTRO MED</strong></span>', 
-                    '3': '<span class="futuristic-program"><i class="fas fa-fire"></i> <strong>META</strong></span>',
-                    '4': '<span class="futuristic-program"><i class="fas fa-droplet"></i> <strong>HEMA</strong></span>',
-                    '5': '<span class="futuristic-program"><i class="fas fa-heart-pulse"></i> <strong>CVS</strong></span>',
-                    '6': '<span class="futuristic-program"><i class="fas fa-wind"></i> <strong>RESPA</strong></span>',
-                    '7': '<span class="futuristic-program"><i class="fas fa-running"></i> <strong>MUSCLO</strong></span>'
-                };
-
-                const programNames = currentUser.registeredYears.map(year => yearNames[year] || `<span class="futuristic-program"><strong>Year ${year}</strong></span>`);
-                profileYears.innerHTML = programNames.join('') || '<span style="color: var(--text-tertiary);">No programs registered</span>';
-                
-                // Trial status
-                if (currentUser.plan === 'trial' && !firebaseUserManager.isTrialExpired(currentUser.trialEndDate)) {
-                    profileTrialStatus.style.display = 'flex';
-                    const remainingTime = firebaseUserManager.getTrialRemainingTime(currentUser.trialEndDate);
-                    trialTimeRemaining.textContent = firebaseUserManager.formatTrialTime(remainingTime);
-                }
-                
-                // Check role for admin
-                if (currentUser.role === 'admin') {
-                    adminBtn.style.display = 'inline-flex';
-                    adminBtn.addEventListener('click', () => {
-                        window.location.href = 'admin/index.html';
-                    });
-                }
-            }
-            
-            // Load profile picture from localStorage
-            const profilePicSrc = localStorage.getItem('profilePic');
-            if (profilePicSrc) {
-                profilePic.src = profilePicSrc;
+        // Load saved theme preference
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('themePreference');
+            if (savedTheme === 'light') {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+                themeToggle.querySelector('i').className = 'fas fa-moon';
             }
         }
 
@@ -1402,6 +1821,7 @@
                 reader.onload = e => {
                     localStorage.setItem('profilePic', e.target.result);
                     profilePic.src = e.target.result;
+                    profileManager.backupProfileData();
                 };
                 reader.readAsDataURL(file);
             }
@@ -1586,6 +2006,10 @@
             window.location.href = 'dashboard.html';
         });
 
+        adminBtn.addEventListener('click', () => {
+            window.location.href = 'admin/index.html';
+        });
+
         // Logout handler
         const logoutHandler = async (e) => {
             e.preventDefault();
@@ -1636,6 +2060,9 @@
                     }
                 }
 
+                // Clean up profile manager
+                profileManager.destroy();
+                
                 // Clear localStorage
                 localStorage.clear();
                 
@@ -1647,11 +2074,10 @@
         });
 
         // Initialize profile
-        function initProfile() {
+        async function initProfile() {
             const currentUser = localStorage.getItem('currentUser');
             
             if (!currentUser) {
-                // Redirect to registration if not logged in
                 window.location.href = 'register.html';
                 return;
             }
@@ -1659,23 +2085,51 @@
             try {
                 const user = JSON.parse(currentUser);
                 
-                // Check if user is verified
                 if (user.status !== 'verified') {
                     alert('Your account is not verified. Please complete verification.');
                     window.location.href = 'register.html';
                     return;
                 }
                 
-                loadProfile();
+                // Load theme preference
+                loadThemePreference();
+                
+                // Initialize enhanced profile manager
+                await profileManager.init();
+                
             } catch (error) {
                 console.error('Error initializing profile:', error);
-                // Redirect to registration on error
                 window.location.href = 'register.html';
             }
         }
 
         // Initialize the profile when page loads
         document.addEventListener('DOMContentLoaded', initProfile);
+
+        // Handle Telegram Mini App Back Button
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.BackButton.show();
+            tg.BackButton.onClick(() => {
+                console.log("Telegram back button pressed");
+                handleBackAction();
+            });
+        }
+
+        // Handle Browser/Phone Back Button
+        window.addEventListener('popstate', () => {
+            console.log("Browser back button pressed");
+            handleBackAction();
+        });
+
+        // Function to handle back action globally
+        function handleBackAction() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // Prevent unwanted exits
+        history.pushState(null, '', location.href);
     </script>
 </body>
 </html>
