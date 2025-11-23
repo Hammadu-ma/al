@@ -1,112 +1,70 @@
-const CACHE_NAME = 'your-app-v1.0.0';
+const CACHE_NAME = 'debug-cache-v1';
+
+// Start with ONLY 2 files to test
 const urlsToCache = [
   '/',
-  '/index.html',
-  '/register.html',
-  '/profile.html',
-  '/dashboard.html',
-  
-  // Year 1 main pages
-  '/yr1/ps.html',
-  '/yr1/pc.html',
-  '/yr1/micro.html',
-  
-  // PS subfolder - ADD ALL YOUR ACTUAL FILES
-  '/yr1/ps/pse2017.html',
-  '/yr1/ps/pse2018.html',
-  '/yr1/ps/pse2019.html',
-  // Add all other PS files...
-  
-  // PC subfolder
-  '/yr1/pc/pce2017.html',
-  '/yr1/pc/pce2018.html', 
-  '/yr1/pc/pce2019.html',
-  // Add all other PC files...
-  
-  // Micro subfolder
-  '/yr1/micro/microe2017.html',
-  '/yr1/micro/microe2018.html',
-  '/yr1/micro/microe2019.html',
-  // Add all other Micro files...
-  
-  // CSS, JS, and other assets - UPDATE WITH YOUR ACTUAL PATHS
-  '/auth-check.js', 
-  '/logo.png',
-  
-  // Offline page
   '/offline.html'
 ];
 
-// Install event - cache all resources
 self.addEventListener('install', event => {
+  console.log('🔧 DEBUG: Starting installation...');
+  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
-      .then(() => self.skipWaiting())
-  );
-});
-
-// Fetch event - serve from cache, fallback to network
-self.addEventListener('fetch', event => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') return;
-
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Return cached version
-        if (response) {
-          return response;
-        }
-
-        // Fetch from network
-        return fetch(event.request)
-          .then(response => {
-            // Check if we received a valid response
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            // Clone the response
-            const responseToCache = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
-          })
-          .catch(() => {
-            // If navigation request and offline, show offline page
-            if (event.request.mode === 'navigate') {
-              return caches.match('/offline.html');
-            }
-            // For other requests (images, css, etc.), return nothing
-            return new Response('Offline', { 
-              status: 408, 
-              statusText: 'Offline' 
+        console.log('🔧 DEBUG: Cache opened successfully');
+        
+        // Cache files one by one to see which fail
+        const cachePromises = urlsToCache.map(url => {
+          return fetch(url)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP ${response.status} for ${url}`);
+              }
+              console.log(`✅ DEBUG: Successfully fetched ${url}`);
+              return cache.put(url, response);
+            })
+            .catch(error => {
+              console.log(`❌ DEBUG: Failed to cache ${url}:`, error.message);
+              return Promise.resolve(); // Continue despite errors
             });
-          });
+        });
+        
+        return Promise.all(cachePromises);
+      })
+      .then(() => {
+        console.log('🔧 DEBUG: Installation completed');
+        return self.skipWaiting();
+      })
+      .catch(error => {
+        console.log('🔧 DEBUG: Installation failed completely:', error);
       })
   );
 });
 
-// Activate event - clean up old caches
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
+self.addEventListener('fetch', event => {
+  if (event.request.mode === 'navigate') {
+    console.log('🔧 DEBUG: Fetching page:', event.request.url);
+    
+    event.respondWith(
+      caches.match(event.request)
+        .then(cached => {
+          if (cached) {
+            console.log('✅ DEBUG: Serving from cache');
+            return cached;
           }
+          console.log('🌐 DEBUG: Fetching from network');
+          return fetch(event.request);
         })
-      );
-    }).then(() => self.clients.claim())
-  );
+        .catch(() => {
+          console.log('❌ DEBUG: Offline - no cache');
+          return new Response('Offline - no cached version');
+        })
+    );
+  }
+});
+
+self.addEventListener('activate', event => {
+  console.log('🔧 DEBUG: Service Worker activated!');
+  event.waitUntil(self.clients.claim());
 });
