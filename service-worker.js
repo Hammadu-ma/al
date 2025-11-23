@@ -4,11 +4,10 @@ self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll([
-        "/",
-        "/index.html",
+        "/dashboard.html",
         "/register.html",
         "/profile.html",
-        "/dashboard.html",
+        "/index.html",
 
         "/yr1/ps.html",
         "/yr1/pc.html",
@@ -35,7 +34,7 @@ self.addEventListener("fetch", event => {
       return (
         response ||
         fetch(event.request).catch(() =>
-          caches.match("/index.html")
+          caches.match("/dashboard.html")
         )
       );
     })
