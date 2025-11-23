@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>alif</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/protect.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #dbeafe;
+            --secondary: #6b7280;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --border: #e5e7eb;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --transition: all 0.2s ease;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: blur(16px);
+            --font-size-base: 14px;
+            --padding-base: 0.75rem;
+            --card-width: 280px;
+            --highlight-bg: #fefcbf;
+            --highlight-border: #facc15;
+            --highlight-color: #111827;
+        }
+
+        .dark-mode {
+            --primary: #60a5fa;
+            --primary-dark: #3b82f6;
+            --primary-light: #1e293b;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --border: #334155;
+            --glass: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(51, 65, 85, 0.2);
+            --highlight-bg: #4b5563;
+            --highlight-border: #6b7280;
+            --highlight-color: #f9fafb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.4;
+            font-size: var(--font-size-base);
+            transition: var(--transition);
+            min-height: 100vh;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--glass);
+            backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i { font-size: 1.2rem; }
+
+        .nav-actions { display: flex; gap: 0.5rem; }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            min-width: 40px;
+            min-height: 40px;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .action-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .action-btn.primary:hover { background: var(--primary-dark); }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 1rem 1rem;
+            position: relative;
+        }
+
+        .page-header {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: var(--glass);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 0.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            min-height: 40px;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .page-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Progress Bar Styles */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            z-index: 1001;
+            border-radius: var(--radius) var(--radius) 0 0;
+            display: none;
+        }
+
+        .dark-mode .progress-container {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius);
+            transition: width 1s ease;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 1.5s infinite;
+            border-radius: var(--radius);
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Fade out animation */
+        .progress-fade-out {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .filters-section { margin-bottom: 1rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .filters-section::-webkit-scrollbar { display: none; }
+
+        .filters-container { display: flex; gap: 0.75rem; white-space: nowrap; padding-bottom: 0.5rem; }
+
+        .filter-group { min-width: 140px; }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .filter-select, .filter-input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .filter-select { cursor: pointer; }
+        .filter-input { cursor: text; }
+
+        .filter-select:focus, .filter-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .question-sets-section { margin-bottom: 1.5rem; }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .sets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(var(--card-width), 1fr));
+            gap: 0.75rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .set-card {
+            background: var(--glass);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: var(--padding-base);
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-decoration: none;
+            color: inherit;
+            width: 100%;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            :root { --card-width: 220px; }
+            .sets-grid { grid-template-columns: repeat(auto-fit, minmax(var(--card-width), 1fr)); }
+        }
+
+        @media (max-width: 480px) {
+            :root { --card-width: 160px; --font-size-base: 12px; }
+            .sets-grid { grid-template-columns: 1fr; }
+        }
+
+        .set-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .set-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+
+        .set-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .set-type {
+            padding: 0.2rem 0.5rem;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: var(--radius);
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .set-description {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .set-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+        }
+
+        .meta-item { display: flex; flex-direction: column; align-items: center; }
+
+        .meta-value { font-weight: 600; color: var(--primary); }
+        .meta-label { font-size: 0.7rem; color: var(--text-secondary); }
+
+        .featured-set { background: linear-gradient(135deg, var(--glass), var(--primary-light)); }
+        .featured-set .set-title, .featured-set .set-description, .featured-set .meta-value { color: var(--text-primary); }
+
+        .featured-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: var(--radius);
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        /* Enhanced Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, var(--border) 25%, var(--surface) 50%, var(--border) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 6px;
+        }
+
+        .skeleton-title { width: 70%; height: 1rem; border-radius: 4px; }
+        .skeleton-type { width: 50px; height: 0.8rem; border-radius: 4px; }
+        .skeleton-description-line { width: 100%; height: 0.8rem; margin-bottom: 0.25rem; border-radius: 4px; }
+        .skeleton-description-line.short { width: 80%; }
+        .skeleton-meta-value { width: 30px; height: 0.9rem; border-radius: 4px; }
+        .skeleton-meta-label { width: 25px; height: 0.7rem; margin-top: 0.25rem; border-radius: 4px; }
+
+        .no-results {
+            text-align: center;
+            padding: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .no-results i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .highlight {
+            background-color: var(--highlight-bg);
+            color: var(--highlight-color);
+            padding: 0.15rem 0.3rem;
+            border: 1px solid var(--highlight-border);
+            border-radius: 4px;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .highlight:hover {
+            background-color: var(--highlight-border);
+            transform: scale(1.05);
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div id="particles-js"></div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container" id="progressContainer">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-stethoscope"></i>
+                <span>alif</span>
+            </a>
+            <div class="nav-actions">
+                <button class="action-btn" id="themeToggle">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <a href="#" class="action-btn">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="/" class="action-btn primary">
+                    <i class="fas fa-home"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <a href="/" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div>
+                <h1 class="page-title">Pharma Question Sets</h1>
+                <p class="page-subtitle">Browse available question sets for practice and exams</p>
+            </div>
+        </div>
+
+        <section class="filters-section">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label class="filter-label" for="search">Search</label>
+                    <input type="text" class="filter-input" id="search" placeholder="Search by title, description...">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label" for="setType">Type</label>
+                    <select class="filter-select" id="setType">
+                        <option value="all">All</option>
+                        <option value="exam">Exams</option>
+                        <option value="quiz">Quizzes</option>
+                        <option value="worksheet">Worksheets</option>
+                        <option value="practice">Practice</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label" for="year">Year</label>
+                    <select class="filter-select" id="year">
+                        <option value="all">All</option>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                        <option value="2014">2014</option>
+                        <option value="2013">2013</option>
+                        <option value="2012">2012</option>
+                        <option value="2011">2011</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label" for="difficulty">Difficulty</label>
+                    <select class="filter-select" id="difficulty">
+                        <option value="all">All</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="question-sets-section">
+            <h2 class="section-title">Available Sets</h2>
+            <div class="sets-grid" id="setsGrid"></div>
+        </section>
+    </main>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Telegram & Back Button Handling
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.BackButton.show();
+            tg.BackButton.onClick(() => handleBackAction());
+        }
+
+        window.addEventListener('popstate', () => handleBackAction());
+        function handleBackAction() {
+            if (document.referrer && window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = '/';
+            }
+        }
+        history.pushState(null, '', location.href);
+
+        // Security
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Particles
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 30, density: { enable: true, value_area: 800 } },
+                color: { value: "#3b82f6" },
+                shape: { type: "circle" },
+                opacity: { value: 0.2, random: true },
+                size: { value: 2, random: true },
+                line_linked: { enable: false },
+                move: { enable: true, speed: 1, random: true }
+            },
+            interactivity: { detect_on: "canvas", events: { onhover: { enable: false }, onclick: { enable: false } } },
+            retina_detect: true
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const icon = themeToggle.querySelector('i');
+            icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        // Sample Data
+        const questionSets = [
+            { id: 1, year: "1", title: "pharma Exam 2014", type: "exam", examYear: "2014", difficulty: "advanced", description: "2014 Final Exam", questions: 40, rating: 4.9, featured: true, page: "pc/pce.2014 .html" },
+            { id: 2, year: "1", title: "pharma Exam 2015", type: "exam", examYear: "2015", difficulty: "advanced", description: "2015 Final Exam", questions: 60, rating: 4.9, featured: true, page: "pc/pce.2015 .html" },
+            { id: 3, year: "1", title: "pharma Exam 2016", type: "exam", examYear: "2016", difficulty: "advanced", description: "2016 Final Exam", questions: 25, rating: 4.7, page: "pc/pce.2016 .html" },
+            { id: 4, year: "1", title: "pharma Exam 2013", type: "exam", examYear: "2014", difficulty: "beginner", description: "Waiting", questions: 32, rating: 4.8, page: "#" },
+            { id: 5, year: "1", title: "pharma Exam waiting...", type: "exam", examYear: "2013", difficulty: "intermediate", description: "waiting", questions: 75, avgScore: 88, rating: 4.6, page: "#" },
+            { id: 6, year: "1", title: "pharma Exam waiting...", type: "practice", examYear: "2021", difficulty: "advanced", description: "Brain functions.", questions: 90, avgScore: 70, rating: 4.5, page: "#" },
+            { id: 7, year: "1", title: "pharma Exam waiting...", type: "quiz", examYear: "2020", difficulty: "intermediate", description: "Heart and vessels.", questions: 60, avgScore: 80, rating: 4.7, page: "#" },
+            { id: 8, year: "1", title: "pharma Exam waiting...", type: "worksheet", examYear: "2019", difficulty: "advanced", description: "Lung functions.", questions: 85, avgScore: 75, rating: 4.4, page: "#" },
+            { id: 10, year: "1", title: "pharma Exam waiting...", type: "practice", examYear: "2022", difficulty: "beginner", description: "Kidney functions.", questions: 70, avgScore: 83, rating: 4.6, page: "#" },
+            { id: 11, year: "1", title: "pharma Exam waiting...", type: "quiz", examYear: "2023", difficulty: "intermediate", description: "Digestive system.", questions: 95, avgScore: 79, rating: 4.7, page: "#" },
+            { id: 12, year: "1", title: "pharma Exam waiting...", type: "practice", examYear: "2017", difficulty: "intermediate", description: "Hormonal systems.", questions: 60, avgScore: 84, rating: 4.9, featured: true, page: "#" }
+        ];
+
+        const setsGrid = document.getElementById('setsGrid');
+        const searchInput = document.getElementById('search');
+        const setTypeFilter = document.getElementById('setType');
+        const yearFilter = document.getElementById('year');
+        const difficultyFilter = document.getElementById('difficulty');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+
+        // Progress Animation for initial load
+        function startProgress() {
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 90) {
+                    clearInterval(interval);
+                } else {
+                    width += 2;
+                    progressBar.style.width = width + '%';
+                }
+            }, 20);
+            return interval;
+        }
+
+        function completeProgress() {
+            progressBar.style.width = '100%';
+            setTimeout(() => {
+                progressContainer.classList.add('progress-fade-out');
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                }, 400);
+            }, 300);
+        }
+
+        // Show progress for card click
+        function showCardProgress(callback) {
+            progressContainer.style.display = 'block';
+            progressContainer.classList.remove('progress-fade-out');
+            progressBar.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 10);
+            setTimeout(() => {
+                completeProgress();
+                if (callback) callback();
+            }, 1000); // Duration matching transition
+        }
+
+        function createSkeletonCards(count) {
+            setsGrid.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const skeletonCard = document.createElement('div');
+                skeletonCard.className = 'set-card';
+                skeletonCard.innerHTML = `
+                    <div class="set-header">
+                        <div>
+                            <div class="skeleton-title skeleton"></div>
+                            <div class="skeleton-type skeleton"></div>
+                        </div>
+                    </div>
+                    <div class="set-description">
+                        <div class="skeleton-description-line skeleton"></div>
+                        <div class="skeleton-description-line skeleton short"></div>
+                    </div>
+                    <div class="set-meta">
+                        <div class="meta-item">
+                            <div class="skeleton-meta-value skeleton"></div>
+                            <div class="skeleton-meta-label skeleton"></div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="skeleton-meta-value skeleton"></div>
+                            <div class="skeleton-meta-label skeleton"></div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="skeleton-meta-value skeleton"></div>
+                            <div class="skeleton-meta-label skeleton"></div>
+                        </div>
+                    </div>
+                `;
+                setsGrid.appendChild(skeletonCard);
+            }
+        }
+
+        function highlightText(text, queryWords) {
+            if (!queryWords || queryWords.length === 0) return text;
+            let result = text;
+            queryWords.forEach(word => {
+                if (word.length < 2) return;
+                const regex = new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                result = result.replace(regex, '<span class="highlight">$1</span>');
+            });
+            return result;
+        }
+
+        function renderQuestionSets(sets, queryWords) {
+            setsGrid.innerHTML = '';
+            if (sets.length === 0) {
+                setsGrid.innerHTML = `<div class="no-results"><i class="fas fa-search"></i><p>No sets found.</p></div>`;
+                return;
+            }
+            sets.forEach((set, index) => {
+                const setCard = document.createElement('a');
+                setCard.className = `set-card ${set.featured ? 'featured-set' : ''}`;
+                setCard.dataset.page = set.page; // Use data attribute instead of href
+                setCard.innerHTML = `
+                    ${set.featured ? '<div class="featured-badge">Featured</div>' : ''}
+                    <div class="set-header">
+                        <div>
+                            <h3 class="set-title">${highlightText(set.title, queryWords)}</h3>
+                            <span class="set-type">${getTypeLabel(set.type)}</span>
+                        </div>
+                    </div>
+                    <p class="set-description">${highlightText(set.description, queryWords)}</p>
+                    <div class="set-meta">
+                        <div class="meta-item">
+                            <span class="meta-value">${set.questions}</span>
+                            <span class="meta-label">Q</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-value">${set.avgScore || 'N/A'}%</span>
+                            <span class="meta-label">Avg</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-value">${set.rating}</span>
+                            <span class="meta-label">Rate</span>
+                        </div>
+                    </div>
+                `;
+                setCard.style.opacity = '0';
+                setCard.style.animation = 'fadeIn 0.3s ease-out forwards';
+                setCard.style.animationDelay = `${index * 0.05}s`;
+
+                // Add click event for loading animation
+                setCard.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = this.dataset.page;
+                    if (url && url !== '#') {
+                        showCardProgress(() => {
+                            window.location.href = url;
+                        });
+                    }
+                });
+
+                setsGrid.appendChild(setCard);
+            });
+        }
+
+        function getTypeLabel(type) {
+            const labels = { exam: 'Exam', quiz: 'Quiz', worksheet: 'Sheet', practice: 'Practice' };
+            return labels[type] || type;
+        }
+
+        function levenshteinDistance(a, b) {
+            const matrix = Array(b.length + 1).fill().map(() => Array(a.length + 1).fill(0));
+            for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
+            for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
+            for (let j = 1; j <= b.length; j++) {
+                for (let i = 1; i <= a.length; i++) {
+                    const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
+                    matrix[j][i] = Math.min(
+                        matrix[j][i - 1] + 1,
+                        matrix[j - 1][i] + 1,
+                        matrix[j - 1][i - 1] + indicator
+                    );
+                }
+            }
+            return matrix[b.length][a.length];
+        }
+
+        function fuzzySearch(set, searchQuery) {
+            if (!searchQuery) return { set, score: 0 };
+            const queryWords = searchQuery.toLowerCase().trim().split(/\s+/).filter(w => w.length >= 2);
+            const text = [set.title, set.description, set.type, set.difficulty, set.examYear].join(' ').toLowerCase();
+            let totalScore = 0;
+            queryWords.forEach(word => {
+                let minDist = Infinity;
+                text.split(/\s+/).forEach(t => {
+                    if (t.includes(word)) minDist = 0;
+                    else {
+                        const d = levenshteinDistance(word, t);
+                        minDist = Math.min(minDist, d / Math.max(word.length, t.length));
+                    }
+                });
+                totalScore += minDist;
+            });
+            return { set, score: queryWords.length > 0 ? totalScore / queryWords.length : 0 };
+        }
+
+        function filterQuestionSets() {
+            const query = searchInput.value;
+            const words = query.toLowerCase().trim().split(/\s+/).filter(w => w.length >= 2);
+            const filtered = questionSets
+                .map(s => fuzzySearch(s, query))
+                .filter(({ set, score }) =>
+                    score <= 0.5 &&
+                    (setTypeFilter.value === 'all' || set.type === setTypeFilter.value) &&
+                    (yearFilter.value === 'all' || set.examYear === yearFilter.value) &&
+                    (difficultyFilter.value === 'all' || set.difficulty === difficultyFilter.value)
+                )
+                .sort((a, b) => a.score - b.score)
+                .map(({ set }) => set);
+            renderQuestionSets(filtered, words);
+        }
+
+        function initPage() {
+            progressContainer.style.display = 'block';
+            createSkeletonCards(Math.min(questionSets.length, 6));
+            const progressInterval = startProgress();
+
+            setTimeout(() => {
+                clearInterval(progressInterval);
+                completeProgress();
+                renderQuestionSets(questionSets, []);
+            }, 1000);
+
+            searchInput.addEventListener('input', filterQuestionSets);
+            setTypeFilter.addEventListener('change', filterQuestionSets);
+            yearFilter.addEventListener('change', filterQuestionSets);
+            difficultyFilter.addEventListener('change', filterQuestionSets);
+        }
+
+        initPage();
+    </script>
+</body>
+</html>
+
+
