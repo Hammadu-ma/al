@@ -2469,527 +2469,416 @@ document.addEventListener('keydown', function(e) {
 
 // Enhanced quiz data with more questions
 const quizData = [
-{
-"id": 1,
-"question": "The type of immunity that follows the injection of an immunogen is termed",
-"options": [
-"Artificial active",
-"Natural active",
-"Artificial passive",
-"Natural passive"
-],
-"answer": 0,
-"correctAnswer": "Artificial active",
-"explanation": "An immunogen is any substance capable of eliciting an adaptive immune response. Injection of an immunogen (e.g., a vaccine) deliberately introduces the antigen into the body, making it artificial. The body actively produces its own antibodies and memory cells, resulting in long-lasting active immunity. This is distinct from natural active (post-infection), artificial passive (e.g., antiserum injection), and natural passive (e.g., maternal antibodies via placenta).",
-"whyNotOtherOptions": {
-"b": "Natural active immunity occurs after natural exposure to infection, not deliberate injection.",
-"c": "Artificial passive involves transfer of pre-formed antibodies (e.g., anti-tetanus serum), not stimulation of the recipient's immune system.",
-"d": "Natural passive is seen in transfer of maternal IgG across the placenta or IgA in breast milk."
-},
-"relatedQuestions": ["12"],
-"category": "Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 2,
-"question": "A hapten is",
-"options": [
-"Half of an immunoglobulin molecule",
-"A carrier molecule for an antigen that is not antigenic alone",
-"An immunoglobulin functional only in the presence of complement",
-"A determinant capable of stimulating an immune response only when bound to a carrier"
-],
-"answer": 3,
-"correctAnswer": "A determinant capable of stimulating an immune response only when bound to a carrier",
-"explanation": "A hapten is a small molecule (e.g., penicillin, nickel) that can bind to antibodies (antigenic) but cannot by itself activate T-cells or induce an immune response (not immunogenic). When covalently linked to a larger carrier protein, it becomes immunogenic, triggering T-dependent B-cell activation and antibody production. This explains contact dermatitis and drug allergies.",
-"whyNotOtherOptions": {
-"a": "Haptens are not part of immunoglobulin structure.",
-"b": "This describes the carrier, not the hapten itself.",
-"c": "Haptens are not immunoglobulins."
-},
-"relatedQuestions": ["16"],
-"category": "Antigens and Antibodies",
-"difficulty": "Medium"
-},
-{
-"id": 3,
-"question": "The first line of defense in protecting the body from infection includes all of the following components except:",
-"options": [
-"Unbroken skin",
-"Normal microbial flora",
-"Phagocytic leukocytes",
-"Secretions such as mucus"
-],
-"answer": 2,
-"correctAnswer": "Phagocytic leukocytes",
-"explanation": "The first line of defense consists of physical and chemical barriers that prevent pathogen entry: intact skin, mucous membranes, mucus, cilia, lysozyme, normal flora (competitive inhibition), and acidic pH. Phagocytic leukocytes (neutrophils, macrophages) belong to the second line of defense (innate immunity), activated only after pathogens breach the first line.",
-"whyNotOtherOptions": {
-"a": "Skin acts as a mechanical barrier.",
-"b": "Normal flora competes with pathogens for nutrients and space.",
-"d": "Mucus traps pathogens; cilia move them out."
-},
-"relatedQuestions": ["7", "10"],
-"category": "Innate Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 4,
-"question": "Which of the following components of the adaptive immune system causes lysis of virally infected cells and the release of cytokines",
-"options": [
-"Activated B cells(plasma cells)",
-"CD4+ activated T cells",
-"CD8+ cytotoxic T cells(CTL)",
-"Resting lymphocytes(B cells, CD4+T cells, CD8+T cells)"
-],
-"answer": 2,
-"correctAnswer": "CD8+ cytotoxic T cells(CTL)",
-"explanation": "CD8+ cytotoxic T lymphocytes directly recognize viral peptides on MHC class I of infected cells, then induce apoptosis via perforin/granzyme or Fas-FasL pathways (lysis). They also secrete cytokines (IFN-γ, TNF) to amplify antiviral responses and activate macrophages.",
-"whyNotOtherOptions": {
-"a": "Plasma cells secrete antibodies, not cause cell lysis.",
-"b": "CD4+ T cells help coordinate immunity but do not directly lyse cells.",
-"d": "Resting lymphocytes are not activated and lack effector functions."
-},
-"relatedQuestions": ["17"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 5,
-"question": "A single plasma cell secretes:",
-"options": [
-"Antibody of a single specificity related to that on the surface of the parent B-cell",
-"Antibody of two antigen specificities",
-"The antigen it recognizes",
-"Many different types of antibody"
-],
-"answer": 0,
-"correctAnswer": "Antibody of a single specificity related to that on the surface of the parent B-cell",
-"explanation": "Plasma cells arise from clonal expansion of a single activated B-cell. Due to clonal selection, each plasma cell produces antibodies with identical variable regions (same specificity/epitope recognition) as the surface Ig on the original B-cell. One plasma cell secretes thousands of identical antibodies per second.",
-"whyNotOtherOptions": {
-"b": "Allelic exclusion ensures only one specificity.",
-"c": "Plasma cells secrete antibodies, not antigens.",
-"d": "Polyclonal activation would produce many types, but a single cell is monoclonal."
-},
-"relatedQuestions": ["12", "13"],
-"category": "Antibodies",
-"difficulty": "Easy"
-},
-{
-"id": 6,
-"question": "Which of the following is a glycoprotein expressed on the surface of T helper cells, regulatory T cells, monocytes, macrophages and dendritic cells",
-"options": [
-"Cluster of differentiation 4 (CD4+)",
-"Cluster of differentiation 8 (CD8+)",
-"Plasma cells (activated B cells)",
-"Cluster of differentiation 56 (CD56)"
-],
-"answer": 0,
-"correctAnswer": "Cluster of differentiation 4 (CD4+)",
-"explanation": "CD4 is a co-receptor that binds MHC class II. It is expressed on T-helper cells (Th1, Th2, Th17), regulatory T cells (Tregs), and antigen-presenting cells (monocytes, macrophages, dendritic cells). It is the primary receptor for HIV.",
-"whyNotOtherOptions": {
-"b": "CD8 is on cytotoxic T cells and binds MHC I.",
-"c": "Plasma cells do not express CD4.",
-"d": "CD56 is a marker for NK cells."
-},
-"relatedQuestions": ["4", "21"],
-"category": "Immunology Markers",
-"difficulty": "Easy"
-},
-{
-"id": 7,
-"question": "Acute inflammation can be initiated by:",
-"options": [
-"Mast cell activation",
-"Influx of neutrophils",
-"An increase in vascular permeability",
-"C3"
-],
-"answer": 0,
-"correctAnswer": "Mast cell activation",
-"explanation": "Mast cell degranulation (triggered by trauma, IgE, or complement) releases histamine, leukotrienes, and prostaglandins, initiating acute inflammation by causing immediate vasodilation and increased vascular permeability. Neutrophil influx and permeability changes are downstream consequences.",
-"whyNotOtherOptions": {
-"b": "Neutrophil influx occurs after chemotactic signals.",
-"c": "Increased permeability is a result, not the initiator.",
-"d": "C3 activation occurs later in the complement cascade."
-},
-"relatedQuestions": ["3", "10"],
-"category": "Inflammation",
-"difficulty": "Medium"
-},
-{
-"id": 8,
-"question": "In the classical pathway of complement activation",
-"options": [
-"C3 is activated by binding C-reactive protein",
-"The sequence of activation is C1, C2, C3, C4",
-"C1q is activated by the presence of a single Fab region",
-"Activation by antibody requires one IgM or two IgG molecules"
-],
-"answer": 3,
-"correctAnswer": "Activation by antibody requires one IgM or two IgG molecules",
-"explanation": "Classical pathway starts when C1q binds to Fc regions of antibody-antigen complexes. One pentameric IgM provides multiple Fc sites, while two closely spaced IgG molecules are needed for C1q binding and activation. Sequence is C1qrs → C4 → C2 → C3.",
-"whyNotOtherOptions": {
-"a": "CRP activates the classical pathway indirectly, not by binding C3.",
-"b": "Correct sequence: C1, C4, C2, C3.",
-"c": "C1q requires at least two Fc regions, not Fab."
-},
-"relatedQuestions": ["9", "10"],
-"category": "Complement System",
-"difficulty": "Medium"
-},
-{
-"id": 9,
-"question": "The alternative complement pathway",
-"options": [
-"Can be activated by bacterial capsule polysaccharides",
-"Uses C5b as a C3 convertase"
-],
-"answer": 0,
-"correctAnswer": "Can be activated by bacterial capsule polysaccharides",
-"explanation": "The alternative pathway is antibody-independent and part of innate immunity. It is spontaneously activated on microbial surfaces (e.g., bacterial LPS, fungal cell walls, capsule polysaccharides) when factor B, D, and properdin stabilize C3b. C3 convertase is C3bBb.",
-"whyNotOtherOptions": {
-"b": "C5 convertase is C3bBb3b; C5b initiates the membrane attack complex."
-},
-"relatedQuestions": ["8", "10"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 10,
-"question": "After activation of the complement system, leukocytes and macrophages are attracted to the site of complement activation by",
-"options": [
-"C1",
-"C5a",
-"C5bC6C7C8C9",
-"C3b"
-],
-"answer": 1,
-"correctAnswer": "C5a",
-"explanation": "C5a is the most potent anaphylatoxin and chemotactic factor in the complement cascade. It strongly attracts neutrophils, eosinophils, monocytes, and macrophages to the site of activation, enhancing phagocytosis and inflammation.",
-"whyNotOtherOptions": {
-"a": "C1 initiates the cascade but has no chemotactic role.",
-"c": "C5b-9 is the membrane attack complex (MAC) that lyses cells.",
-"d": "C3b opsonizes pathogens for phagocytosis but is not chemotactic."
-},
-"relatedQuestions": ["7", "8", "9"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 11,
-"question": "What is the predominant type of antibody found in the serum of neonates born after full-term gestation?",
-"options": [
-"Infant IgA",
-"Infant IgG",
-"Infant IgM",
-"Maternal IgG"
-],
-"answer": 3,
-"correctAnswer": "Maternal IgG",
-"explanation": "During the third trimester, maternal IgG is selectively transported across the placenta via FcRn receptor, providing passive immunity to the newborn for the first 6–12 months. Neonatal IgG synthesis is low at birth. IgM and IgA are not transferred across the placenta.",
-"whyNotOtherOptions": {
-"a": "IgA is obtained postnatally via breast milk.",
-"b": "Infant begins producing own IgG later.",
-"c": "Elevated IgM at birth suggests intrauterine infection."
-},
-"relatedQuestions": ["1", "12"],
-"category": "Passive Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 12,
-"question": "How does the secondary humoral immune response differ from the primary response?",
-"options": [
-"The lag phase is longer in the secondary immune response",
-"IgM is the predominant antibody class produced in the secondary immune response",
-"The antibody levels produced are higher in the secondary immune response",
-"Cytotoxic T lymphocytes play an important role in the secondary response"
-],
-"answer": 2,
-"correctAnswer": "The antibody levels produced are higher in the secondary immune response",
-"explanation": "Memory B cells formed during the primary response enable a faster (lag 1–3 days vs. 7–10 days), stronger (10–100-fold higher antibody titer), longer-lasting, and predominantly IgG (due to class switching) secondary response upon re-exposure to the same antigen.",
-"whyNotOtherOptions": {
-"a": "Lag phase is shorter in secondary response.",
-"b": "IgG predominates in secondary response.",
-"d": "Cytotoxic T cells are part of cell-mediated, not humoral, immunity."
-},
-"relatedQuestions": ["1", "5", "11"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 13,
-"question": "Which of the following statements about immunoglobulin light chains is true?",
-"options": [
-"Each immunoglobulin monomer has either one kappa or one lambda chain",
-"There are two types: kappa and lambda",
-"They consist of constant regions only",
-"They form part of the Fc fragment"
-],
-"answer": 1,
-"correctAnswer": "There are two types: kappa and lambda",
-"explanation": "Light chains have two isotypes: kappa (κ) and lambda (λ). Each antibody monomer contains two identical light chains (either both κ or both λ) paired with two heavy chains. Light chains have one variable (VL) and one constant (CL) domain.",
-"whyNotOtherOptions": {
-"a": "Each monomer has two identical light chains, not one.",
-"c": "Light chains have both variable and constant regions.",
-"d": "Fc fragment consists of heavy-chain constant regions only."
-},
-"relatedQuestions": ["5", "14"],
-"category": "Antibody Structure",
-"difficulty": "Medium"
-},
-{
-"id": 14,
-"question": "Which of the following statements applies to the Fc fragment of an immunoglobulin molecule?",
-"options": [
-"It consists of the entire heavy chain",
-"It contains the variable region of the heavy chain",
-"It contains the antigen binding sites of the molecule",
-"It is the region of the molecule that binds to receptors on various white blood cells"
-],
-"answer": 3,
-"correctAnswer": "It is the region of the molecule that binds to receptors on various white blood cells",
-"explanation": "The Fc region comprises the constant domains of the heavy chains (CH2 and CH3). It mediates effector functions by binding Fc receptors on phagocytes (opsonization), NK cells (ADCC), mast cells (degranulation), and complement (C1q).",
-"whyNotOtherOptions": {
-"a": "Fc is only the C-terminal half of heavy chains.",
-"b": "Variable region is in Fab.",
-"c": "Antigen binding occurs in Fab regions."
-},
-"relatedQuestions": ["13", "8"],
-"category": "Antibody Structure",
-"difficulty": "Medium"
-},
-{
-"id": 15,
-"question": "The activity of natural killer (NK) cells",
-"options": [
-"Does not require previous exposure to an antigen",
-"Involves phagocytosis and killing of bacteria",
-"Requires interaction with cytotoxic T cells",
-"Requires interaction with B cells"
-],
-"answer": 0,
-"correctAnswer": "Does not require previous exposure to an antigen",
-"explanation": "NK cells are innate lymphocytes that kill virus-infected and tumor cells without prior sensitization or MHC restriction. They detect 'missing self' (low MHC I) and use perforin/granzyme or death ligands. No immunological memory is involved.",
-"whyNotOtherOptions": {
-"b": "Phagocytosis is performed by macrophages/neutrophils.",
-"c": "NK cells act independently.",
-"d": "No interaction with B cells."
-},
-"relatedQuestions": ["4", "17"],
-"category": "Innate Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 16,
-"question": "Interaction between B and T helper cells involves",
-"options": [
-"MHC II molecule on B cell binding to MHC I molecule on the T cell",
-"MHC II molecule on B cell binding to CD3 on the T cell",
-"Foreign antigen on B cell binding to T cell receptor",
-"CD3 molecule on B cell binding to T cell receptor"
-],
-"answer": 2,
-"correctAnswer": "Foreign antigen on B cell binding to T cell receptor",
-"explanation": "For T-dependent antigens, B cells internalize antigen via surface Ig, process it, and present peptides on MHC II. The CD4+ T-helper cell’s TCR recognizes the peptide-MHC II complex. Co-stimulatory signals (CD40-CD40L, cytokines) then activate the B cell for proliferation and differentiation.",
-"whyNotOtherOptions": {
-"a": "MHC II on B cell binds TCR+CD4, not MHC I.",
-"b": "CD3 is part of TCR complex on T cell.",
-"d": "B cells do not express CD3."
-},
-"relatedQuestions": ["2", "17", "22"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 17,
-"question": "A target cell is typically killed when",
-"options": [
-"A CD4+ T cell recognizes a peptide bound to MHC class I on the target cell",
-"A CD4+ T cell recognizes a peptide bound to MHC class II on the target cell",
-"A CD8+ T cell produces IL-4 in close proximity to the target cell",
-"A CD8+ T cell recognizes a peptide bound to MHC class I on the target cell"
-],
-"answer": 3,
-"correctAnswer": "A CD8+ T cell recognizes a peptide bound to MHC class I on the target cell",
-"explanation": "CD8+ cytotoxic T cells recognize viral or tumor peptides presented on MHC class I (present on all nucleated cells). Recognition triggers release of perforin/granzyme or FasL, inducing apoptosis in the target cell.",
-"whyNotOtherOptions": {
-"a": "CD4+ cells recognize MHC II (on APCs), not MHC I.",
-"b": "CD4+ cells do not kill targets directly.",
-"c": "IL-4 is produced by Th2 cells; CD8+ cells produce IFN-γ."
-},
-"relatedQuestions": ["4", "15", "22"],
-"category": "Cell-Mediated Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 18,
-"question": "Primary immunodeficiency producing susceptibility to infection by viruses and fungus is caused by:",
-"options": [
-"B-cell deficiency",
-"T-cell deficiency",
-"Phagocyte deficiency",
-"Complement deficiency"
-],
-"answer": 1,
-"correctAnswer": "T-cell deficiency",
-"explanation": "T-cells (especially CD4+ Th1) coordinate antiviral and antifungal responses by activating macrophages and cytotoxic T cells. Pure T-cell defects (e.g., DiGeorge syndrome, SCID with T-cell involvement) lead to severe viral (HSV, CMV) and fungal (Candida, Pneumocystis) infections.",
-"whyNotOtherOptions": {
-"a": "B-cell defects cause bacterial infections.",
-"c": "Phagocyte defects (e.g., CGD) cause bacterial and fungal abscesses.",
-"d": "Complement defects cause encapsulated bacterial infections."
-},
-"relatedQuestions": ["21", "23"],
-"category": "Immunodeficiency",
-"difficulty": "Medium"
-},
-{
-"id": 19,
-"question": "Incompatible blood transfusions are examples of",
-"options": [
-"Type I hypersensitivity reactions",
-"Type II hypersensitivity reactions",
-"Type III hypersensitivity reactions",
-"Type IV hypersensitivity reactions"
-],
-"answer": 1,
-"correctAnswer": "Type II hypersensitivity reactions",
-"explanation": "Type II (cytotoxic) hypersensitivity involves IgM/IgG antibodies binding cell-surface antigens, leading to complement activation and cell lysis. In ABO incompatibility, anti-A/B IgM binds donor RBCs, activates complement, and causes acute hemolytic transfusion reaction.",
-"whyNotOtherOptions": {
-"a": "Type I is immediate (IgE, anaphylaxis).",
-"c": "Type III is immune complex (e.g., serum sickness).",
-"d": "Type IV is delayed (T-cell mediated)."
-},
-"relatedQuestions": ["8"],
-"category": "Hypersensitivity",
-"difficulty": "Easy"
-},
-{
-"id": 20,
-"question": "The single best chance of a tissue graft being accepted in a human recipient is if it is:",
-"options": [
-"An isograft",
-"An allograft given under the cover of potent immunosuppression",
-"A xenograft from a pig",
-"From a living sibling donor"
-],
-"answer": 0,
-"correctAnswer": "An isograft",
-"explanation": "An isograft (syngeneic graft) is between genetically identical individuals (identical twins). There is complete MHC matching, so no alloantigens are recognized, and no rejection occurs without immunosuppression.",
-"whyNotOtherOptions": {
-"b": "Allografts still carry risk of rejection despite immunosuppression.",
-"c": "Xenografts have major antigenic differences and hyperacute rejection.",
-"d": "Sibling donors may share only some HLA; still an allograft."
-},
-"relatedQuestions": ["none"],
-"category": "Transplantation",
-"difficulty": "Easy"
-},
-{
-"id": 21,
-"question": "In patients with human immunodeficiency virus infection, immune status can be monitored by measuring the ratio of",
-"options": [
-"CD3+ cells to CD8+ cells",
-"CD4+ cells to CD8+ cells",
-"Lymphocytes to monocytes",
-"T cells to B cells"
-],
-"answer": 1,
-"correctAnswer": "CD4+ cells to CD8+ cells",
-"explanation": "HIV infects CD4+ cells via gp120-CD4 binding. Progressive loss of CD4+ T-helper cells leads to inversion of the normal CD4:CD8 ratio (normally ~2:1). CD4 count <200/μL defines AIDS; ratio is a key prognostic marker.",
-"whyNotOtherOptions": {
-"a": "CD3 marks all T cells; not specific.",
-"c": "Not used in HIV monitoring.",
-"d": "HIV primarily affects T-helper cells, not B cells."
-},
-"relatedQuestions": ["6", "18"],
-"category": "HIV/AIDS",
-"difficulty": "Easy"
-},
-{
-"id": 22,
-"question": "What is the structure recognized by the αβ T-cell receptor on the cell surface of an antigen–presenting cell?",
-"options": [
-"Soluble native protein antigen plus MHC molecule",
-"Processed (peptide) antigen plus MHC",
-"Processed peptide antigen",
-"Cell surface native antigen"
-],
-"answer": 1,
-"correctAnswer": "Processed (peptide) antigen plus MHC",
-"explanation": "The αβ TCR recognizes only linear peptide fragments (8–20 amino acids) bound in the groove of MHC molecules. Native proteins are processed intracellularly into peptides before presentation. This is the basis of MHC restriction.",
-"whyNotOtherOptions": {
-"a": "TCR does not recognize soluble native antigen.",
-"c": "Peptide alone is not recognized without MHC.",
-"d": "Native antigen on surface is recognized by B-cell receptor, not TCR."
-},
-"relatedQuestions": ["16", "17"],
-"category": "Antigen Presentation",
-"difficulty": "Medium"
-},
-{
-"id": 23,
-"question": "Your patient is a child who has no detectable T or B cells. This is most probably the result of a defect in",
-"options": [
-"The thymus",
-"The bursal equivalent",
-"T cell-B cell interaction",
-"Stem cells originating in the bone marrow"
-],
-"answer": 3,
-"correctAnswer": "Stem cells originating in the bone marrow",
-"explanation": "Severe Combined Immunodeficiency (SCID) with absent T and B cells results from defects in common lymphoid progenitor cells in the bone marrow (e.g., ADA deficiency, RAG mutations). Both T-cell (thymus-dependent) and B-cell lineages fail to develop.",
-"whyNotOtherOptions": {
-"a": "Thymus defect (DiGeorge) affects only T cells.",
-"b": "B-cell maturation occurs in bone marrow in humans.",
-"c": "Interaction defect would not abolish both cell types."
-},
-"relatedQuestions": ["18"],
-"category": "Immunodeficiency",
-"difficulty": "Medium"
-},
-{
-"id": 24,
-"question": "A patient is admitted with multiple bacterial infections and is found to have a complete absence of Complement. Which complement-mediated function would remain intact in such a patient?",
-"options": [
-"Lysis of bacteria",
-"Opsonization of bacteria",
-"Generation of anaphylatoxins",
-"None"
-],
-"answer": 3,
-"correctAnswer": "None",
-"explanation": "All major functions of complement require intact complement proteins: lysis (MAC: C5b-9), opsonization (C3b), chemotaxis/anaphylaxis (C3a, C5a). Complete absence (e.g., hereditary C3 deficiency) abolishes all these effector mechanisms, leading to severe bacterial infections.",
-"whyNotOtherOptions": {
-"a": "Lysis requires MAC.",
-"b": "Opsonization requires C3b.",
-"c": "Anaphylatoxins are C3a and C5a."
-},
-"relatedQuestions": ["8", "9", "10"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 25,
-"question": "For vaccination against mycobacterial diseases such as tuberculosis, what is the most important facet of the immune response to be stimulated?",
-"options": [
-"A high titer of antibody",
-"Macrophage-activating cell-mediated immunity",
-"Cytotoxic T-cells",
-"Antibody in the gut lumen"
-],
-"answer": 1,
-"correctAnswer": "Macrophage-activating cell-mediated immunity",
-"explanation": "Mycobacterium tuberculosis is an intracellular pathogen surviving inside macrophages. Effective immunity requires Th1-mediated cell-mediated immunity: IFN-γ from CD4+ T cells activates macrophages to form granulomas and kill intracellular bacteria. BCG vaccine aims to induce this response. Antibodies are ineffective against intracellular pathogens.",
-"whyNotOtherOptions": {
-"a": "Antibodies cannot access intracellular mycobacteria.",
-"c": "Cytotoxic T cells help but are secondary to macrophage activation.",
-"d": "Gut IgA is irrelevant for pulmonary TB."
-},
-"relatedQuestions": ["4", "17"],
-"category": "Vaccination",
-"difficulty": "Medium"
-}
+    {
+        "id": 1,
+        "question": "Active immunity refers to:",
+        "options": [
+            "Adaptive immunity that is induced by natural exposure to a pathogen",
+            "Adaptive immunity that is induced by vaccinations",
+            "Innate immunity induced by PAMPs/DAMPs",
+            "A & B are answers"
+        ],
+        "answer": 3,
+        "correctAnswer": "A & B are answers",
+        "explanation": "According to Robbins Basic Pathology (Chapter 3: Immunity), active immunity is a form of adaptive/acquired immunity in which the individual's own immune system is stimulated to produce antibodies and memory cells. This can occur naturally following infection or artificially through vaccination. Both lead to long-lasting, antigen-specific protection with immunological memory.",
+        "whyNotOtherOptions": {
+            "a": "Correct but incomplete alone",
+            "b": "Correct but incomplete alone",
+            "c": "Describes innate immunity, not active immunity"
+        },
+        "relatedQuestions": ["2", "11"],
+        "category": "Immunity",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 2,
+        "question": "What is artificially acquired passive immunity?",
+        "options": [
+            "Introduction or inoculation of the person with preformed antibody molecules",
+            "An immunity developed by injecting the person with vaccine antigens",
+            "Immunizing the immunocompromised person with the immune cells",
+            "A & C are answers"
+        ],
+        "answer": 0,
+        "correctAnswer": "Introduction or inoculation of the person with preformed antibody molecules",
+        "explanation": "Artificially acquired passive immunity involves direct transfer of preformed antibodies (e.g., antisera, immunoglobulin preparations, monoclonal antibodies such as palivizumab or anti-rabies immunoglobulin). It provides immediate but short-lived protection without inducing memory (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "b": "Describes artificially acquired active immunity (vaccination)",
+            "c": "Refers to adoptive cell transfer (experimental/not standard passive immunity)",
+            "d": "Incorrect combination"
+        },
+        "relatedQuestions": ["1", "11"],
+        "category": "Immunity",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 3,
+        "question": "Which of the following immune cells are not phagocytic?",
+        "options": [
+            "Neutrophils",
+            "Basophils",
+            "Eosinophils",
+            "Lymphocytes"
+        ],
+        "answer": 3,
+        "correctAnswer": "Lymphocytes",
+        "explanation": "Lymphocytes (B and T cells) are not phagocytic; they mediate adaptive immunity through antigen-specific receptors. Professional phagocytes are neutrophils, macrophages, and dendritic cells. Eosinophils have limited phagocytic ability, and basophils rarely phagocytose (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "Neutrophils are the most abundant professional phagocytes",
+            "b": "Basophils primarily release histamine; minimal phagocytosis",
+            "c": "Eosinophils can phagocytose but mainly kill parasites via degranulation"
+        },
+        "relatedQuestions": ["4", "5", "6"],
+        "category": "Innate Immunity",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 4,
+        "question": "The most potent antigen presenting cells (APCs) include",
+        "options": [
+            "Dendritic cells (DCs)",
+            "B-cells",
+            "Macrophages",
+            "Neutrophils"
+        ],
+        "answer": 0,
+        "correctAnswer": "Dendritic cells (DCs)",
+        "explanation": "Dendritic cells are the most effective professional APCs because they express high levels of MHC II and co-stimulatory molecules (CD80/CD86), efficiently capture antigens in tissues, migrate to lymph nodes, and prime naive T-cells, initiating primary adaptive responses (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "b": "B-cells present antigen mainly to helper T-cells during humoral response",
+            "c": "Macrophages are good APCs but less potent than DCs at priming naive T-cells",
+            "d": "Neutrophils are poor APCs"
+        },
+        "relatedQuestions": ["3", "6"],
+        "category": "Adaptive Immunity",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 5,
+        "question": "Which of the following peripheral blood cells plays a key role in killing of parasites?",
+        "options": [
+            "Lymphocytes",
+            "Neutrophils",
+            "Eosinophils",
+            "Monocytes"
+        ],
+        "answer": 2,
+        "correctAnswer": "Eosinophils",
+        "explanation": "Eosinophils are specialized for defense against multicellular parasites (helminths). They release major basic protein, eosinophil cationic protein, and peroxidases from granules that damage parasite surfaces. This is the basis of type II hypersensitivity in parasitic infections (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "Lymphocytes coordinate response but do not directly kill large parasites",
+            "b": "Neutrophils target bacteria/fungi",
+            "d": "Monocytes/macrophages phagocytose but ineffective against large parasites"
+        },
+        "relatedQuestions": ["3", "17"],
+        "category": "Innate Immunity",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 6,
+        "question": "______ and ______ cells are the central players in the adaptive immune system and have the ability to generate highly specific cell surface receptors",
+        "options": [
+            "Natural killer cells, T-cells",
+            "B-cells, T-cells",
+            "T-cells, neutrophils",
+            "Macrophages, B-cells"
+        ],
+        "answer": 1,
+        "correctAnswer": "B-cells, T-cells",
+        "explanation": "B- and T-lymphocytes are the only cells of the adaptive immune system. They undergo V(D)J recombination to generate diverse, highly specific antigen receptors: BCR on B-cells and TCR on T-cells (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "NK cells belong to innate immunity",
+            "c": "Neutrophils are innate",
+            "d": "Macrophages are innate APCs"
+        },
+        "relatedQuestions": ["3", "4", "8"],
+        "category": "Adaptive Immunity",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 7,
+        "question": "______ cells have the ability to kill cells that express abnormal MHC receptor profiles",
+        "options": [
+            "Neutrophils",
+            "Monocytes",
+            "Cytotoxic T-cells",
+            "Natural killer cells"
+        ],
+        "answer": 3,
+        "correctAnswer": "Natural killer cells",
+        "explanation": "NK cells (innate lymphoid cells) detect and kill cells with downregulated or missing MHC class I ('missing-self' hypothesis) via perforin/granzyme or death receptor pathways. This is crucial against virus-infected and tumor cells that evade cytotoxic T-cells (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "c": "Cytotoxic T-cells require antigen presentation on MHC I to kill"
+        },
+        "relatedQuestions": ["3", "6"],
+        "category": "Innate Immunity",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 8,
+        "question": "A single plasma cell secretes:",
+        "options": [
+            "Antibody of a single specificity related to that on the surface of the parent B-cell",
+            "Antibody of two antigen specificities",
+            "The antigen it recognizes",
+            "Many different types of antibody"
+        ],
+        "answer": 0,
+        "correctAnswer": "Antibody of a single specificity related to that on the surface of the parent B-cell",
+        "explanation": "Due to clonal selection and allelic exclusion, each plasma cell is derived from one B-cell clone and secretes antibodies of identical specificity (same variable region) as the original BCR. One cell → one specificity (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "b": "Impossible; each B-cell expresses only one specificity",
+            "c": "Plasma cells secrete antibodies, not antigens",
+            "d": "Polyclonal activation produces multiple specificities from different clones"
+        },
+        "relatedQuestions": ["6"],
+        "category": "Adaptive Immunity",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 9,
+        "question": "Which of the following statements is the best example of a primary lymphoid organ?",
+        "options": [
+            "Lymph nodes",
+            "Spleen",
+            "Tonsil",
+            "Thymus"
+        ],
+        "answer": 3,
+        "correctAnswer": "Thymus",
+        "explanation": "Primary lymphoid organs are sites of lymphocyte maturation: bone marrow (B-cells) and thymus (T-cells). Secondary lymphoid organs (lymph nodes, spleen, tonsils, Peyer patches) are sites where mature lymphocytes encounter antigen and initiate responses (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a,b,c": "All are secondary lymphoid organs"
+        },
+        "relatedQuestions": ["6"],
+        "category": "Immune System Organization",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 10,
+        "question": "Which of the following is not true when comparing innate to adaptive immunity?",
+        "options": [
+            "Innate responds quickly and adaptive responds slowly",
+            "Innate has few pathogen (non-self) recognition mechanisms and adaptive has many",
+            "Innate has immunologic memory and adaptive does not",
+            "Innate response is non-specific and adaptive is very specific"
+        ],
+        "answer": 2,
+        "correctAnswer": "Innate has immunologic memory and adaptive does not",
+        "explanation": "The adaptive immune system possesses immunologic memory (memory B- and T-cells) leading to faster, stronger secondary responses — this is its hallmark and the principle behind vaccination. Innate immunity lacks true memory (though trained immunity exists in some cells, it is not equivalent) (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "Correct: innate immediate, adaptive has lag phase",
+            "b": "Correct: innate uses limited PRRs, adaptive has ~10¹⁵ possible receptors",
+            "d": "Correct: innate pattern-based, adaptive antigen-specific"
+        },
+        "relatedQuestions": ["11", "12"],
+        "category": "Immunity",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 11,
+        "question": "What is the characteristic that best defines the acquired immune response?",
+        "options": [
+            "It exhibits immunological memory",
+            "It involves leukocytes",
+            "It involves cell proliferation",
+            "The cells involved recognize pathogens"
+        ],
+        "answer": 0,
+        "correctAnswer": "It exhibits immunological memory",
+        "explanation": "The defining hallmark of adaptive/acquired immunity is antigen-specific immunological memory, allowing rapid and enhanced response upon re-exposure — basis of vaccination (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "b,c,d": "All true but also apply to innate immunity to varying degrees"
+        },
+        "relatedQuestions": ["10", "12"],
+        "category": "Adaptive Immunity",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 12,
+        "question": "Which of the following is not a major cardinal feature of the adaptive immune system?",
+        "options": [
+            "Diversity",
+            "Memory",
+            "Faster during primary response",
+            "Specificity"
+        ],
+        "answer": 2,
+        "correctAnswer": "Faster during primary response",
+        "explanation": "The primary adaptive response is slower (lag phase of 4–7 days) due to clonal expansion and differentiation. The secondary response is faster and stronger because of memory cells. Cardinal features: specificity, diversity, memory, self/non-self discrimination, and specialization (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "Receptor diversity via gene rearrangement",
+            "b": "Memory cells",
+            "d": "Antigen-specific receptors"
+        },
+        "relatedQuestions": ["10", "11"],
+        "category": "Adaptive Immunity",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 13,
+        "question": "What are the structures that trigger activation of the innate immune system?",
+        "options": [
+            "Pattern recognition receptors (PRRs)",
+            "Damaged associated molecular patterns (DAMPs)",
+            "Pathogen associated molecular patterns (PAMPs)",
+            "B & C are answers"
+        ],
+        "answer": 3,
+        "correctAnswer": "B & C are answers",
+        "explanation": "Innate immunity is triggered when PRRs (e.g., TLRs, NLRs, RLRs) on immune cells recognize conserved PAMPs from microbes or DAMPs from injured host cells. This initiates inflammation, phagocytosis, and cytokine release (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "PRRs are the sensors, not the triggers themselves"
+        },
+        "relatedQuestions": ["10"],
+        "category": "Innate Immunity",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 14,
+        "question": "Complement component C3 is cleaved by:",
+        "options": [
+            "C3b",
+            "C3bBb",
+            "Factor B",
+            "Factor D"
+        ],
+        "answer": 1,
+        "correctAnswer": "C3bBb",
+        "explanation": "C3bBb is the C3 convertase of the alternative pathway (stabilized by properdin). It cleaves C3 into C3a (anaphylatoxin) and C3b (opsonin and continues amplification loop). In classical/lectin pathways, the C3 convertase is C4b2a (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "C3b is a cleavage product, not the enzyme",
+            "c": "Factor B binds C3b but requires cleavage by Factor D",
+            "d": "Factor D cleaves Factor B when bound to C3b"
+        },
+        "relatedQuestions": ["18"],
+        "category": "Complement System",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 15,
+        "question": "The immune system becomes confused between what is self and nonself and mounts sustained responses against its own tissues is called ______. ",
+        "options": [
+            "Autoimmunity",
+            "Hypersensitivity",
+            "Allergy",
+            "Anaphylactic shock"
+        ],
+        "answer": 0,
+        "correctAnswer": "Autoimmunity",
+        "explanation": "Autoimmunity results from failure of self-tolerance mechanisms, leading to adaptive immune responses (autoantibodies or autoreactive T-cells) against self-antigens, causing organ-specific (e.g., Hashimoto) or systemic (e.g., SLE) diseases (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "b": "Hypersensitivity is exaggerated response; can be to self or foreign",
+            "c": "Allergy is type I hypersensitivity to environmental antigens",
+            "d": "Severe systemic type I reaction"
+        },
+        "relatedQuestions": ["16", "17", "18"],
+        "category": "Immunopathology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 16,
+        "question": "Primary immunodeficiency producing susceptibility to infection by viruses and fungus is caused by",
+        "options": [
+            "B-cell deficiency",
+            "T-cell deficiency",
+            "Phagocyte deficiency",
+            "Complement deficiency"
+        ],
+        "answer": 1,
+        "correctAnswer": "T-cell deficiency",
+        "explanation": "T-cell defects (e.g., SCID, DiGeorge syndrome, HIV) severely impair cell-mediated immunity, leading to susceptibility to intracellular pathogens: viruses, fungi (Candida, Pneumocystis), mycobacteria, and protozoa (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "B-cell defects → bacterial infections (pyogenic)",
+            "c": "Phagocyte defects (CGD, LAD) → bacterial and fungal abscesses",
+            "d": "Early complement defects → encapsulated bacteria (Neisseria)"
+        },
+        "relatedQuestions": ["15"],
+        "category": "Immunodeficiency",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 17,
+        "question": "The major effector molecules involved in type IV hypersensitivity reactions include",
+        "options": [
+            "Antibodies",
+            "Complement components",
+            "Cytokines",
+            "Histamines"
+        ],
+        "answer": 2,
+        "correctAnswer": "Cytokines",
+        "explanation": "Type IV (delayed-type) hypersensitivity is T-cell mediated. Activated Th1/Th17/CD8 T-cells release cytokines (IFN-γ, TNF, IL-17) that recruit and activate macrophages or directly kill target cells (e.g., tuberculin reaction, contact dermatitis, graft rejection) (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "Types II and III",
+            "b": "Type III mainly",
+            "d": "Type I"
+        },
+        "relatedQuestions": ["5", "18"],
+        "category": "Hypersensitivity",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 18,
+        "question": "The single best description of type III hypersensitivity is that it involves:",
+        "options": [
+            "Antibodies",
+            "Complement",
+            "Immune complexes",
+            "Macrophages"
+        ],
+        "answer": 2,
+        "correctAnswer": "Immune complexes",
+        "explanation": "Type III hypersensitivity is caused by deposition of antigen-antibody-complement immune complexes in vessels/tissues, activating complement and attracting neutrophils, leading to tissue damage (e.g., serum sickness, Arthus reaction, SLE nephritis) (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a,b,d": "Involved but not the defining feature"
+        },
+        "relatedQuestions": ["14", "17"],
+        "category": "Hypersensitivity",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 19,
+        "question": "Which of the following is incorrectly paired?",
+        "options": [
+            "Subunit vaccine: vaccine against Hepatitis B virus",
+            "Attenuated vaccines: Polio, measles and mumps",
+            "Killed vaccines: not require a booster shot",
+            "Toxoid vaccines: modified toxins are the inoculums"
+        ],
+        "answer": 2,
+        "correctAnswer": "Killed vaccines: not require a booster shot",
+        "explanation": "Killed/inactivated vaccines (e.g., Salk polio, rabies, hepatitis A) generally induce weaker and shorter-lived immunity (mostly humoral, poor cell-mediated and memory) and usually require multiple booster doses. Live attenuated vaccines often give lifelong immunity after 1–2 doses (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "Hep B vaccine is recombinant subunit (HBsAg)",
+            "b": "MMR, oral polio, rotavirus are live attenuated",
+            "d": "Diphtheria, tetanus toxoids are inactivated toxins"
+        },
+        "relatedQuestions": ["1"],
+        "category": "Vaccines",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 20,
+        "question": "What is a graft between different members of the same species termed?",
+        "options": [
+            "Autograft",
+            "Isograft",
+            "Xenograft",
+            "Allograft"
+        ],
+        "answer": 3,
+        "correctAnswer": "Allograft",
+        "explanation": "Allograft: transplant between genetically different individuals of the same species (most common clinical transplant). Autograft: same individual; Isograft/syngeneic: identical twins; Xenograft: different species (Robbins Basic Pathology, Chapter 3 - Transplantation Immunology).",
+        "whyNotOtherOptions": {
+            "a": "From self",
+            "b": "Between genetically identical individuals",
+            "c": "Between different species"
+        },
+        "relatedQuestions": ["17"],
+        "category": "Transplantation",
+        "difficulty": "Easy"
+    }
 ];
 
 // Core application variables

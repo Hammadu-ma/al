@@ -1,42 +1,12 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ALIF | Advanced Medical Education</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="/protect.js"></script>
-    // Production-ready service worker registration
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    const swUrl = '/sw.js';
-    
-    navigator.serviceWorker.register(swUrl)
-      .then(function(registration) {
-        console.log('✅ SW registered successfully on scope:', registration.scope);
-        
-        // Check if SW is controlling the page
-        if (navigator.serviceWorker.controller) {
-          console.log('🎯 SW is controlling the page');
-        } else {
-          console.log('⚠️ SW registered but not controlling the page');
-        }
-        
-        // Check cache after registration
-        setTimeout(() => {
-          caches.open('vercel-app-v1').then(cache => {
-            cache.keys().then(requests => {
-              console.log(`📦 Production cache: ${requests.length} files`);
-            });
-          });
-        }, 3000);
-      })
-      .catch(function(error) {
-        console.log('❌ SW registration failed:', error);
-      });
-  });
-}
-</script>
     <style type="text/css">
         /* Import Inter font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -586,6 +556,35 @@ if ('serviceWorker' in navigator) {
             line-height: 1.6;
             margin-bottom: 24px;
             color: var(--text-primary);
+            overflow-x: auto;
+        }
+
+        .question-text table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            text-align: left;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .question-text th, .question-text td {
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .question-text th {
+            background-color: var(--surface);
+            font-weight: bold;
+        }
+
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
         }
 
         .options-grid {
@@ -989,173 +988,172 @@ if ('serviceWorker' in navigator) {
             box-shadow: var(--shadow-lg);
         }
 
-        /* Custom Quiz Modal */
-/* Custom Quiz Modal Styles */
-.custom-quiz-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-}
+        /* Custom Quiz Modal Styles */
+        .custom-quiz-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
 
-.custom-quiz-modal.active {
-    display: flex;
-}
+        .custom-quiz-modal.active {
+            display: flex;
+        }
 
-.custom-quiz-content {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-xl);
-    border: 1px solid var(--border);
-}
+        .custom-quiz-content {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+        }
 
-.custom-quiz-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: var(--text-primary);
-}
+        .custom-quiz-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
 
-.custom-quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 24px;
-}
+        .custom-quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
 
-.custom-quiz-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: var(--transition);
-    background: var(--glass);
-}
+        .custom-quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--glass);
+        }
 
-.custom-quiz-option:hover {
-    border-color: var(--primary-light);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow);
-}
+        .custom-quiz-option:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
 
-.custom-quiz-option.selected {
-    border-color: var(--primary);
-    background: var(--primary-light);
-}
+        .custom-quiz-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
 
-.custom-quiz-option .option-selector {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-    flex-shrink: 0;
-}
+        .custom-quiz-option .option-selector {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
 
-.custom-quiz-option.selected .option-selector {
-    background: var(--primary);
-    border-color: var(--primary);
-}
+        .custom-quiz-option.selected .option-selector {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
 
-.custom-quiz-option.selected .option-selector::after {
-    content: '✓';
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-}
+        .custom-quiz-option.selected .option-selector::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-.custom-quiz-option label {
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--text-primary);
-    flex: 1;
-    margin: 0;
-}
+        .custom-quiz-option label {
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+            margin: 0;
+        }
 
-.quiz-options-section {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-}
+        .quiz-options-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
 
-.quiz-options-section label {
-    display: block;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-    font-weight: 600;
-}
+        .quiz-options-section label {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
 
-.custom-quiz-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 24px;
-}
+        .custom-quiz-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
 
-/* Modern Dropdown for Custom Quiz */
-.custom-quiz-content .modern-dropdown {
-    position: relative;
-    margin-top: 8px;
-}
+        /* Modern Dropdown for Custom Quiz */
+        .custom-quiz-content .modern-dropdown {
+            position: relative;
+            margin-top: 8px;
+        }
 
-.custom-quiz-content .modern-dropdown select {
-    width: 100%;
-    padding: 12px 48px 12px 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    color: var(--text-primary);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 18px;
-}
+        .custom-quiz-content .modern-dropdown select {
+            width: 100%;
+            padding: 12px 48px 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 18px;
+        }
 
-.custom-quiz-content .modern-dropdown select:hover {
-    border-color: var(--primary);
-    background-color: var(--primary-light);
-}
+        .custom-quiz-content .modern-dropdown select:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
 
-.custom-quiz-content .modern-dropdown select:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
+        .custom-quiz-content .modern-dropdown select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-/* Glass effect for modal */
-.custom-quiz-content.glass-effect {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
+        /* Glass effect for modal */
+        .custom-quiz-content.glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-.dark-mode .custom-quiz-content.glass-effect {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+        .dark-mode .custom-quiz-content.glass-effect {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
         /* Mobile Optimizations */
         @media (max-width: 768px) {
@@ -1785,7 +1783,377 @@ if ('serviceWorker' in navigator) {
     background: var(--primary-dark);
     transform: scale(1.1);
 }
+/* Responsive Images */
+.question-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 16px 0;
+    display: block;
+    box-shadow: var(--shadow);
+}
 
+.question-image-container {
+    width: 100%;
+    text-align: center;
+    margin: 16px 0;
+}
+
+/* Ensure images don't overflow their containers */
+.question-image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+/* Responsive Tables */
+.question-text table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+    text-align: left;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.question-text th, .question-text td {
+    padding: 12px;
+    border: 1px solid var(--border);
+    min-width: 120px; /* Prevents columns from becoming too narrow */
+}
+
+.question-text th {
+    background-color: var(--surface);
+    font-weight: bold;
+    position: sticky;
+    left: 0;
+    color: var(--text-primary);
+}
+
+.question-text td {
+    color: var(--text-secondary);
+    background: var(--background);
+}
+
+/* Responsive Question Cards */
+.question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    width: 100%;
+    overflow: hidden;
+}
+
+.question-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    /* Question card mobile optimization */
+    .question-card {
+        padding: 16px;
+        margin-bottom: 12px;
+        border-radius: var(--radius);
+    }
+    
+    .question-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .question-meta {
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .question-actions {
+        align-self: flex-end;
+        margin-top: -40px; /* Position actions at top right */
+        position: relative;
+        z-index: 2;
+    }
+    
+    .question-text {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Image mobile optimization */
+    .question-image {
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+    
+    .question-image-container {
+        margin: 12px 0;
+    }
+    
+    /* Table mobile optimization */
+    .question-text table {
+        font-size: 12px;
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+    
+    .question-text th, .question-text td {
+        padding: 8px 10px;
+        min-width: 100px;
+    }
+    
+    /* Options grid mobile optimization */
+    .options-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .option {
+        padding: 14px;
+        min-height: auto;
+    }
+    
+    .option-letter {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+    }
+    
+    .option-text {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    
+    /* Quiz controls mobile optimization */
+    .quiz-controls {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+        padding-top: 20px;
+    }
+    
+    .quiz-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+    
+    /* Explanation section mobile optimization */
+    .explanation-section {
+        margin-top: 20px;
+        padding: 16px;
+    }
+    
+    .explanation-section summary {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .explanation-content {
+        padding: 12px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+}
+
+/* Extra small devices optimization (phones under 480px) */
+@media (max-width: 480px) {
+    .question-card {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .question-text {
+        font-size: 15px;
+        line-height: 1.4;
+    }
+    
+    /* Image optimization for very small screens */
+    .question-image {
+        margin: 10px 0;
+        border-radius: 4px;
+    }
+    
+    .question-image-container {
+        margin: 10px 0;
+    }
+    
+    /* Table optimization for very small screens */
+    .question-text table {
+        font-size: 11px;
+        margin: 10px 0;
+    }
+    
+    .question-text th, .question-text td {
+        padding: 6px 8px;
+        min-width: 80px;
+    }
+    
+    .question-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    
+    .question-number, .question-category, .question-difficulty {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .option {
+        padding: 12px 10px;
+    }
+    
+    .option-text {
+        font-size: 13px;
+    }
+    
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    /* Ensure proper spacing in exam mode */
+    .exam-mode-layout .question-card {
+        margin-bottom: 16px;
+    }
+}
+
+/* Fix for exam mode layout on mobile */
+.exam-mode-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .exam-mode-layout {
+        gap: 12px;
+    }
+    
+    .exam-header {
+        padding: 16px;
+    }
+    
+    .exam-header > div:first-child {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .exam-mode-toggle {
+        align-self: stretch;
+        display: flex;
+    }
+    
+    .mode-toggle-btn {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        padding: 10px 8px;
+    }
+    
+    .progress-info {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .progress-info .progress-bar {
+        width: 100%;
+    }
+}
+
+/* Fix for learn mode responsiveness */
+@media (max-width: 768px) {
+    .explanation-section {
+        padding: 16px;
+    }
+    
+    .explanation-section summary {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .explanation-content {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .related-questions-list {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .related-question-tag {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .correct-answer, .why-not-section, .related-questions {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+}
+
+/* Prevent horizontal scrolling on the entire page */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+    
+    .quiz-container {
+        padding: 0 16px 16px;
+    }
+    
+    .main-content {
+        width: 100%;
+    }
+}
+
+/* Ensure images in custom questions are also responsive */
+.custom-question-creator img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 10px 0;
+    display: block;
+}
+
+/* Fix for image loading states */
+.question-image {
+    background: var(--surface);
+    min-height: 50px;
+}
+
+.question-image:not([src]) {
+    display: none;
+}
+
+/* Animation for image loading */
+@keyframes imageFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.question-image.loaded {
+    animation: imageFadeIn 0.3s ease-in;
+}
     </style>
 </head>
 <body class="dark-mode">
@@ -1794,7 +2162,7 @@ if ('serviceWorker' in navigator) {
     <!-- Custom Quiz Modal -->
 <div class="custom-quiz-modal" id="customQuizModal">
     <div class="custom-quiz-content glass-effect">
-        <h3 class="custom-quiz-title"> </h3>
+        <h3 class="custom-quiz-title">Create Custom Quiz</h3>
         <div class="custom-quiz-options">
             <div class="custom-quiz-option" data-category="all">
                 <div class="option-selector"></div>
@@ -2103,1133 +2471,1897 @@ document.addEventListener('keydown', function(e) {
 const quizData = [
     {
         "id": 1,
-        "question": "Bone marrow cells from an organ donor are cultured in vitro at 37°C in the presence of recombinant erythropoietin. A photomicrograph of a typical “burst-forming unit” is shown in the image. This colony, committed to the erythrocyte pathway of differentiation, represents an example of which of the following physiologic adaptations to transmembrane signaling?",
+        "question": "The term \"pharmacokinetics\" is best described as:",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "The study of what the drug does to the body",
+            "The study of the physiologic and biochemical effects of drugs",
+            "What the body does to the drug",
+            "The science and art of treating diseases"
         ],
         "answer": 2,
-        "correctAnswer": "Hyperplasia",
-        "explanation": "Hyperplasia is defined as an increase in the number of cells in an organ or tissue. Like hypertrophy, it is often a response to trophic signals or increased functional demand and is commonly a normal process. Erythroid hyperplasia is typically seen in people living at high altitude. Low oxygen tension evokes the production of erythropoietin, which promotes the survival and proliferation of erythroid precursors in the bone marrow. The cellular and molecular mechanisms that are responsible for hyperplasia clearly relate to the control of cell proliferation (i.e., cell cycle).",
+        "correctAnswer": "What the body does to the drug",
+        "explanation": "Pharmacokinetics encompasses absorption, distribution, metabolism, and excretion (ADME)—the processes the body performs on the drug.",
         "whyNotOtherOptions": {
-            "a": "Atrophy refers to a decrease in cell size or number, often due to reduced demand or disuse.",
-            "b": "Dysplasia involves abnormal cell maturation and organization, often preneoplastic.",
-            "d": "Hypertrophy is an increase in cell size, not number.",
-            "e": "Metaplasia is the replacement of one differentiated cell type with another."
+            "a": "This defines pharmacodynamics.",
+            "b": "This also refers to pharmacodynamics.",
+            "d": "This is pharmacotherapeutics."
         },
-        "relatedQuestions": ["12", "41"],
-        "category": "Cell Injury",
+        "relatedQuestions": ["14"],
+        "category": "Introduction",
         "difficulty": "Easy"
     },
     {
         "id": 2,
-        "question": "A 50-year-old chronic alcoholic presents to the emergency room with 12 hours of severe abdominal pain. The pain radiates to the back and is associated with an urge to vomit. Physical examination discloses exquisite abdominal tenderness. Laboratory studies show elevated serum amylase. Which of the following morphologic changes would be expected in the peripancreatic tissue of this patient?",
+        "question": "A \"medicine\" is differentiated from a \"drug\" in that it:",
         "options": [
-            "(A) Coagulative necrosis",
-            "(B) Caseous necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
+            "Is always a single chemical substance",
+            "Is a chemical preparation that usually contains one or more drugs",
+            "Produces a biological effect by itself",
+            "Must be derived from a synthetic source"
         ],
-        "answer": 2,
-        "correctAnswer": "Fat necrosis",
-        "explanation": "Saponification of fat derived from peripancreatic fat cells exposed to pancreatic enzymes is a typical feature of fat necrosis. Lipase, released from pancreatic acinar cells during an attack of acute pancreatitis, hydrolyzes fat into fatty acids and glycerol. Free fatty acids bind with calcium to form soaps, which is a process known as saponification. Entry of calcium ions into the injured tissue reduces the level of calcium in blood. Hypocalcemia is, therefore, a typical finding in patients who had a recent bout of acute pancreatitis. Patients with acute pancreatitis experience sudden-onset abdominal pain, distention, and vomiting.",
+        "answer": 1,
+        "correctAnswer": "Is a chemical preparation that usually contains one or more drugs",
+        "explanation": "A medicine is a formulated product containing active drug(s) plus excipients for therapeutic use.",
         "whyNotOtherOptions": {
-            "a": "Coagulative necrosis preserves cell outlines, seen in ischemic injury.",
-            "b": "Caseous necrosis is cheese-like, typical of tuberculosis.",
-            "d": "Fibrinoid necrosis occurs in vessel walls in vasculitis.",
-            "e": "Liquefactive necrosis involves digestion, seen in brain or abscesses."
+            "a": "Medicines often combine substances.",
+            "c": "Excipients do not.",
+            "d": "Source irrelevant."
         },
-        "relatedQuestions": ["13", "28"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
+        "relatedQuestions": [],
+        "category": "Introduction",
+        "difficulty": "Easy"
     },
     {
         "id": 3,
-        "question": "A 68-year-old man with a history of gastroesophageal reflux disease suffers a massive stroke and expires. The esophagus at autopsy is shown in the image. Histologic examination of the abnormal tissue shows intestine-like epithelium composed of goblet cells and surface cells similar to those of incompletely intestinalized gastric mucosa. There is no evidence of nuclear atypia. Which of the following terms best describes this morphologic response to persistent injury in the esophagus of this patient?",
+        "question": "Chemotherapy specifically deals with drugs that:",
         "options": [
-            "(A) Atypical hyperplasia",
-            "(B) Complex hyperplasia",
-            "(C) Glandular metaplasia",
-            "(D) Simple hyperplasia",
-            "(E) Squamous metaplasia"
+            "Replace deficient natural substances in the body",
+            "Selectively inhibit or destroy specific disease agents like bacteria or cancer cells",
+            "Are used for general treatment of all disease types",
+            "Act by stimulating physiological processes"
         ],
-        "answer": 2,
-        "correctAnswer": "Glandular metaplasia",
-        "explanation": "The major adaptive responses of cells to sublethal injury are atrophy, hypertrophy, hyperplasia, metaplasia, dysplasia, and intracellular storage. Metaplasia is defined as the conversion of one differentiated cell pathway to another. In this case, the esophageal squamous epithelium is replaced by columnar epithelium as a result of chronic gastroesophageal reflux. The lesion is characterized histologically by intestine-like epithelium composed of goblet cells and cells similar to those of incompletely intestinalized gastric mucosa.",
+        "answer": 1,
+        "correctAnswer": "Selectively inhibit or destroy specific disease agents like bacteria or cancer cells",
+        "explanation": "Chemotherapy targets pathogens or malignant cells with selective toxicity.",
         "whyNotOtherOptions": {
-            "a": "Atypical hyperplasia involves abnormal cell growth, often in endometrium.",
-            "b": "Complex hyperplasia is a preneoplastic change in endometrium.",
-            "d": "Simple hyperplasia is increased cell number without atypia.",
-            "e": "Squamous metaplasia occurs in bronchial epithelium of smokers."
+            "a": "Replacement therapy.",
+            "c": "Too broad.",
+            "d": "Stimulation not selective destruction."
         },
-        "relatedQuestions": ["25", "39"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "Introduction",
         "difficulty": "Medium"
     },
     {
         "id": 4,
-        "question": "A CT scan of a 43-year-old woman with a parathyroid adenoma and hyperparathyroidism reveals extensive calcium deposits in the lungs and kidney parenchyma. These radiologic findings are best explained by which of the following mechanisms of disease?",
+        "question": "The primary purpose of a coating on a tablet includes all of the following EXCEPT:",
         "options": [
-            "(A) DNA",
-            "(B) Glycogen",
-            "(C) Lipid",
-            "(D) mRNA",
-            "(E) Water"
+            "Hide the taste of the tablet's components",
+            "Make the tablet smoother and easier to swallow",
+            "Increase the drug's intrinsic potency",
+            "Extend the drug's release duration"
         ],
-        "answer": 3,
-        "correctAnswer": "Metastatic calcification",
-        "explanation": "Metastatic calcification is associated with an increased serum calcium concentration (hypercalcemia). Almost any disorder that increases serum calcium levels can lead to calcification in the alveolar septa of the lung, renal tubules, and blood vessels. The patient in this case had a parathyroid adenoma that produced large quantities of parathyroid hormone. Other examples of metastatic calcification include multiple opacities in the cornea of a child given large amounts of vitamin D and partially calcified alveolar septa in the lungs of a patient with breast cancer metastatic to bone.",
+        "answer": 2,
+        "correctAnswer": "Increase the drug's intrinsic potency",
+        "explanation": "Coatings mask taste, improve swallowability, and control release but do not alter the drug's inherent efficacy.",
         "whyNotOtherOptions": {
-            "a": "DNA is not involved in calcification mechanisms.",
-            "b": "Glycogen accumulation is seen in diabetes, not calcification.",
-            "c": "Lipid relates to fat necrosis or atherosclerosis.",
-            "d": "mRNA is involved in protein synthesis, like hypertrophy.",
-            "e": "Water influx causes hydropic swelling."
+            "a": "Taste masking common.",
+            "b": "Facilitates ingestion.",
+            "d": "Enteric/sustained-release."
         },
-        "relatedQuestions": ["8", "32"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
+        "relatedQuestions": [],
+        "category": "Dosage Forms",
+        "difficulty": "Easy"
     },
     {
         "id": 5,
-        "question": "A 75-year-old woman with Alzheimer disease dies of congestive heart failure. The brain at autopsy is shown in the image. This patient’s brain exemplifies which of the following responses to chronic injury?",
+        "question": "Buccal and sublingual tablets are designed to:",
         "options": [
-            "(A) Anaplasia",
-            "(B) Atrophy",
-            "(C) Dysplasia",
-            "(D) Hyperplasia",
-            "(E) Hypertrophy"
+            "Dissolve slowly in the stomach for sustained release",
+            "Be chewed thoroughly before swallowing",
+            "Dissolve rapidly and be absorbed through oral mucous membranes",
+            "Resist the alkaline environment of the intestine"
         ],
-        "answer": 1,
-        "correctAnswer": "Atrophy",
-        "explanation": "Clinically, atrophy is recognized as diminution in the size or function of an organ. It is often seen in areas of vascular insufficiency or chronic inflammation and may result from disuse. Atrophy may be thought of as an adaptive response to stress, in which the cell shuts down its differentiated functions. Reduction in the size of an organ may reflect reversible cell atrophy or may be caused by irreversible loss of cells. For example, atrophy of the brain in this patient with Alzheimer disease is secondary to extensive cell death, and the size of the organ cannot be restored. This patient’s brain shows marked atrophy of the frontal lobe. The gyri are thinned, and sulci are widened.",
+        "answer": 2,
+        "correctAnswer": "Dissolve rapidly and be absorbed through oral mucous membranes",
+        "explanation": "Rapid dissolution and mucosal absorption bypass first-pass metabolism.",
         "whyNotOtherOptions": {
-            "a": "Anaplasia represents lack of differentiated features in a neoplasm.",
-            "c": "Dysplasia is disordered maturation, preneoplastic.",
-            "d": "Hyperplasia increases cell number.",
-            "e": "Hypertrophy increases cell size."
+            "a": "Not gastric.",
+            "b": "Not chewable.",
+            "d": "Not enteric."
         },
-        "relatedQuestions": ["19", "31"],
-        "category": "Cell Injury",
+        "relatedQuestions": ["24"],
+        "category": "Dosage Forms",
         "difficulty": "Easy"
     },
     {
         "id": 6,
-        "question": "A 68-year-old woman with a history of heavy smoking and repeated bouts of pneumonia presents with a 2-week history of fever and productive cough. A chest X-ray reveals a right lower lobe infiltrate. A transbronchial biopsy confirms pneumonia and further demonstrates preneoplastic changes within the bronchial mucosa. Which of the following best characterizes the morphology of this bronchial mucosal lesion?",
+        "question": "A key advantage of a capsule dosage form is its ability to:",
         "options": [
-            "(A) Abnormal pattern of cellular maturation",
-            "(B) Increased numbers of otherwise normal cells",
-            "(C) Invasiveness through the basement membrane",
-            "(D) Transformation of one differentiated cell type to another",
-            "(E) Ulceration and necrosis of epithelial cells"
+            "Increase the absolute bioavailability of any drug",
+            "Mask the unpleasant taste of its contents",
+            "Bypass all first-pass metabolism",
+            "Ensure 100% generic equivalence"
         ],
-        "answer": 0,
-        "correctAnswer": "Abnormal pattern of cellular maturation",
-        "explanation": "Cells that compose an epithelium exhibit uniformity of size and shape, and they undergo maturation in an orderly fashion (e.g., from plump basal cells to flat superficial cells in a squamous epithelium). When we speak of dysplasia, we mean that this regular appearance is disturbed by (1) variations in the size and shape of the cells; (2) enlargement, irregularity, and hyperchromatism of the nuclei; and (3) disorderly arrangement of the cells within the epithelium. Dysplasia of the bronchial epithelium is a reaction of respiratory epithelium to carcinogens in tobacco smoke. It is potentially reversible if the patient stops smoking but is considered preneoplastic and may progress to carcinoma.",
+        "answer": 1,
+        "correctAnswer": "Mask the unpleasant taste of its contents",
+        "explanation": "Gelatin shell conceals bitter or irritant drugs.",
         "whyNotOtherOptions": {
-            "b": "Increased numbers describe hyperplasia.",
-            "c": "Invasiveness connotes malignancy.",
-            "d": "Transformation to another cell type is metaplasia.",
-            "e": "Ulceration and necrosis are seen in severe injury."
+            "a": "Depends on drug.",
+            "c": "Oral capsules undergo first-pass.",
+            "d": "Equivalence separate."
         },
-        "relatedQuestions": ["40", "42"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "Dosage Forms",
         "difficulty": "Medium"
     },
     {
         "id": 7,
-        "question": "A 64-year-old man with long-standing angina pectoris and arterial hypertension dies of spontaneous intracerebral hemorrhage. At autopsy, the heart appears globoid. The left ventricle measures 2.8 cm on cross section (shown in the image). This adaptation to chronic injury was mediated primarily by changes in the intracellular concentration of which of the following components?",
+        "question": "An \"elixir\" is characterized as a clear liquid preparation that contains a high proportion of:",
         "options": [
-            "(A) DNA",
-            "(B) Glycogen",
-            "(C) Lipid",
-            "(D) mRNA",
-            "(E) Water"
+            "Sucrose only",
+            "Oily dispersions",
+            "Ethanol or sucrose with preservatives",
+            "Sterile water for injection"
         ],
-        "answer": 3,
-        "correctAnswer": "mRNA",
-        "explanation": "Hypertrophic cardiac myocytes have more cytoplasm and larger nuclei than normal cells. Although the elucidation of the cellular and molecular mechanisms underlying the hypertrophic response is still actively pursued, it is clear that the final steps include increases in mRNA, rRNA, and protein. Hypertrophy results from transcriptional regulation.",
+        "answer": 2,
+        "correctAnswer": "Ethanol or sucrose with preservatives",
+        "explanation": "Elixirs are hydroalcoholic sweetened solutions for oral use.",
         "whyNotOtherOptions": {
-            "a": "Aneuploidy (DNA) is not a feature of myofiber hypertrophy.",
-            "b": "Glycogen is stored in some conditions but not primary in hypertrophy.",
-            "c": "Lipid accumulation is seen in fatty change.",
-            "e": "Water influx is typical of hydropic swelling in acute injury."
+            "a": "May include alcohol.",
+            "b": "Emulsions/suspensions differ.",
+            "d": "Parenteral."
         },
-        "relatedQuestions": ["17"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [],
+        "category": "Dosage Forms",
+        "difficulty": "Easy"
     },
     {
         "id": 8,
-        "question": "A 24-year-old woman contracts toxoplasmosis during her pregnancy and delivers a neonate at 37 weeks of gestation with a severe malformation of the central nervous system. MRI studies of the neonate reveal porencephaly and hydrocephalus. An X-ray film of the head shows irregular densities in the basal ganglia. These X-ray findings are best explained by which of the following mechanisms of disease?",
+        "question": "A \"transdermal patch\" is classified as a system that:",
         "options": [
-            "(A) Amniotic fluid embolism",
-            "(B) Dystrophic calcification",
-            "(C) Granulomatous inflammation",
-            "(D) Metastatic calcification",
-            "(E) Organ immaturity"
+            "Delivers medication for a local skin effect only",
+            "Provides controlled release of medicament into the bloodstream",
+            "Is primarily used for bowel evacuation",
+            "Is identical in function to a topical ointment"
         ],
         "answer": 1,
-        "correctAnswer": "Dystrophic calcification",
-        "explanation": "Dystrophic calcification reflects underlying cell injury. Serum levels of calcium are normal, and the calcium deposits are located in previously damaged tissue. Intrauterine Toxoplasma infection affects approximately 0.1% of all pregnancies. Acute encephalitis in the fetus afflicted with TORCH syndrome may be associated with foci of necrosis that become calcified. Microcephaly, hydrocephalus, and microgyria are frequent complications of these intrauterine infections.",
+        "correctAnswer": "Provides controlled release of medicament into the bloodstream",
+        "explanation": "Transdermal systems achieve systemic delivery via rate-controlled skin permeation.",
         "whyNotOtherOptions": {
-            "a": "Amniotic fluid embolism causes pulmonary issues in mother.",
-            "c": "Granulomatous inflammation is seen in tuberculosis.",
-            "d": "Metastatic calcification reflects hypercalcemia.",
-            "e": "Organ immaturity does not cause calcification."
+            "a": "Systemic intent.",
+            "c": "Suppositories.",
+            "d": "Ointments local."
         },
-        "relatedQuestions": ["4", "32"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
+        "relatedQuestions": ["33"],
+        "category": "Dosage Forms",
+        "difficulty": "Easy"
     },
     {
         "id": 9,
-        "question": "A 30-year-old man with AIDS-dementia complex develops acute pneumonia and dies of respiratory insufficiency. At autopsy, many central nervous system neurons display hydropic degeneration. This manifestation of sublethal neuronal injury was most likely mediated by impairment of which of the following cellular processes?",
+        "question": "The first commercially available transdermal patch was used for:",
         "options": [
-            "(A) DNA synthesis",
-            "(B) Lipid peroxidation",
-            "(C) Mitotic spindle assembly",
-            "(D) Plasma membrane sodium transport",
-            "(E) Ribosome biosynthesis"
+            "Nicotine replacement",
+            "Hormone therapy",
+            "Motion sickness (scopolamine)",
+            "Pain management"
         ],
-        "answer": 3,
-        "correctAnswer": "Plasma membrane sodium transport",
-        "explanation": "Hydropic swelling reflects acute, reversible (sublethal) cell injury. It results from impairment of cellular volume regulation, a process that controls ionic concentrations in the cytoplasm. This regulation, particularly for sodium, involves (1) the plasma membrane, (2) the plasma membrane sodium pump, and (3) the supply of ATP. Injurious agents may interfere with these membrane-regulated processes. Accumulation of sodium in the cell leads to an increase in water content to maintain isosmotic conditions, and the cell then swells.",
+        "answer": 2,
+        "correctAnswer": "Motion sickness (scopolamine)",
+        "explanation": "Scopoderm TTS (scopolamine) introduced in 1979 for antiemetic effect.",
         "whyNotOtherOptions": {
-            "a": "DNA synthesis impairment affects replication.",
-            "b": "Lipid peroxidation is often a feature of irreversible injury.",
-            "c": "Mitotic spindle relates to division.",
-            "e": "Ribosome biosynthesis affects protein synthesis."
+            "a": "Later (1991).",
+            "b": "Estradiol later.",
+            "d": "Fentanyl later."
         },
-        "relatedQuestions": ["34"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [],
+        "category": "Dosage Forms",
+        "difficulty": "Medium"
     },
     {
         "id": 10,
-        "question": "A 62-year-old man is brought to the emergency room in a disoriented state. Physical examination reveals jaundice, splenomegaly, and ascites. Serum levels of ALT, AST, alkaline phosphatase, and bilirubin are all elevated. A liver biopsy demonstrates alcoholic hepatitis with Mallory bodies. These cytoplasmic structures are composed of interwoven bundles of which of the following proteins?",
+        "question": "The purpose of a \"retention enema,\" as opposed to an \"evacuant enema,\" is to:",
         "options": [
-            "(A) α1-Antitrypsin",
-            "(B) β-Amyloid (Aβ)",
-            "(C) Intermediate filaments",
-            "(D) Prion protein (PrP)",
-            "(E) α-Synuclein"
+            "Stimulate bowel movement for constipation",
+            "Administer a substance for local or systemic effect with low volume",
+            "Cleanse the colon before radiological imaging",
+            "Replace fluid and electrolytes"
         ],
-        "answer": 2,
-        "correctAnswer": "Intermediate filaments",
-        "explanation": "Hyaline is a term that refers to any material that exhibits a reddish, homogeneous appearance when stained with hematoxylin and eosin (H&E). Standard terminology includes hyaline arteriolosclerosis, alcoholic hyaline in the liver, hyaline membranes in the lung, and hyaline droplets in various cells. Alcoholic (Mallory) hyaline is composed of cytoskeletal intermediate filaments (cytokeratins), whereas pulmonary hyaline membranes consist of plasma proteins deposited in alveoli.",
+        "answer": 1,
+        "correctAnswer": "Administer a substance for local or systemic effect with low volume",
+        "explanation": "Retention enemas (10-30 mL) retain drug for absorption or local action.",
         "whyNotOtherOptions": {
-            "a": "Structurally abnormal α1-antitrypsin molecules accumulate in the liver of patients with α1-antitrypsin deficiency.",
-            "b": "β-Amyloid accumulates in Alzheimer disease.",
-            "d": "Prion protein in Creutzfeldt-Jakob disease.",
-            "e": "α-Synuclein accumulates in neurons in Parkinson disease."
+            "a": "Evacuant.",
+            "c": "Evacuant.",
+            "d": "IV fluids."
         },
-        "relatedQuestions": ["47"],
-        "category": "Cell Injury",
+        "relatedQuestions": ["25"],
+        "category": "Dosage Forms",
         "difficulty": "Medium"
     },
     {
         "id": 11,
-        "question": "A 65-year-old man suffers a heart attack and expires. Examination of the lungs at autopsy reveals numerous pigmented nodules scattered throughout the parenchyma (shown in the image). What is the appropriate diagnosis?",
+        "question": "The drug name \"assigned by the U.S. Adopted Names Council, less complicated, and used internationally\" is the:",
         "options": [
-            "(A) Anthracosis",
-            "(B) Asbestosis",
-            "(C) Hemosiderosis",
-            "(D) Sarcoidosis",
-            "(E) Silicosis"
+            "Chemical Name",
+            "Generic Name",
+            "Trade Name",
+            "Proprietary Name"
         ],
-        "answer": 0,
-        "correctAnswer": "Anthracosis",
-        "explanation": "Anthracosis refers to the storage of carbon particles in the lung and regional lymph nodes. These particles accumulate in alveolar macrophages and are also transported to hilar and mediastinal lymph nodes, where the indigestible material is stored indefinitely within tissue macrophages. Although the gross appearance of the lungs of persons with anthracosis may be alarming, the condition is innocuous. Workers who mine hard coal (anthracite) develop pulmonary fibrosis, owing to the presence of toxic/fibrogenic dusts such as silica.",
+        "answer": 1,
+        "correctAnswer": "Generic Name",
+        "explanation": "USAN generic (nonproprietary) name is simplified and globally harmonized.",
         "whyNotOtherOptions": {
-            "b": "Asbestosis involves asbestos fibers and fibrosis.",
-            "c": "Hemosiderosis represents intracellular storage of iron.",
-            "d": "Sarcoidosis is granulomatous disease.",
-            "e": "Silicosis from silica dust."
+            "a": "IUPAC, complex.",
+            "c": "Brand-specific.",
+            "d": "Same as trade."
         },
-        "relatedQuestions": ["22", "24"],
-        "category": "Cell Injury",
+        "relatedQuestions": ["12"],
+        "category": "Nomenclature",
         "difficulty": "Easy"
     },
     {
         "id": 12,
-        "question": "A 32-year-old woman with poorly controlled diabetes mellitus delivers a healthy boy at 38 weeks of gestation. As a result of maternal hyperglycemia during pregnancy, pancreatic islets in the neonate would be expected to show which of the following morphologic responses to injury?",
+        "question": "A single drug having multiple names like Advil, Motrin, and Midol is an example of:",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Metaplasia",
-            "(E) Necrosis"
+            "Generic names",
+            "Chemical names",
+            "Trade names",
+            "Non-proprietary names"
         ],
         "answer": 2,
-        "correctAnswer": "Hyperplasia",
-        "explanation": "Infants of diabetic mothers show a 5% to 10% incidence of major developmental abnormalities, including anomalies of the heart and great vessels and neural tube defects. The frequency of these lesions relates to the control of maternal diabetes during early gestation. During fetal development, the islet cells of the pancreas have proliferative capacity and respond to increased demand for insulin by undergoing physiologic hyperplasia. Fetuses exposed to hyperglycemia in utero may develop hyperplasia of the pancreatic β cells, which may secrete insulin autonomously and cause hypoglycemia at birth.",
+        "correctAnswer": "Trade names",
+        "explanation": "Different manufacturers market ibuprofen under distinct brand (trade) names.",
         "whyNotOtherOptions": {
-            "a": "Atrophy is decrease in size.",
-            "b": "Dysplasia is abnormal maturation.",
-            "d": "Metaplasia is cell type change.",
-            "e": "Necrosis is cell death."
+            "a": "One generic: ibuprofen.",
+            "b": "One chemical.",
+            "d": "Generic."
         },
-        "relatedQuestions": ["1", "41"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
-    },
-    {
-        "id": 13,
-        "question": "A 59-year-old female alcoholic is brought to the emergency room with a fever (38.7°C/103°F) and foul-smelling breath. The patient subsequently develops acute bronchopneumonia and dies of respiratory insufficiency. A pulmonary abscess is identified at autopsy (shown in the image). Histologic examination of the wall of this lesion would most likely demonstrate which of the following pathologic changes?",
-        "options": [
-            "(A) Caseous necrosis",
-            "(B) Coagulative necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
-        ],
-        "answer": 4,
-        "correctAnswer": "Liquefactive necrosis",
-        "explanation": "When the rate of dissolution of the necrotic cells is faster than the rate of repair, the resulting morphologic appearance is termed liquefactive necrosis. The polymorphonuclear leukocytes of the acute inflammatory reaction are endowed with potent hydrolases that are capable of digesting dead cells. A sharply localized collection of these acute inflammatory cells in response to a bacterial infection produces rapid death and dissolution of tissue. The result is often an abscess defined as a cavity formed by liquefactive necrosis in a solid tissue.",
-        "whyNotOtherOptions": {
-            "a": "Caseous necrosis is seen in necrotizing granulomas.",
-            "b": "Coagulative necrosis retains cell outline.",
-            "c": "Fat necrosis in pancreatitis.",
-            "d": "Fibrinoid necrosis in vasculitis."
-        },
-        "relatedQuestions": ["2", "28"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
-    },
-    {
-        "id": 14,
-        "question": "A 20-year-old man from China is evaluated for persistent cough, night sweats, low-grade fever, and general malaise. A chest X-ray reveals findings “consistent with a Ghon complex.” Sputum cultures grow acid-fast bacilli. Examination of hilar lymph nodes in this patient would most likely demonstrate which of the following pathologic changes?",
-        "options": [
-            "(A) Caseous necrosis",
-            "(B) Coagulative necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
-        ],
-        "answer": 0,
-        "correctAnswer": "Caseous necrosis",
-        "explanation": "Caseous necrosis is a characteristic of primary tuberculosis, in which the necrotic cells fail to retain their cellular outlines. They do not disappear by lysis, as in liquefactive necrosis, but persist indefinitely as amorphous, coarsely granular, eosinophilic debris. Grossly, this debris resembles clumpy cheese, hence the name caseous necrosis. Primary tuberculosis is often asymptomatic or presents with nonspecific symptoms, such as low-grade fever, loss of appetite, and occasional spells of coughing. The Ghon complex includes parenchymal consolidation and ipsilateral enlargement of hilar lymph nodes and is often accompanied by a pleural effusion.",
-        "whyNotOtherOptions": {
-            "b": "Coagulative in ischemia.",
-            "c": "Fat in pancreatitis.",
-            "d": "Fibrinoid in vessels.",
-            "e": "Liquefactive in abscesses."
-        },
-        "relatedQuestions": ["13", "28"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
-    },
-    {
-        "id": 15,
-        "question": "A 31-year-old woman complains of increased vaginal discharge of 1-month duration. A cervical Pap smear is shown in the image. Superficial epithelial cells are identified with arrows. When compared to cells from the deeper intermediate layer (top), the nuclei of these superficial cells exhibit which of the following cytologic features?",
-        "options": [
-            "(A) Karyolysis",
-            "(B) Karyorrhexis",
-            "(C) Pyknosis",
-            "(D) Segmentation",
-            "(E) Viral inclusion bodies"
-        ],
-        "answer": 2,
-        "correctAnswer": "Pyknosis",
-        "explanation": "Coagulative necrosis refers to light microscopic alterations in dying cells. When stained with the usual combination of hematoxylin and eosin, the cytoplasm of a necrotic cell is eosinophilic. The nucleus displays an initial clumping of chromatin followed by its redistribution along the nuclear membrane. In pyknosis, the nucleus becomes smaller and stains deeply basophilic as chromatin clumping continues.",
-        "whyNotOtherOptions": {
-            "a": "Karyolysis is dissolution of nucleus.",
-            "b": "Karyorrhexis is fragmentation.",
-            "d": "Segmentation in neutrophils.",
-            "e": "Viral inclusions in infections."
-        },
-        "relatedQuestions": ["21", "35"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
-    },
-    {
-        "id": 16,
-        "question": "A 30-year-old woman suffers a tonic-clonic seizure and presents with delirium and hydrophobia. The patient states that she was bitten on the hand by a bat about 1 month ago. The patient subsequently dies of respiratory failure. Viral particles are found throughout the brainstem and cerebellum at autopsy. In addition to direct viral cytotoxicity, the necrosis of virally infected neurons in this patient was mediated primarily by which of the following mechanisms?",
-        "options": [
-            "(A) Histamine release from mast cells",
-            "(B) Humoral and cellular immunity",
-            "(C) Neutrophil-mediated phagocytosis",
-            "(D) Release of oxygen radicals from macrophages",
-            "(E) Vasoconstriction and ischemia"
-        ],
-        "answer": 1,
-        "correctAnswer": "Humoral and cellular immunity",
-        "explanation": "Both humoral and cellular arms of the immune system protect against the harmful effects of viral infections. Thus, the presentation of viral proteins to the immune system immunizes the body against the invader and elicits both killer cells and the production of antiviral antibodies. These arms of the immune system eliminate virus-infected cells by either inducing apoptosis or directing complement-mediated cytolysis. In this patient, the rabies virus entered a peripheral nerve and was transported by retrograde axoplasmic flow to the spinal cord and brain. The inflammation is centered in the brainstem and spills into the cerebellum and hypothalamus.",
-        "whyNotOtherOptions": {
-            "a": "Histamine in allergy.",
-            "c": "Neutrophils in bacterial infections.",
-            "d": "Oxygen radicals in reperfusion.",
-            "e": "Vasoconstriction in ischemia."
-        },
-        "relatedQuestions": ["46"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
-    },
-    {
-        "id": 17,
-        "question": "A 52-year-old woman loses her right kidney following an automobile accident. A CT scan of the abdomen 2 years later shows marked enlargement of the left kidney. The renal enlargement is an example of which of the following adaptations?",
-        "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
-        ],
-        "answer": 3,
-        "correctAnswer": "Hypertrophy",
-        "explanation": "Hypertrophy is a response to trophic signals or increased functional demand and is commonly a normal process. For example, if one kidney is rendered inoperative because of vascular occlusion, the contralateral kidney hypertrophies to accommodate increased demand. The molecular basis of hypertrophy reflects increased expression of growth-promoting genes (protooncogenes) such as myc, fos, and ras.",
-        "whyNotOtherOptions": {
-            "a": "Atrophy is decrease.",
-            "b": "Dysplasia abnormal maturation.",
-            "c": "Hyperplasia may occur but enlargement is hypertrophy.",
-            "e": "Metaplasia cell type change."
-        },
-        "relatedQuestions": ["7"],
-        "category": "Cell Injury",
+        "relatedQuestions": ["11"],
+        "category": "Nomenclature",
         "difficulty": "Easy"
     },
     {
-        "id": 18,
-        "question": "An 82-year-old man has profound bleeding from a peptic ulcer and dies of hypovolemic shock. The liver at autopsy displays centrilobular necrosis. Compared to viable hepatocytes, the necrotic cells contain higher intracellular concentrations of which of the following?",
+        "id": 13,
+        "question": "\"Over-the-counter\" (OTC) drugs are considered:",
         "options": [
-            "(A) Calcium",
-            "(B) Cobalt",
-            "(C) Copper",
-            "(D) Iron",
-            "(E) Selenium"
+            "Unsafe for use without medical supervision",
+            "Safe and can be sold without medical supervision",
+            "To have a high risk of abuse and dependence",
+            "To be more potent than prescription drugs"
         ],
-        "answer": 0,
-        "correctAnswer": "Calcium",
-        "explanation": "Coagulative necrosis is characterized by a massive influx of calcium into the cell. Under normal circumstances, the plasma membrane maintains a steep gradient of calcium ions, whose concentration in interstitial fluids is 10,000 times higher than that inside the cell. Irreversible cell injury damages the plasma membrane, which then fails to maintain this gradient, allowing the influx of calcium into the cell.",
+        "answer": 1,
+        "correctAnswer": "Safe and can be sold without medical supervision",
+        "explanation": "OTC drugs have established safety profiles for self-use.",
         "whyNotOtherOptions": {
-            "b": "Cobalt not typically increased.",
-            "c": "Copper in Wilson disease.",
-            "d": "Iron in hemochromatosis.",
-            "e": "Selenium antioxidant."
+            "a": "Opposite.",
+            "c": "Controlled substances Rx.",
+            "d": "Potency varies."
         },
-        "relatedQuestions": ["20", "35"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "Regulation",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 14,
+        "question": "The process that involves absorption, distribution, metabolism, and excretion is:",
+        "options": [
+            "Pharmacodynamics",
+            "Pharmacokinetics",
+            "Pharmacotherapeutics",
+            "Pharmacogenetics"
+        ],
+        "answer": 1,
+        "correctAnswer": "Pharmacokinetics",
+        "explanation": "ADME processes define pharmacokinetics.",
+        "whyNotOtherOptions": {
+            "a": "Drug effects.",
+            "c": "Clinical use.",
+            "d": "Genetic variation."
+        },
+        "relatedQuestions": ["1"],
+        "category": "Introduction",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 15,
+        "question": "The mechanism of drug absorption described as \"cell eating,\" involving the intake of large particulate materials is:",
+        "options": [
+            "Passive Diffusion",
+            "Facilitated Diffusion",
+            "Phagocytosis",
+            "Pinocytosis"
+        ],
+        "answer": 2,
+        "correctAnswer": "Phagocytosis",
+        "explanation": "Phagocytosis engulfs solids; pinocytosis fluids.",
+        "whyNotOtherOptions": {
+            "a": "No energy.",
+            "b": "Carrier-mediated.",
+            "d": "Fluid endocytosis."
+        },
+        "relatedQuestions": ["68"],
+        "category": "Absorption",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 16,
+        "question": "Facilitated diffusion differs from passive diffusion in that it:",
+        "options": [
+            "Moves against a concentration gradient",
+            "Requires energy in the form of ATP",
+            "Is mediated by carrier proteins",
+            "Is only for lipid-insoluble drugs"
+        ],
+        "answer": 2,
+        "correctAnswer": "Is mediated by carrier proteins",
+        "explanation": "Carrier-mediated but passive (down gradient, no ATP).",
+        "whyNotOtherOptions": {
+            "a": "Active transport.",
+            "b": "Active.",
+            "d": "Both mechanisms."
+        },
+        "relatedQuestions": ["17"],
+        "category": "Absorption",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 17,
+        "question": "A key characteristic of active transport is that it:",
+        "options": [
+            "Is a non-saturable process",
+            "Moves drugs down their concentration gradient",
+            "Can exhibit competitive antagonism",
+            "Does not require energy"
+        ],
+        "answer": 2,
+        "correctAnswer": "Can exhibit competitive antagonism",
+        "explanation": "Carrier saturation and substrate competition occur.",
+        "whyNotOtherOptions": {
+            "a": "Saturable.",
+            "b": "Against gradient.",
+            "d": "ATP-dependent."
+        },
+        "relatedQuestions": ["16"],
+        "category": "Absorption",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 18,
+        "question": "Which pair of properties would favor the FASTEST absorption?",
+        "options": [
+            "Large molecular size and high lipid solubility",
+            "Small molecular size and high lipid solubility",
+            "High degree of ionization and large molecular size",
+            "Low lipid solubility and small molecular size"
+        ],
+        "answer": 1,
+        "correctAnswer": "Small molecular size and high lipid solubility",
+        "explanation": "Lipid-soluble, small molecules cross membranes rapidly via passive diffusion.",
+        "whyNotOtherOptions": {
+            "a": "Large size hinders.",
+            "c": "Ionized poor diffusion.",
+            "d": "Low lipid poor."
+        },
+        "relatedQuestions": ["39"],
+        "category": "Absorption",
         "difficulty": "Medium"
     },
     {
         "id": 19,
-        "question": "A 28-year-old woman is pinned by falling debris during a hurricane. An X-ray film of the leg reveals a compound fracture of the right tibia. The leg is immobilized in a cast for 6 weeks. When the cast is removed, the patient notices that her right leg is weak and visibly smaller in circumference than the left leg. Which of the following terms best describes this change in the patient’s leg muscle?",
+        "question": "The degree of ionization of a drug depends on all of the following EXCEPT:",
         "options": [
-            "(A) Atrophy",
-            "(B) Hyperplasia",
-            "(C) Metaplasia",
-            "(D) Ischemic necrosis",
-            "(E) Irreversible cell injury"
+            "Acidity or alkalinity (pH) of the drug",
+            "Pka value of the drug",
+            "pH of the medium",
+            "The drug's trade name"
         ],
-        "answer": 0,
-        "correctAnswer": "Atrophy",
-        "explanation": "The most common form of atrophy follows reduced functional demand. For example, after immobilization of a limb in a cast as treatment for a bone fracture, muscle cells atrophy, and muscular strength is reduced. The expression of differentiation genes is repressed. On restoration of normal conditions, atrophic cells are fully capable of resuming their differentiated functions; size increases to normal, and specialized functions, such as protein synthesis or contractile force, return to their original levels.",
+        "answer": 3,
+        "correctAnswer": "The drug's trade name",
+        "explanation": "Ionization governed by Henderson-Hasselbalch (pKa, pH); trade name irrelevant.",
         "whyNotOtherOptions": {
-            "b": "Hyperplasia increase in number.",
-            "c": "Metaplasia cell type change.",
-            "d": "Ischemic necrosis from vascular issue.",
-            "e": "Irreversible injury unlikely in cast."
+            "a": "pKa defines.",
+            "b": "pKa.",
+            "c": "Medium pH."
         },
-        "relatedQuestions": ["5", "31"],
-        "category": "Cell Injury",
+        "relatedQuestions": ["69"],
+        "category": "Absorption",
         "difficulty": "Easy"
     },
     {
         "id": 20,
-        "question": "A 70-year-old man is hospitalized after suffering a mild stroke. While in the hospital, he suddenly develops crushing substernal chest pain. Analysis of serum proteins and ECG confirm a diagnosis of acute myocardial infarction. The patient subsequently develops an arrhythmia and expires. A cross section of the left ventricle at autopsy is shown in the image. Histologic examination of the affected heart muscle would demonstrate which of the following morphologic changes?",
+        "question": "Compared to solid dosage forms, liquid dosage forms generally provide:",
         "options": [
-            "(A) Caseous necrosis",
-            "(B) Coagulative necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
+            "Slower absorption",
+            "Faster absorption",
+            "Lower bioavailability",
+            "Higher first-pass metabolism"
         ],
         "answer": 1,
-        "correctAnswer": "Coagulative necrosis",
-        "explanation": "Ischemic necrosis of cardiac myocytes is the leading cause of death in the Western world. In brief, the interruption of blood supply to the heart decreases the delivery of O2 and glucose. Lack of O2 impairs mitochondrial electron transport, thereby decreasing ATP synthesis and facilitating the production of reactive oxygen species. Mitochondrial damage promotes the release of cytochrome c to the cytosol, and the cell dies. The morphologic appearance of the necrotic cell has traditionally been termed coagulative necrosis because of its similarity to the coagulation of proteins that occurs upon heating.",
+        "correctAnswer": "Faster absorption",
+        "explanation": "No dissolution step; drug already in solution.",
         "whyNotOtherOptions": {
-            "a": "Caseous in TB.",
-            "c": "Fat in pancreatitis.",
-            "d": "Fibrinoid in vessels.",
-            "e": "Liquefactive in brain."
+            "a": "Opposite.",
+            "c": "Often higher.",
+            "d": "Same first-pass."
         },
-        "relatedQuestions": ["13", "18"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "Absorption",
         "difficulty": "Easy"
     },
     {
         "id": 21,
-        "question": "Which of the following histologic features would provide definitive evidence of necrosis in the myocardium of the patient described in Question 20?",
+        "question": "The relationship of surface area and vascularity to absorption rate is:",
         "options": [
-            "(A) Disaggregation of polyribosomes",
-            "(B) Increased intracellular volume",
-            "(C) Influx of lymphocytes",
-            "(D) Mitochondrial swelling and calcification",
-            "(E) Nuclear fragmentation"
+            "Larger surface area and lower vascularity increase absorption rate",
+            "Smaller surface area and higher vascularity increase absorption rate",
+            "Larger surface area and higher vascularity increase absorption rate",
+            "Surface area and vascularity have no impact on absorption rate"
         ],
-        "answer": 4,
-        "correctAnswer": "Nuclear fragmentation",
-        "explanation": "Nuclear fragmentation (karyorrhexis and karyolysis) is a hallmark of coagulative necrosis.",
+        "answer": 2,
+        "correctAnswer": "Larger surface area and higher vascularity increase absorption rate",
+        "explanation": "Intestine: vast area, rich blood flow maximize absorption.",
         "whyNotOtherOptions": {
-            "a": "Disaggregation in reversible injury.",
-            "b": "Increased volume in swelling.",
-            "c": "Lymphocytes in chronic inflammation.",
-            "d": "Mitochondrial swelling in reversible."
+            "a": "Low vascularity limits.",
+            "b": "Small area limits.",
+            "d": "Key factors."
         },
-        "relatedQuestions": ["15", "35"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
-    },
-    {
-        "id": 22,
-        "question": "A 90-year-old woman with mild diabetes and Alzheimer disease dies in her sleep. At autopsy, hepatocytes are noted to contain golden cytoplasmic granules that do not stain with Prussian blue. Which of the following best accounts for pigment accumulation in the liver of this patient?",
-        "options": [
-            "(A) Advanced age",
-            "(B) Alzheimer disease",
-            "(C) Congestive heart failure",
-            "(D) Diabetic ketoacidosis",
-            "(E) Hereditary hemochromatosis"
-        ],
-        "answer": 0,
-        "correctAnswer": "Advanced age",
-        "explanation": "Substances that cannot be metabolized accumulate in cells. Examples include (1) endogenous substrates that are not processed because a key enzyme is missing (lysosomal storage diseases), (2) insoluble endogenous pigments (lipofuscin and melanin), and (3) exogenous particulates (silica and carbon). Lipofuscin is a “wear and tear” pigment of aging that accumulates in organs such as the brain, heart, and liver.",
-        "whyNotOtherOptions": {
-            "b": "Alzheimer has neurofibrillary tangles.",
-            "c": "Heart failure causes hemosiderin.",
-            "d": "Ketoacidosis not pigment.",
-            "e": "Hemochromatosis stains blue with Prussian."
-        },
-        "relatedQuestions": ["11", "23"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
-    },
-    {
-        "id": 23,
-        "question": "Which of the following mechanisms of disease best describes the pathogenesis of pigment accumulation in hepatocytes in the patient described in Question 22?",
-        "options": [
-            "(A) Degradation of melanin pigments",
-            "(B) Inhibition of glycogen biosynthesis",
-            "(C) Malabsorption and enhanced deposition of iron",
-            "(D) Peroxidation of membrane lipids",
-            "(E) Progressive oxidation of bilirubin"
-        ],
-        "answer": 3,
-        "correctAnswer": "Peroxidation of membrane lipids",
-        "explanation": "Lipofuscin is found in lysosomes and contains peroxidation products of unsaturated fatty acids. The presence of this pigment is thought to reflect continuing lipid peroxidation of cellular membranes as a result of inadequate defenses against activated oxygen radicals.",
-        "whyNotOtherOptions": {
-            "a": "Melanin degradation not involved.",
-            "b": "Glycogen in diabetes.",
-            "c": "Iron in hemochromatosis.",
-            "e": "Bilirubin in jaundice."
-        },
-        "relatedQuestions": ["22", "27"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
-    },
-    {
-        "id": 24,
-        "question": "A 45-year-old man presents with increasing abdominal girth and yellow discoloration of his skin and sclera. Physical examination reveals hepatomegaly and jaundice. A Prussian blue stain of a liver biopsy is shown in the image. What is the major intracellular iron storage protein in this patient’s hepatocytes?",
-        "options": [
-            "(A) Bilirubin",
-            "(B) Haptoglobin",
-            "(C) Hemoglobin",
-            "(D) Hemosiderin",
-            "(E) Transferrin"
-        ],
-        "answer": 3,
-        "correctAnswer": "Hemosiderin",
-        "explanation": "Hemosiderin is a partially denatured form of ferritin that aggregates easily and is recognized microscopically as yellow-brown granules in the cytoplasm, which turn blue with the Prussian blue reaction. In hereditary hemochromatosis, a genetic abnormality of iron absorption in the small intestine, excess iron is stored mostly in the form of hemosiderin, primarily in the liver.",
-        "whyNotOtherOptions": {
-            "a": "Bilirubin product of heme.",
-            "b": "Haptoglobin binds free Hb.",
-            "c": "Hemoglobin is the iron-containing pigment of RBCs.",
-            "e": "Transferrin binds serum iron."
-        },
-        "relatedQuestions": ["11", "22"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "Absorption",
         "difficulty": "Easy"
     },
     {
-        "id": 25,
-        "question": "A 60-year-old man with chronic cystitis complains of urinary frequency and pelvic discomfort. Digital rectal examination is unremarkable. Biopsy of the bladder mucosa reveals foci of glandular epithelium and chronic inflammatory cells. No cytologic signs of atypia or malignancy are observed. Which of the following terms best describes the morphologic response to chronic injury in this patient?",
+        "id": 22,
+        "question": "The enteral route of administration includes:",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "Intravenous, intramuscular, subcutaneous",
+            "Oral, sublingual, rectal",
+            "Inhalation, topical, transdermal",
+            "Intrathecal, intra-articular, intraperitoneal"
         ],
-        "answer": 4,
-        "correctAnswer": "Metaplasia",
-        "explanation": "Metaplasia of transitional epithelium to glandular epithelium is seen in patients with chronic inflammation of the bladder (cystitis glandularis). Metaplasia is considered to be a protective mechanism, but it is not necessarily a harmless process. For example, squamous metaplasia in a bronchus may protect against injury produced by tobacco smoke, but it also impairs the production of mucus and ciliary clearance of debris. Furthermore, neoplastic transformation may occur in metaplastic epithelium.",
+        "answer": 1,
+        "correctAnswer": "Oral, sublingual, rectal",
+        "explanation": "Enteral: via GI tract.",
         "whyNotOtherOptions": {
-            "a": "Atrophy decrease.",
-            "b": "Dysplasia atypia present.",
-            "c": "Hyperplasia increase number.",
-            "d": "Hypertrophy increase size."
+            "a": "Parenteral.",
+            "c": "Other.",
+            "d": "Special parenteral."
         },
-        "relatedQuestions": ["3", "39"],
-        "category": "Cell Injury",
+        "relatedQuestions": ["26"],
+        "category": "Routes",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 23,
+        "question": "A significant disadvantage of the oral route is:",
+        "options": [
+            "It is irreversible.",
+            "It is subject to first-pass metabolism.",
+            "It provides the most rapid onset of action.",
+            "It requires sterile preparation."
+        ],
+        "answer": 1,
+        "correctAnswer": "It is subject to first-pass metabolism.",
+        "explanation": "Portal circulation to liver reduces bioavailability.",
+        "whyNotOtherOptions": {
+            "a": "Reversible until absorbed.",
+            "c": "Slowest.",
+            "d": "Non-sterile."
+        },
+        "relatedQuestions": ["51"],
+        "category": "Routes",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 24,
+        "question": "The sublingual route offers the advantage of:",
+        "options": [
+            "Avoiding the harsh GI environment and first-pass metabolism",
+            "Being suitable for unconscious patients",
+            "Allowing administration of large drug volumes",
+            "Providing the slowest onset of action"
+        ],
+        "answer": 0,
+        "correctAnswer": "Avoiding the harsh GI environment and first-pass metabolism",
+        "explanation": "Direct systemic venous drainage bypasses liver.",
+        "whyNotOtherOptions": {
+            "b": "Rectal better.",
+            "c": "Small volume.",
+            "d": "Rapid."
+        },
+        "relatedQuestions": ["5"],
+        "category": "Routes",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 25,
+        "question": "The rectal route is particularly useful in which situation?",
+        "options": [
+            "When a drug has pleasant taste",
+            "When the patient is vomiting or unconscious",
+            "When rapid, predictable, complete absorption is always guaranteed",
+            "When seeking to maximize first-pass metabolism"
+        ],
+        "answer": 1,
+        "correctAnswer": "When the patient is vomiting or unconscious",
+        "explanation": "Bypasses oral intake; partial first-pass bypass.",
+        "whyNotOtherOptions": {
+            "a": "Irrelevant.",
+            "c": "Variable.",
+            "d": "Partial bypass."
+        },
+        "relatedQuestions": ["10"],
+        "category": "Routes",
         "difficulty": "Medium"
     },
     {
         "id": 26,
-        "question": " conc A 60-year-old man is rushed to the hospital with acute liver failure. He undergoes successful orthotopic liver transplantation; however, the transplanted liver does not produce much bile for the first 3 days. Poor graft function in this patient is thought to be the result of “reperfusion injury.” Which of the following substances was the most likely cause of reperfusion injury in this patient’s transplanted liver?",
+        "question": "Parenteral routes are defined as those that:",
         "options": [
-            "(A) Cationic proteins",
-            "(B) Free ferric iron",
-            "(C) Hydrochlorous acid",
-            "(D) Lysosomal acid hydrolases",
-            "(E) Reactive oxygen species"
+            "Administer a drug through the alimentary tract",
+            "Administer a drug through non-alimentary sites, typically by injection",
+            "Are only used for topical effects",
+            "Always have 100% bioavailability regardless of the drug"
         ],
-        "answer": 4,
-        "correctAnswer": "Reactive oxygen species",
-        "explanation": "Ischemia/reperfusion (I/R) injury is a common clinical problem that arises in the setting of occlusive cardiovascular disease, infection, transplantation, shock, and many other circumstances. The genesis of I/R injury relates to the interplay between transient ischemia and the re-establishment of blood flow (reperfusion). Initially, ischemia produces a type of cellular damage that leads to the generation of free radical species. Subsequently, reperfusion provides abundant molecular oxygen (O2) to combine with free radicals to form reactive oxygen species. Oxygen radicals are formed inside cells through the xanthine oxidase pathway and released from activated neutrophils.",
+        "answer": 1,
+        "correctAnswer": "Administer a drug through non-alimentary sites, typically by injection",
+        "explanation": "Parenteral: bypass GI (IV, IM, SC, etc.).",
         "whyNotOtherOptions": {
-            "a": "Cationic in neutrophils.",
-            "b": "Free iron in Fenton reaction but secondary.",
-            "c": "HOCl from neutrophils.",
-            "d": "Hydrolases in autophagy."
+            "a": "Enteral.",
+            "c": "Some systemic.",
+            "d": "IV yes; others no."
         },
-        "relatedQuestions": ["27"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
-    },
-    {
-        "id": 27,
-        "question": "A 68-year-old woman with a history of hyperlipidemia dies of cardiac arrhythmia following a massive heart attack. Peroxidation of which of the following molecules was primarily responsible for causing the loss of membrane integrity in cardiac myocytes in this patient?",
-        "options": [
-            "(A) Cholesterol",
-            "(B) Glucose transport proteins",
-            "(C) Glycosphingolipids",
-            "(D) Phospholipids",
-            "(E) Sodium-potassium ATPase"
-        ],
-        "answer": 3,
-        "correctAnswer": "Phospholipids",
-        "explanation": "During lipid peroxidation, hydroxyl radicals remove a hydrogen atom from the unsaturated fatty acids of membrane phospholipids. The lipid radicals so formed react with molecular oxygen and form a lipid peroxide radical. A chain reaction is initiated. Lipid peroxides are unstable and break down into smaller molecules. The destruction of the unsaturated fatty acids of phospholipids results in a loss of membrane integrity.",
-        "whyNotOtherOptions": {
-            "a": "Cholesterol in plaques.",
-            "b": "Glucose proteins in diabetes.",
-            "c": "Glycosphingolipids in storage.",
-            "e": "Na-K ATPase in swelling."
-        },
-        "relatedQuestions": ["23", "26"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
-    },
-    {
-        "id": 28,
-        "question": "A 22-year-old construction worker sticks himself with a sharp, rusty nail. Within 24 hours, the wound has enlarged to become a 1-cm sore that drains thick, purulent material. This skin wound illustrates which of the following morphologic types of necrosis?",
-        "options": [
-            "(A) Caseous necrosis",
-            "(B) Coagulative necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
-        ],
-        "answer": 4,
-        "correctAnswer": "Liquefactive necrosis",
-        "explanation": "Polymorphonuclear leukocytes (segmented neutrophils) rapidly accumulate at sites of injury. They are loaded with acid hydrolases and are capable of digesting dead cells. A localized collection of these inflammatory cells may create an abscess with central liquefaction (pus). Liquefactive necrosis is also commonly seen in the brain.",
-        "whyNotOtherOptions": {
-            "a": "Caseous in granulomas.",
-            "b": "Coagulative in ischemia.",
-            "c": "Fat in pancreatitis.",
-            "d": "Fibrinoid in vessels."
-        },
-        "relatedQuestions": ["13", "2"],
-        "category": "Cell Injury",
+        "relatedQuestions": ["22"],
+        "category": "Routes",
         "difficulty": "Easy"
     },
     {
-        "id": 29,
-        "question": "A 42-year-old man undergoes liver biopsy for evaluation of the grade and stage of his hepatitis C virus infection. The biopsy reveals swollen (ballooned) hepatocytes and moderate lobular inflammatory activity (shown in the image). The arrow identifies an acidophilic (Councilman) body. Which of the following cellular processes best accounts for the presence of scattered acidophilic bodies in this liver biopsy?",
+        "id": 27,
+        "question": "The parenteral route that provides the most rapid onset and greatest control over circulating drug levels is:",
         "options": [
-            "(A) Aggregation of intermediate filament proteins",
-            "(B) Apoptotic cell death",
-            "(C) Coagulative necrosis",
-            "(D) Collagen deposition",
-            "(E) Intracellular viral inclusions"
+            "Intramuscular (IM)",
+            "Subcutaneous (SC)",
+            "Intravenous (IV)",
+            "Intradermal (ID)"
+        ],
+        "answer": 2,
+        "correctAnswer": "Intravenous (IV)",
+        "explanation": "Direct bloodstream access; 100% bioavailability, immediate effect.",
+        "whyNotOtherOptions": {
+            "a": "Absorption delay.",
+            "b": "Slower.",
+            "d": "Local."
+        },
+        "relatedQuestions": ["72"],
+        "category": "Routes",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 28,
+        "question": "A major risk associated with the intravenous (IV) route is:",
+        "options": [
+            "Slow and erratic absorption",
+            "The possibility of embolism and the fact that the drug cannot be recalled",
+            "High first-pass metabolism",
+            "Being inconvenient for the patient"
         ],
         "answer": 1,
-        "correctAnswer": "Apoptotic cell death",
-        "explanation": "Apoptosis is a programmed pathway of cell death that is triggered by a variety of extracellular and intracellular signals. It is often a self-defense mechanism, destroying cells that have been infected with pathogens or those in which genomic alterations have occurred. After staining with hematoxylin and eosin, apoptotic cells are visible under the light microscope as acidophilic (Councilman) bodies. These deeply eosinophilic structures represent membrane-bound cellular remnants that are extruded into the hepatic sinusoids.",
+        "correctAnswer": "The possibility of embolism and the fact that the drug cannot be recalled",
+        "explanation": "No retrieval post-injection; air/particulate embolism risk.",
         "whyNotOtherOptions": {
-            "a": "Aggregation in Mallory bodies.",
-            "c": "Coagulative not scattered.",
-            "d": "Collagen in fibrosis.",
-            "e": "Inclusions in viral."
+            "a": "No absorption.",
+            "c": "Bypasses.",
+            "d": "Secondary."
         },
-        "relatedQuestions": ["30", "33"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "Routes",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 29,
+        "question": "The intramuscular (IM) route is suitable for:",
+        "options": [
+            "Highly irritant drugs in large volumes (>20ml)",
+            "Oily solutions and some vaccines",
+            "Drugs that require immediate reversal with activated charcoal",
+            "Self-administration of drugs with a very fast onset"
+        ],
+        "answer": 1,
+        "correctAnswer": "Oily solutions and some vaccines",
+        "explanation": "Depot formulations (oily) and vaccines common IM.",
+        "whyNotOtherOptions": {
+            "a": "Irritant risk; volume ≤5-10 mL.",
+            "c": "IV for reversal.",
+            "d": "SC/IV faster."
+        },
+        "relatedQuestions": ["88"],
+        "category": "Routes",
         "difficulty": "Medium"
     },
     {
         "id": 30,
-        "question": "Which of the following biochemical changes characterizes the formation of acidophilic bodies in the patient described in Question 29?",
+        "question": "The subcutaneous (SC) route is commonly used for the administration of:",
         "options": [
-            "(A) Fragmentation of DNA",
-            "(B) Loss of tumor suppressor protein p53",
-            "(C) Mitochondrial swelling",
-            "(D) Synthesis of arachidonic acid",
-            "(E) Triglyceride accumulation"
+            "Large volumes of irritant drugs",
+            "Drugs for immediate life-threatening emergencies",
+            "Insulin and some vaccines",
+            "Drugs that are gases"
         ],
-        "answer": 0,
-        "correctAnswer": "Fragmentation of DNA",
-        "explanation": "Fragmentation of DNA is a hallmark of cells undergoing both necrosis and apoptosis, but apoptotic cells can be detected by demonstrating nucleosomal “laddering.” This pattern of DNA degradation is characteristic of apoptotic cell death. It results from the cleavage of chromosomal DNA at nucleosomes by endonucleases. Since nucleosomes are regularly spaced along the genome, a pattern of regular bands can be seen when fragments of cellular DNA are separated by electrophoresis.",
+        "answer": 2,
+        "correctAnswer": "Insulin and some vaccines",
+        "explanation": "Self-injection (insulin); vaccine depot.",
         "whyNotOtherOptions": {
-            "b": "p53 in apoptosis trigger.",
-            "c": "Mitochondrial in injury.",
-            "d": "Arachidonic in inflammation.",
-            "e": "Triglyceride in steatosis."
+            "a": "Small volume, non-irritant.",
+            "b": "IV.",
+            "d": "Inhalation."
         },
-        "relatedQuestions": ["29", "49"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [],
+        "category": "Routes",
+        "difficulty": "Easy"
     },
     {
         "id": 31,
-        "question": "A 56-year-old woman with a history of hyperlipidemia and hypertension develops progressive, right renal artery stenosis. Over time, this patient’s right kidney is likely to demonstrate which of the following morphologic adaptations to partial ischemia?",
+        "question": "Inhalation as a route is particularly effective for:",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Neoplasia"
+            "Systemic antibiotic therapy",
+            "Drugs that are gases or for treating respiratory diseases like asthma",
+            "Achieving slow, sustained release over weeks",
+            "Bypassing the blood-brain barrier"
         ],
-        "answer": 0,
-        "correctAnswer": "Atrophy",
-        "explanation": "Interference with blood supply to tissues is known as ischemia. Total ischemia results in cell death. Partial ischemia occurs after incomplete occlusion of a blood vessel or in areas of inadequate collateral circulation. This results in a chronically reduced oxygen supply, a condition often compatible with continued cell viability. Under such circumstances, cell atrophy is common. For example, it is frequently seen around the inadequately perfused margins of infarcts in the heart, brain, and kidneys.",
+        "answer": 1,
+        "correctAnswer": "Drugs that are gases or for treating respiratory diseases like asthma",
+        "explanation": "Rapid local (bronchi) or systemic (gases) effect.",
         "whyNotOtherOptions": {
-            "b": "Dysplasia abnormal.",
-            "c": "Hyperplasia increase.",
-            "d": "Hypertrophy in contralateral.",
-            "e": "Neoplasia cancer."
+            "a": "IV/oral.",
+            "c": "Short duration.",
+            "d": "Not primary."
         },
-        "relatedQuestions": ["5", "19"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
+        "relatedQuestions": [],
+        "category": "Routes",
+        "difficulty": "Easy"
     },
     {
         "id": 32,
-        "question": "A 5-year-old boy suffers blunt trauma to the leg in an automobile accident. Six months later, bone trabeculae have formed within the striated skeletal muscle at the site of tissue injury. This pathologic condition is an example of which of the following morphologic adaptations to injury?",
+        "question": "The primary goal of topical application is to achieve a:",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Metaplasia",
-            "(D) Metastatic calcification",
-            "(E) Dystrophic calcification"
+            "Rapid systemic effect",
+            "Local effect on the skin or mucous membranes",
+            "Sustained release over months",
+            "High first-pass effect"
         ],
-        "answer": 2,
-        "correctAnswer": "Metaplasia",
-        "explanation": "Myositis ossificans is a disease characterized by formation of bony trabeculae within striated muscle. It represents a form of osseous metaplasia (i.e., replacement of one differentiated tissue with another type of normal differentiated tissue).",
+        "answer": 1,
+        "correctAnswer": "Local effect on the skin or mucous membranes",
+        "explanation": "Minimize systemic absorption.",
         "whyNotOtherOptions": {
-            "a": "Atrophy decrease.",
-            "b": "Dysplasia abnormal.",
-            "d": "Metastatic hypercalcemia.",
-            "e": "Dystrophic in damaged tissue without bone."
+            "a": "Transdermal.",
+            "c": "Patches.",
+            "d": "Oral."
         },
-        "relatedQuestions": ["4", "8"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [],
+        "category": "Routes",
+        "difficulty": "Easy"
     },
     {
         "id": 33,
-        "question": "A 43-year-old man presents with a scaly, erythematous lesion on the dorsal surface of his left hand. A skin biopsy reveals atypical keratinocytes filling the entire thickness of the epidermis (shown in the image). The arrows point to apoptotic bodies. Which of the following proteins plays the most important role in mediating programmed cell death in this patient’s skin cancer?",
+        "question": "Transdermal patches are primarily designed for:",
         "options": [
-            "(A) Catalase",
-            "(B) Cytochrome c",
-            "(C) Cytokeratins",
-            "(D) Myeloperoxidase",
-            "(E) Superoxide dismutase"
+            "Immediate drug release for acute pain",
+            "Localized treatment of skin infections",
+            "Sustained systemic delivery of drugs",
+            "Bypassing first-pass metabolism via the oral cavity"
         ],
-        "answer": 1,
-        "correctAnswer": "Cytochrome c",
-        "explanation": "The mitochondrial membrane is a key regulator of apoptosis. When mitochondrial pores open, cytochrome c leaks out and activates Apaf-1, which converts procaspase-9 to caspase-9, resulting in the activation of downstream caspases (cysteine proteases). These effector caspases cleave target proteins, including endonucleases nuclear proteins, and cytoskeletal proteins to mediate the varied morphological and biochemical changes that accompany apoptosis.",
+        "answer": 2,
+        "correctAnswer": "Sustained systemic delivery of drugs",
+        "explanation": "Rate-controlled systemic absorption over days.",
         "whyNotOtherOptions": {
-            "a": "Catalase antioxidant.",
-            "c": "Cytokeratins intermediate filaments.",
-            "d": "Myeloperoxidase in neutrophils.",
-            "e": "Superoxide dismutase antioxidant."
+            "a": "IV/IM.",
+            "b": "Topical creams.",
+            "d": "Sublingual."
         },
-        "relatedQuestions": ["29", "49"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": ["8"],
+        "category": "Routes",
+        "difficulty": "Easy"
     },
     {
         "id": 34,
-        "question": "A 16-year-old girl with a history of suicidal depression swallows a commercial solvent. A liver biopsy is performed to assess the degree of damage to the hepatic parenchyma. Histologic examination demonstrates severe swelling of the centrilobular hepatocytes (shown in the image). Which of the following mechanisms of disease best accounts for the reversible changes noted in this liver biopsy?",
+        "question": "Drug distribution is defined as the movement of drug from the ______ to ______. ",
         "options": [
-            "(A) Decreased stores of intracellular ATP",
-            "(B) Increased storage of triglycerides and free fatty acids",
-            "(C) Intracytoplasmic rupture of lysosomes",
-            "(D) Mitochondrial membrane permeability transition",
-            "(E) Protein aggregation due to increased cytosolic pH"
+            "Site of administration; the central compartment (blood)",
+            "Central compartment (blood); peripheral compartments (tissues)",
+            "Liver; the site of action",
+            "Kidney; the urine"
         ],
-        "answer": 0,
-        "correctAnswer": "Decreased stores of intracellular ATP",
-        "explanation": "Hydropic swelling may result from many causes, including chemical and biologic toxins, infections, and ischemia. Injurious agents cause hydropic swelling by (1) increasing the permeability of the plasma membrane to sodium; (2) damaging the membrane sodium-potassium ATPase (pump); or (3) interfering with the synthesis of ATP, thereby depriving the pump of its fuel.",
+        "answer": 1,
+        "correctAnswer": "Central compartment (blood); peripheral compartments (tissues)",
+        "explanation": "From plasma to tissues/organs.",
         "whyNotOtherOptions": {
-            "b": "Triglycerides in steatosis.",
-            "c": "Lysosome rupture irreversible.",
-            "d": "Mitochondrial transition irreversible.",
-            "e": "pH increase not typical."
+            "a": "Absorption.",
+            "c": "Too specific.",
+            "d": "Excretion."
         },
-        "relatedQuestions": ["9"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
+        "relatedQuestions": [],
+        "category": "Distribution",
+        "difficulty": "Easy"
     },
     {
         "id": 35,
-        "question": "A 40-year-old man is pulled from the ocean after a boating accident and resuscitated. Six hours later, the patient develops acute renal failure. Kidney biopsy reveals evidence of karyorrhexis and karyolysis in renal tubular epithelial cells. Which of the following biochemical events preceded these pathologic changes?",
+        "question": "The pharmacologically active form in the bloodstream is the:",
         "options": [
-            "(A) Activation of Na+ /K+ ATPase",
-            "(B) Decrease in intracellular calcium",
-            "(C) Decrease in intracellular pH",
-            "(D) Increase in ATP production",
-            "(E) Increase in intracellular pH"
+            "Bound form",
+            "Unbound (free) form",
+            "Both are equally active",
+            "Form bound to alpha-1 acid glycoprotein"
         ],
-        "answer": 2,
-        "correctAnswer": "Decrease in intracellular pH",
-        "explanation": "During periods of ischemia, anaerobic glycolysis leads to the overproduction of lactate and a decrease in intracellular pH. Lack of O2 during myocardial ischemia blocks the production of ATP. Pyruvate is reduced to lactate in the cytosol and lowers intracellular pH. The acidification of the cytosol initiates a downward spiral of events that propels the cell toward necrosis.",
+        "answer": 1,
+        "correctAnswer": "Unbound (free) form",
+        "explanation": "Only free drug crosses membranes and interacts with receptors.",
         "whyNotOtherOptions": {
-            "a": "ATPase inhibited.",
-            "b": "Calcium increases.",
-            "d": "ATP decreases.",
-            "e": "pH decreases."
+            "a": "Inactive reservoir.",
+            "c": "Bound inert.",
+            "d": "Specific binding."
         },
-        "relatedQuestions": ["18", "21"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": ["37"],
+        "category": "Distribution",
+        "difficulty": "Easy"
     },
     {
         "id": 36,
-        "question": "A 58-year-old man presents with symptoms of acute renal failure. His blood pressure is 220/130 mm Hg (malignant hypertension). While in the emergency room, the patient suffers a stroke and expires. Microscopic examination of the kidney at autopsy is shown in the image. Which of the following morphologic changes accounts for the red material in the wall of the artery?",
+        "question": "The major plasma protein that binds acidic and hydrophobic drugs is:",
         "options": [
-            "(A) Apoptosis",
-            "(B) Caseous necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
+            "Alpha-1 acid glycoprotein",
+            "Globulin",
+            "Albumin",
+            "Fibrinogen"
         ],
-        "answer": 3,
-        "correctAnswer": "Fibrinoid necrosis",
-        "explanation": "Fibrinoid necrosis is an alteration of injured blood vessels, in which the insudation and accumulation of plasma proteins cause the wall to stain intensely with eosin.",
+        "answer": 2,
+        "correctAnswer": "Albumin",
+        "explanation": "Albumin primary for acidic/neutral drugs.",
         "whyNotOtherOptions": {
-            "a": "Apoptosis programmed.",
-            "b": "Caseous in TB.",
-            "c": "Fat in pancreas.",
-            "e": "Liquefactive digestion."
+            "a": "Basic drugs.",
+            "b": "Less.",
+            "d": "Clotting."
         },
-        "relatedQuestions": ["2", "13"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
+        "relatedQuestions": [],
+        "category": "Distribution",
+        "difficulty": "Easy"
     },
     {
         "id": 37,
-        "question": "A 10-year-old girl presents with advanced features of progeria (patient shown in the image). This child has inherited mutations in the gene that encodes which of the following types of intracellular proteins?",
+        "question": "Only the unbound drug can do all of the following EXCEPT:",
         "options": [
-            "(A) Helicase",
-            "(B) Lamin",
-            "(C) Oxidase",
-            "(D) Polymerase",
-            "(E) Topoisomerase"
+            "Diffuse through capillary and cell membranes",
+            "Produce a pharmacological effect",
+            "Be metabolized and excreted",
+            "Remain stable in the bloodstream indefinitely"
         ],
-        "answer": 1,
-        "correctAnswer": "Lamin",
-        "explanation": "Hutchinson-Gilford progeria is a rare genetic disease characterized by early cataracts, hair loss, atrophy of the skin, osteoporosis, and atherosclerosis. This phenotype gives the impression of premature aging in children. Progeria is one of many diseases caused by mutations in the human lamin A gene (LMNA). Lamins are intermediate filament proteins that form a fibrous meshwork beneath the nuclear envelope. Defective lamin A is thought to make the nucleus unstable, leading to cell injury and death.",
+        "answer": 3,
+        "correctAnswer": "Remain stable in the bloodstream indefinitely",
+        "explanation": "Bound drug is in equilibrium; no drug is indefinitely stable.",
         "whyNotOtherOptions": {
-            "a": "Helicase in Werner syndrome.",
-            "c": "Oxidase not.",
-            "d": "Polymerase in replication.",
-            "e": "Topoisomerase in DNA."
+            "a": "Free diffuses.",
+            "b": "Free acts.",
+            "c": "Free cleared."
         },
-        "relatedQuestions": ["48"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": ["35"],
+        "category": "Distribution",
+        "difficulty": "Medium"
     },
     {
         "id": 38,
-        "question": "A 32-year-old woman develops an Addisonian crisis (acute adrenal insufficiency) 3 months after suffering massive hemorrhage during the delivery of her baby. A CT scan of the abdomen shows small adrenal glands. Which of the following mechanisms of disease best accounts for adrenal atrophy in this patient?",
+        "question": "Tissue accumulation of a drug can be advantageous when it:",
         "options": [
-            "(A) Chronic inflammation",
-            "(B) Chronic ischemia",
-            "(C) Hemorrhagic necrosis",
-            "(D) Lack of trophic signals",
-            "(E) Tuberculosis"
+            "Leads to toxicity, like lead in bone causing brittleness",
+            "Causes discoloration, like tetracycline in teeth",
+            "Provides target tissue therapy, like chloroquine in the liver",
+            "Causes gray baby syndrome, like chloramphenicol"
         ],
-        "answer": 3,
-        "correctAnswer": "Lack of trophic signals",
-        "explanation": "Atrophy of an organ may be caused by interruption of key trophic signals. Postpartum infarction of the anterior pituitary in this patient resulted in decreased production of adrenocorticotropic hormone (ACTH, also termed corticotropin). Lack of corticotropin results in atrophy of the adrenal cortex, which leads to adrenal insufficiency. Symptoms of acute adrenal insufficiency (Addisonian crisis) include hypotension and shock, as well as weakness, vomiting, abdominal pain, and lethargy.",
+        "answer": 2,
+        "correctAnswer": "Provides target tissue therapy, like chloroquine in the liver",
+        "explanation": "High hepatic concentration aids malaria treatment.",
         "whyNotOtherOptions": {
-            "a": "Chronic inflammation not postpartum.",
-            "b": "Ischemia not.",
-            "c": "Hemorrhagic in pituitary but atrophy from lack ACTH.",
-            "e": "TB chronic."
+            "a": "Toxicity.",
+            "b": "Adverse.",
+            "d": "Toxicity in neonates."
         },
-        "relatedQuestions": ["5", "19"],
-        "category": "Cell Injury",
+        "relatedQuestions": ["87"],
+        "category": "Distribution",
         "difficulty": "Hard"
     },
     {
         "id": 39,
-        "question": "A 47-year-old man with a history of heavy smoking complains of chronic cough. A “coin lesion” is discovered in his right upper lobe on chest X-ray. Bronchoscopy and biopsy fail to identify a mass, but the bronchial mucosa displays squamous metaplasia. What is the most likely outcome of this morphologic adaptation if the patient stops smoking?",
+        "question": "The Blood-Brain Barrier (BBB) is most readily crossed by drugs that are:",
         "options": [
-            "(A) Atrophy",
-            "(B) Malignant transformation",
-            "(C) Necrosis and scarring",
-            "(D) Persistence throughout life",
-            "(E) Reversion to normal"
+            "Highly ionized and water-soluble",
+            "Large molecules bound to proteins",
+            "Unionized and lipid-soluble",
+            "Administered via the rectal route"
         ],
-        "answer": 4,
-        "correctAnswer": "Reversion to normal",
-        "explanation": "Metaplasia is almost invariably a response to persistent injury and can be thought of as an adaptive mechanism. Prolonged exposure of the bronchi to tobacco smoke leads to squamous metaplasia of the bronchial epithelium. Unlike malignancy and necrosis with scarring, metaplasia is usually fully reversible. If the source of injury in this patient is removed (the patient stops smoking), then the metaplastic epithelium will eventually return to normal.",
+        "answer": 2,
+        "correctAnswer": "Unionized and lipid-soluble",
+        "explanation": "Tight junctions require lipid diffusion.",
         "whyNotOtherOptions": {
-            "a": "Atrophy not.",
-            "b": "Malignant if continues.",
-            "c": "Scarring in advanced.",
-            "d": "Persistence if smoking continues."
+            "a": "Ionized restricted.",
+            "b": "Large bound no.",
+            "d": "Route irrelevant."
         },
-        "relatedQuestions": ["3", "25"],
-        "category": "Cell Injury",
+        "relatedQuestions": ["18"],
+        "category": "Distribution",
         "difficulty": "Medium"
     },
     {
         "id": 40,
-        "question": "A 60-year-old farmer presents with multiple patches of discoloration on his face. Biopsy of lesional skin reveals actinic keratosis. Which of the following terms best describes this response of the skin to chronic sunlight exposure?",
+        "question": "Inflammation, such as in meningitis, can increase BBB permeability, allowing which normally restricted drugs to cross?",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "Highly lipid-soluble drugs only",
+            "Ionized drugs like penicillin and ampicillin",
+            "Drugs with very large molecular sizes",
+            "No drugs can cross, even with inflammation"
         ],
         "answer": 1,
-        "correctAnswer": "Dysplasia",
-        "explanation": "Actinic keratosis is a form of dysplasia in sun-exposed skin. Histologically, such lesions are composed of atypical squamous cells, which vary in size and shape. They show no signs of regular maturation as the cells move from the basal layer of the epidermis to the surface. Dysplasia is a preneoplastic lesion, in the sense that it is a necessary stage in the multistep evolution to cancer. However, unlike cancer cells, dysplastic cells are not entirely autonomous, and the histologic appearance of the tissue may still revert to normal.",
+        "correctAnswer": "Ionized drugs like penicillin and ampicillin",
+        "explanation": "Disrupted barrier permits polar antibiotics.",
         "whyNotOtherOptions": {
-            "a": "Atrophy thin skin.",
-            "c": "Hyperplasia increase.",
-            "d": "Hypertrophy size.",
-            "e": "Metaplasia type change."
+            "a": "Already cross.",
+            "c": "Still restricted.",
+            "d": "Permeability increases."
         },
-        "relatedQuestions": ["6", "42"],
-        "category": "Cell Injury",
-        "difficulty": "Easy"
+        "relatedQuestions": [],
+        "category": "Distribution",
+        "difficulty": "Hard"
     },
     {
         "id": 41,
-        "question": "A 59-year-old woman smoker complains of intermittent blood in her urine. Urinalysis confirms 4+ hematuria. A CBC reveals increased red cell mass (hematocrit). A CT scan demonstrates a 3-cm renal mass, and a CT-guided biopsy displays renal cell carcinoma. Which of the following cellular adaptations in the bone marrow best explains the increased hematocrit in this patient?",
+        "question": "The placenta barrier is most readily crossed by:",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "Highly polar and ionized drugs",
+            "Drugs with high lipid solubility",
+            "Drugs with very large molecular weights",
+            "Drugs that are highly bound to albumin"
         ],
-        "answer": 2,
-        "correctAnswer": "Hyperplasia",
-        "explanation": "Renal cell carcinomas often secrete erythropoietin. This hormone stimulates the growth of erythrocyte precursors in the bone marrow by inhibiting programmed cell death. Increased hematocrit in this patient is the result of bone marrow hyperplasia affecting the erythroid lineage.",
+        "answer": 1,
+        "correctAnswer": "Drugs with high lipid solubility",
+        "explanation": "Similar to BBB; lipid-soluble cross easily.",
         "whyNotOtherOptions": {
-            "a": "Atrophy decrease.",
-            "b": "Dysplasia abnormal.",
-            "d": "Hypertrophy size.",
-            "e": "Metaplasia type."
+            "a": "Restricted.",
+            "c": "Size limit.",
+            "d": "Bound less free."
         },
-        "relatedQuestions": ["1", "12"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "Distribution",
         "difficulty": "Medium"
     },
     {
         "id": 42,
-        "question": "A 33-year-old woman has an abnormal cervical Pap smear. A cervical biopsy reveals that the epithelium lacks normal polarity (shown in the image). Individual cells display hyperchromatic nuclei, a larger nucleus-to-cytoplasm ratio, and disorderly tissue arrangement. Which of the following adaptations to chronic injury best describes these changes in the patient’s cervical epithelium?",
+        "question": "Tetracycline accumulates in the bone and teeth of neonates, leading to:",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "Gray baby syndrome",
+            "Impaired bone development and tooth discoloration",
+            "Neural tube defects",
+            "Cardiovascular abnormalities"
         ],
         "answer": 1,
-        "correctAnswer": "Dysplasia",
-        "explanation": "The distinction between severe dysplasia and early cancer of the cervix is a common diagnostic problem for the pathologist. Both are associated with disordered growth and maturation of the tissue. Similar to the development of cancer, dysplasia is believed to result from mutations in a proliferating cell population. When a particular mutation confers a growth or survival advantage, the progeny of the affected cell will tend to predominate. In turn, their continued proliferation provides the opportunity for further mutations. The accumulation of such mutations progressively distances the cell from normal regulatory constraints and may lead to neoplasia.",
+        "correctAnswer": "Impaired bone development and tooth discoloration",
+        "explanation": "Chelates calcium; enamel hypoplasia, brown staining.",
         "whyNotOtherOptions": {
-            "a": "Atrophy thin.",
-            "c": "Hyperplasia number.",
-            "d": "Hypertrophy size.",
-            "e": "Metaplasia type."
+            "a": "Chloramphenicol.",
+            "c": "Folate antagonists.",
+            "d": "Thalidomide."
         },
-        "relatedQuestions": ["6", "40"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "Distribution",
         "difficulty": "Medium"
     },
     {
         "id": 43,
-        "question": "A 24-year-old woman accidentally ingests carbon tetrachloride (CCl4) in the laboratory and develops acute liver failure. Which of the following cellular proteins was directly involved in the development of hepatotoxicity in this patient?",
+        "question": "The primary purpose of drug biotransformation (metabolism) is to:",
         "options": [
-            "(A) Acetaldehyde dehydrogenase",
-            "(B) Alcohol dehydrogenase",
-            "(C) Glucose-6-phosphate dehydrogenase",
-            "(D) Mixed function oxygenase",
-            "(E) Superoxide dismutase"
+            "Activate all prodrugs",
+            "Make drugs more lipid-soluble for storage",
+            "Convert drugs into more water-soluble forms for excretion",
+            "Increase the drug's pharmacological activity"
         ],
-        "answer": 3,
-        "correctAnswer": "Mixed function oxygenase",
-        "explanation": "The metabolism of CCl4 is a model system for toxicologic studies. CCl4 is first metabolized via the mixed function oxygenase system (P450) of the liver to a chloride ion and a highly reactive trichloromethyl free radical. Like the hydroxyl radical, this radical is a potent initiator of lipid peroxidation, which damages the plasma membrane and leads to cell death.",
+        "answer": 2,
+        "correctAnswer": "Convert drugs into more water-soluble forms for excretion",
+        "explanation": "Enhances renal/biliary elimination.",
         "whyNotOtherOptions": {
-            "a": "Acetaldehyde in alcohol.",
-            "b": "Alcohol dehydrogenase in ethanol.",
-            "c": "G6PD in hemolysis.",
-            "e": "SOD antioxidant."
+            "a": "Some prodrugs.",
+            "b": "Opposite.",
+            "d": "Usually inactivation."
         },
-        "relatedQuestions": ["45"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [],
+        "category": "Metabolism",
+        "difficulty": "Easy"
     },
     {
         "id": 44,
-        "question": "A 30-year-old woman presents with a 2-month history of fatigue, mild fever, and an erythematous scaling rash. She also notes joint pain and swelling, primarily involving the small bones of her fingers. Physical examination reveals erythematous plaques with adherent silvery scales that induce punctate bleeding points when removed. Biopsy of lesional skin reveals markedly increased thickness of the epidermis (shown in the image). Which of the following terms best describes this adaptation to chronic injury in this patient with psoriasis?",
+        "question": "The main organ where drug metabolism occurs is the:",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "Kidney",
+            "Lung",
+            "Liver",
+            "Intestine"
         ],
         "answer": 2,
-        "correctAnswer": "Hyperplasia",
-        "explanation": "Psoriasis is a disease of the dermis and epidermis that is characterized by persistent epidermal hyperplasia. It is a chronic, frequently familial disorder that features large, erythematous, scaly plaques, commonly on the dorsal extensor cutaneous surfaces. There is evidence to suggest that deregulation of epidermal proliferation and an abnormality in the microcirculation of the dermis are responsible for the development of psoriatic lesions. Abnormal proliferation of keratinocytes is thought to be related to defective epidermal cell surface receptors and altered intracellular signaling.",
+        "correctAnswer": "Liver",
+        "explanation": "Hepatocytes rich in enzymes (CYP450).",
         "whyNotOtherOptions": {
-            "a": "Atrophy thin.",
-            "b": "Dysplasia atypia.",
-            "d": "Hypertrophy size.",
-            "e": "Metaplasia type."
+            "a": "Excretion.",
+            "b": "Some.",
+            "d": "First-pass."
         },
-        "relatedQuestions": ["1", "12"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "Metabolism",
         "difficulty": "Easy"
     },
     {
         "id": 45,
-        "question": "A 24-year-old woman with chronic depression ingests a bottle of acetaminophen tablets. Two days later, she is jaundiced (elevated serum bilirubin) and displays symptoms of encephalopathy, including impairment in spatial perception. In the liver, toxic metabolites of acetaminophen are generated by which of the following organelles?",
+        "question": "Phase I metabolism reactions generally involve:",
         "options": [
-            "(A) Golgi apparatus",
-            "(B) Mitochondria",
-            "(C) Nucleus",
-            "(D) Peroxisomes",
-            "(E) Smooth endoplasmic reticulum"
+            "Conjugation with polar molecules",
+            "Addition of large molecular groups like glucuronide",
+            "Functionalization reactions (oxidation, reduction, hydrolysis)",
+            "Direct excretion without any change"
         ],
-        "answer": 4,
-        "correctAnswer": "Smooth endoplasmic reticulum",
-        "explanation": "Carbon tetrachloride and acetaminophen are well-studied hepatotoxins. Each is metabolized by cytochrome P450 of the mixed-function oxidase system, located in the smooth endoplasmic reticulum. These hepatotoxins are metabolized differently, and it is possible to relate the subsequent evolution of lethal cell injury to the specific features of this metabolism. Acetaminophen, an important constituent of many analgesics, is innocuous in recommended doses, but when consumed to excess it is highly toxic to the liver. The metabolism of acetaminophen to yield highly reactive quinones is accelerated by alcohol consumption, an effect mediated by an ethanol-induced increase in cytochrome P450.",
+        "answer": 2,
+        "correctAnswer": "Functionalization reactions (oxidation, reduction, hydrolysis)",
+        "explanation": "Introduce or expose functional groups.",
         "whyNotOtherOptions": {
-            "a": "Golgi packaging.",
-            "b": "Mitochondria energy.",
-            "c": "Nucleus DNA.",
-            "d": "Peroxisomes oxidation."
+            "a": "Phase II.",
+            "b": "Phase II.",
+            "d": "No metabolism."
         },
-        "relatedQuestions": ["43"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
+        "relatedQuestions": ["46"],
+        "category": "Metabolism",
+        "difficulty": "Easy"
     },
     {
         "id": 46,
-        "question": "A 45-year-old woman presents with a 2-month history of fatigue and recurrent fever. She also complains of tenderness below the right costal margin and dark urine. Physical examination reveals jaundice and mild hepatomegaly. The serum is positive for hepatitis B virus antigen. Which of the following best describes the mechanism of indirect virus-mediated hepatocyte cell death in this patient?",
+        "question": "The cytochrome P450 enzyme system is most associated with which phase of metabolism?",
         "options": [
-            "(A) Accumulation of abnormal cytoplasmic proteins",
-            "(B) Immune recognition of viral antigens on the cell surface",
-            "(C) Generation of cytoplasmic free radicals",
-            "(D) Impaired plasma membrane Na+ /K+ ATPase activity",
-            "(E) Interference with cellular energy generation"
+            "Phase I",
+            "Phase II",
+            "Phase III",
+            "Direct Excretion"
         ],
-        "answer": 1,
-        "correctAnswer": "Immune recognition of viral antigens on the cell surface",
-        "explanation": "Viral cytotoxicity is either direct or indirect (immunologically mediated). Viruses may injure cells directly by subverting cellular enzymes and depleting the cell’s nutrients, thereby disrupting the normal homeostatic mechanisms. Some viruses also encode proteins that induce apoptosis once daughter virions are mature. Viruses may also injure cells indirectly through activation of the immune system. Both humoral and cellular arms of the immune system protect against the harmful effects of viral infections by eliminating infected cells. In brief, the presentation of viral proteins to the immune system in the context of a self major histocompatibility complex on the cell surface immunizes the body against the invader and elicits both killer cells and antiviral antibodies. These arms of the immune system eliminate virus-infected cells by inducing apoptosis or by lysing the virally infected target cell with complement.",
+        "answer": 0,
+        "correctAnswer": "Phase I",
+        "explanation": "CYP450 catalyzes oxidations in Phase I.",
         "whyNotOtherOptions": {
-            "a": "Abnormal proteins in storage.",
-            "c": "Free radicals in reperfusion.",
-            "d": "ATPase in swelling.",
-            "e": "Energy in ischemia evolving."
+            "b": "Conjugation.",
+            "c": "Transporters.",
+            "d": "None."
         },
-        "relatedQuestions": ["16"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": ["89"],
+        "category": "Metabolism",
+        "difficulty": "Easy"
     },
     {
         "id": 47,
-        "question": "You are asked to present a grand rounds seminar on the role of abnormal proteins in disease. In this connection, intracellular accumulation of an abnormally folded protein plays a role in the pathogenesis of which of the following diseases?",
+        "question": "Phase II metabolism reactions primarily involve:",
         "options": [
-            "(A) AA amyloidosis",
-            "(B) AL amyloidosis",
-            "(C) α1-Antitrypsin deficiency",
-            "(D) Gaucher disease",
-            "(E) Tay-Sachs disease"
+            "Making the drug more reactive",
+            "Conjugation with endogenous polar compounds",
+            "Oxidation via the CYP450 system",
+            "Reduction of functional groups"
         ],
-        "answer": 2,
-        "correctAnswer": "α1-Antitrypsin deficiency",
-        "explanation": "Several acquired and inherited diseases are characterized by intracellular accumulation of abnormal proteins. The deviant tertiary structure of the protein may result from an inherited mutation that alters the normal primary amino acid sequence, or may reflect an acquired defect in protein folding. α1-Antitrypsin deficiency is a heritable disorder in which mutations in the gene for α1-antitrypsin yield an insoluble protein. The mutant protein is not easily exported. It accumulates in liver cells, causing cell injury and cirrhosis. Pulmonary emphysema is another complication of α1-antitrypsin deficiency.",
-        "whyNotOtherOptions": {
-            "a": "AA amyloid extracellular.",
-            "b": "AL amyloid extracellular.",
-            "d": "Gaucher lysosomal storage.",
-            "e": "Tay-Sachs lysosomal."
+        "answer": 1,
+        "correctAnswer": "Conjugation with endogenous polar compounds",
+        "explanation": "Glucuronidation, sulfation, etc., increase polarity.",
+        "whyNotOther.": {
+            "a": "Phase I.",
+            "c": "Phase I.",
+            "d": "Phase I."
         },
-        "relatedQuestions": ["10"],
-        "category": "Cell Injury",
-        "difficulty": "Medium"
+        "relatedQuestions": [],
+        "category": "Metabolism",
+        "difficulty": "Easy"
     },
     {
         "id": 48,
-        "question": "A 38-year-old woman shows evidence of early cataracts, hair loss, atrophy of skin, osteoporosis, and accelerated atherosclerosis. This patient has most likely inherited mutations in both alleles of a gene that encodes which of the following types of intracellular proteins?",
+        "question": "The metabolism of morphine via glucuronide conjugation produces an active metabolite. This is an example of:",
         "options": [
-            "(A) Deaminase",
-            "(B) Helicase",
-            "(C) Oxidase",
-            "(D) Polymerase",
-            "(E) Topoisomerase"
+            "Toxic metabolite formation",
+            "Prodrug activation",
+            "Maintenance of activity",
+            "Inactivation"
         ],
-        "answer": 1,
-        "correctAnswer": "Helicase",
-        "explanation": "Werner syndrome is a rare autosomal recessive disease characterized by early cataracts, hair loss, atrophy of the skin, osteoporosis, and accelerated atherosclerosis. Affected persons are also at risk for development of a variety of cancers. Unlike Hutchinson-Gilford progeria, patients with Werner syndrome typically die in the fifth decade from either cancer or cardiovascular disease. Werner syndrome is caused by mutations in the WRN gene, which encodes a protein with multiple DNA-dependent enzymatic functions, including proteins with ATPase, helicase, and exonuclease activity.",
+        "answer": 2,
+        "correctAnswer": "Maintenance of activity",
+        "explanation": "M6G more potent than morphine.",
         "whyNotOtherOptions": {
-            "a": "Deaminase not.",
-            "c": "Oxidase not.",
-            "d": "Polymerase replication.",
-            "e": "Topoisomerase DNA."
+            "a": "Not toxic.",
+            "b": "Morphine active.",
+            "d": "Active metabolite."
         },
-        "relatedQuestions": ["37"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "Metabolism",
         "difficulty": "Hard"
     },
     {
         "id": 49,
-        "question": "A 28-year-old man with a history of radiation/bone marrow transplantation for leukemia presents with severe diarrhea. He subsequently develops septic shock and expires. Microscopic examination of the colon epithelium at autopsy reveals numerous acidophilic bodies and small cells with pyknotic nuclei. Which of the following proteins most likely played a key role in triggering radiation-induced cell death in this patient’s colonic mucosa?",
+        "question": "Chloramphenicol is not given to infants because:",
         "options": [
-            "(A) Cytochrome P450",
-            "(B) β-Catenin",
-            "(C) E-Cadherin",
-            "(D) P-Selectin",
-            "(E) p53"
+            "It induces enzymes too rapidly.",
+            "Their UGT enzymes are underdeveloped, leading to toxic levels (Gray Baby Syndrome).",
+            "It is not absorbed in their GI tract.",
+            "It causes excessive diuresis."
         ],
-        "answer": 4,
-        "correctAnswer": "p53",
-        "explanation": "Apoptosis detects and destroys cells that harbor dangerous mutations, thereby maintaining genetic consistency and preventing the development of cancer. There are several means, the most important of which is probably p53, by which the cell recognizes genomic abnormalities and “assesses” whether they can be repaired. If the damage to DNA is so severe that it cannot be repaired, the cascade of events leading to apoptosis is activated, and the cell dies. This process protects an organism from the consequences of a non-functional cell or one that cannot control its own proliferation (e.g., a cancer cell). After it binds to areas of DNA damage, p53 activates proteins that arrest the cell in G1 of the cell cycle, allowing time for DNA repair to proceed. It also directs DNA repair enzymes to the site of injury. If the DNA damage cannot be repaired, p53 activates mechanisms that terminate in apoptosis.",
+        "answer": 1,
+        "correctAnswer": "Their UGT enzymes are underdeveloped, leading to toxic levels (Gray Baby Syndrome).",
+        "explanation": "Impaired glucuronidation → accumulation → circulatory collapse.",
         "whyNotOtherOptions": {
-            "a": "P450 metabolism.",
-            "b": "β-Catenin Wnt.",
-            "c": "E-Cadherin adhesion.",
-            "d": "P-Selectin inflammation."
+            "a": "Not inducer.",
+            "c": "Absorbed.",
+            "d": "Not diuretic."
         },
-        "relatedQuestions": ["30", "33"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "Metabolism",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 50,
+        "question": "The toxic metabolite of paracetamol (acetaminophen) that causes hepatotoxicity is:",
+        "options": [
+            "NAPQI",
+            "Glutathione",
+            "Morphine-6-glucuronide",
+            "Acetylsalicylic acid"
+        ],
+        "answer": 0,
+        "correctAnswer": "NAPQI",
+        "explanation": "N-acetyl-p-benzoquinone imine depletes GSH, binds hepatocytes.",
+        "whyNotOtherOptions": {
+            "b": "Conjugates NAPQI.",
+            "c": "Opioid.",
+            "d": "Aspirin."
+        },
+        "relatedQuestions": [],
+        "category": "Metabolism",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 51,
+        "question": "First-pass metabolism significantly reduces the bioavailability of drugs administered via which route?",
+        "options": [
+            "Intravenous",
+            "Sublingual",
+            "Oral",
+            "Inhalation"
+        ],
+        "answer": 2,
+        "correctAnswer": "Oral",
+        "explanation": "Portal vein to liver before systemic circulation.",
+        "whyNotOtherOptions": {
+            "a": "Bypasses.",
+            "b": "Bypasses.",
+            "d": "Pulmonary but oral dominant."
+        },
+        "relatedQuestions": ["23"],
+        "category": "Metabolism",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 52,
+        "question": "Enzyme induction by a drug (e.g., Rifampicin) leads to:",
+        "options": [
+            "Decreased metabolism of other drugs",
+            "Increased synthesis of metabolizing enzymes",
+            "Increased half-life of co-administered drugs",
+            "Decreased drug excretion"
+        ],
+        "answer": 1,
+        "correctAnswer": "Increased synthesis of metabolizing enzymes",
+        "explanation": "Upregulates CYP expression.",
+        "whyNotOtherOptions": {
+            "a": "Increased metabolism.",
+            "c": "Decreased t½.",
+            "d": "Metabolism primary."
+        },
+        "relatedQuestions": ["53"],
+        "category": "Metabolism",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 53,
+        "question": "A patient on warfarin starts taking phenobarbital (an enzyme inducer). The likely effect is:",
+        "options": [
+            "Increased warfarin levels and risk of bleeding",
+            "Decreased warfarin levels and reduced anticoagulant effect",
+            "No change in warfarin levels",
+            "Increased half-life of warfarin"
+        ],
+        "answer": 1,
+        "correctAnswer": "Decreased warfarin levels and reduced anticoagulant effect",
+        "explanation": "Induced CYP2C9 accelerates warfarin clearance.",
+        "whyNotOtherOptions": {
+            "a": "Inhibition.",
+            "c": "Interaction occurs.",
+            "d": "Decreased."
+        },
+        "relatedQuestions": ["52"],
+        "category": "Interactions",
         "difficulty": "Hard"
+    },
+    {
+        "id": 54,
+        "question": "Grapefruit juice is a known inhibitor of CYP3A4. If taken with a drug metabolized by this enzyme, the result is:",
+        "options": [
+            "Decreased drug absorption",
+            "Increased drug metabolism",
+            "Increased drug levels and potential toxicity",
+            "Faster drug excretion"
+        ],
+        "answer": 2,
+        "correctAnswer": "Increased drug levels and potential toxicity",
+        "explanation": "Inhibits intestinal/hepatic CYP3A4 → higher F.",
+        "whyNotOtherOptions": {
+            "a": "P-gp also.",
+            "b": "Opposite.",
+            "d": "Reduced clearance."
+        },
+        "relatedQuestions": [],
+        "category": "Interactions",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 55,
+        "question": "Bioavailability (F) is defined as:",
+        "options": [
+            "The rate at which a drug is absorbed",
+            "The fraction of an administered drug that reaches the systemic circulation intact",
+            "The total amount of drug excreted unchanged",
+            "The volume of plasma cleared of drug per unit time"
+        ],
+        "answer": 1,
+        "correctAnswer": "The fraction of an administered drug that reaches the systemic circulation intact",
+        "explanation": "F = AUC_oral / AUC_IV.",
+        "whyNotOtherOptions": {
+            "a": "Rate = ka.",
+            "c": "fe.",
+            "d": "CL."
+        },
+        "relatedQuestions": ["56"],
+        "category": "Pharmacokinetics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 56,
+        "question": "For a drug given orally, bioavailability is less than 100% mainly due to:",
+        "options": [
+            "Rapid IV absorption",
+            "Incomplete absorption and first-pass metabolism",
+            "High volume of distribution",
+            "Extensive plasma protein binding"
+        ],
+        "answer": 1,
+        "correctAnswer": "Incomplete absorption and first-pass metabolism",
+        "explanation": "Gut wall and hepatic extraction.",
+        "whyNotOtherOptions": {
+            "a": "IV reference.",
+            "c": "Post-absorption.",
+            "d": "Affects free fraction."
+        },
+        "relatedQuestions": ["55"],
+        "category": "Pharmacokinetics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 57,
+        "question": "The Volume of Distribution (Vd) is a parameter that relates:",
+        "options": [
+            "The rate of elimination to the plasma concentration",
+            "The amount of drug in the body to the plasma concentration",
+            "The fraction of drug absorbed to the dose administered",
+            "The time required to remove half the drug from the body"
+        ],
+        "answer": 1,
+        "correctAnswer": "The amount of drug in the body to the plasma concentration",
+        "explanation": "Vd = Dose / Cp0 (IV).",
+        "whyNotOtherOptions": {
+            "a": "CL.",
+            "c": "F.",
+            "d": "t½."
+        },
+        "relatedQuestions": [],
+        "category": "Pharmacokinetics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 58,
+        "question": "A drug with a very high Vd is likely to:",
+        "options": [
+            "Be primarily concentrated in the blood",
+            "Have a long half-life if clearance is low",
+            "Be easily removed by dialysis",
+            "Be extensively metabolized on first pass"
+        ],
+        "answer": 1,
+        "correctAnswer": "Have a long half-life if clearance is low",
+        "explanation": "t½ = 0.693 × Vd / CL; large Vd prolongs if CL low.",
+        "whyNotOtherOptions": {
+            "a": "Low Vd.",
+            "c": "High Vd tissue-bound.",
+            "d": "Separate."
+        },
+        "relatedQuestions": [],
+        "category": "Pharmacokinetics",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 59,
+        "question": "Clearance (CL) is a measure of:",
+        "options": [
+            "The rate of drug absorption",
+            "The volume of distribution",
+            "The rate of drug elimination relative to its plasma concentration",
+            "The fraction of drug bound to plasma proteins"
+        ],
+        "answer": 2,
+        "correctAnswer": "The rate of drug elimination relative to its plasma concentration",
+        "explanation": "CL = Rate_elim / Cp.",
+        "whyNotOtherOptions": {
+            "a": "ka.",
+            "b": "Vd.",
+            "d": "fu."
+        },
+        "relatedQuestions": [],
+        "category": "Pharmacokinetics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 60,
+        "question": "Total Body Clearance is the sum of clearances from:",
+        "options": [
+            "Liver and Kidneys only",
+            "Liver, Kidneys, and other organs",
+            "Plasma and Tissues",
+            "Absorption and Distribution sites"
+        ],
+        "answer": 1,
+        "correctAnswer": "Liver, Kidneys, and other organs",
+        "explanation": "CL_total = CL_hepatic + CL_renal + CL_other (lungs, etc.).",
+        "whyNotOtherOptions": {
+            "a": "Incomplete.",
+            "c": "Not sites.",
+            "d": "Not clearance."
+        },
+        "relatedQuestions": [],
+        "category": "Pharmacokinetics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 61,
+        "question": "The half-life (t½) of a drug is the time required for:",
+        "options": [
+            "The drug to be completely eliminated from the body",
+            "The plasma concentration to be reduced by 50%",
+            "The drug to be fully absorbed",
+            "The maximum effect to be achieved"
+        ],
+        "answer": 1,
+        "correctAnswer": "The plasma concentration to be reduced by 50%",
+        "explanation": "t½ = 0.693 / ke.",
+        "whyNotOtherOptions": {
+            "a": "~5-7 t½.",
+            "c": "Absorption time.",
+            "d": "Onset."
+        },
+        "relatedQuestions": [],
+        "category": "Pharmacokinetics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 62,
+        "question": "How many half-lives are approximately required to reach steady-state concentration during repeated dosing?",
+        "options": [
+            "1-2",
+            "4-5",
+            "8-10",
+            "10-12"
+        ],
+        "answer": 1,
+        "correctAnswer": "4-5",
+        "explanation": "94-97% Css after 3.3-5 t½.",
+        "whyNotOtherOptions": {
+            "a": "50-75%.",
+            "c": "Excess.",
+            "d": "Excess."
+        },
+        "relatedQuestions": ["67"],
+        "category": "Pharmacokinetics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 63,
+        "question": "A loading dose is used to:",
+        "options": [
+            "Maintain steady-state concentration",
+            "Rapidly achieve the target drug concentration",
+            "Decrease the drug's volume of distribution",
+            "Increase the drug's half-life"
+        ],
+        "answer": 1,
+        "correctAnswer": "Rapidly achieve the target drug concentration",
+        "explanation": "LD = Vd × Css_target / F.",
+        "whyNotOtherOptions": {
+            "a": "Maintenance.",
+            "c": "Fixed.",
+            "d": "Fixed."
+        },
+        "relatedQuestions": ["64"],
+        "category": "Pharmacokinetics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 64,
+        "question": "The formula for Loading Dose is:",
+        "options": [
+            "CL x Css",
+            "Vd x Css",
+            "F x Dose",
+            "t½ x 0.693"
+        ],
+        "answer": 1,
+        "correctAnswer": "Vd x Css",
+        "explanation": "LD = Vd × desired Cp (IV); adjust for F oral.",
+        "whyNotOtherOptions": {
+            "a": "Maintenance rate.",
+            "c": "Bioavailability.",
+            "d": "t½ formula."
+        },
+        "relatedQuestions": ["63"],
+        "category": "Pharmacokinetics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 65,
+        "question": "The maintenance dose is designed to:",
+        "options": [
+            "Achieve rapid therapeutic effects",
+            "Replace the amount of drug eliminated since the last dose",
+            "Decrease the volume of distribution",
+            "Increase the bioavailability"
+        ],
+        "answer": 1,
+        "correctAnswer": "Replace the amount of drug eliminated since the last dose",
+        "explanation": "MD = CL × Css × τ / F.",
+        "whyNotOtherOptions": {
+            "a": "Loading.",
+            "c": "Fixed.",
+            "d": "Fixed."
+        },
+        "relatedQuestions": [],
+        "category": "Pharmacokinetics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 66,
+        "question": "Steady-state concentration is achieved when:",
+        "options": [
+            "The drug is completely absorbed",
+            "The rate of drug administration equals the rate of elimination",
+            "The drug is fully distributed to all tissues",
+            "The maximum pharmacological effect is seen"
+        ],
+        "answer": 1,
+        "correctAnswer": "The rate of drug administration equals the rate of elimination",
+        "explanation": "Input = output at Css.",
+        "whyNotOtherOptions": {
+            "a": "Absorption complete earlier.",
+            "c": "Distribution faster.",
+            "d": "May lag."
+        },
+        "relatedQuestions": ["62"],
+        "category": "Pharmacokinetics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 67,
+        "question": "Drug \"A\" has a half-life of 6 hours. If a constant IV infusion is started, when will it reach steady state?",
+        "options": [
+            "6 hours",
+            "12 hours",
+            "24-30 hours",
+            "36 hours"
+        ],
+        "answer": 2,
+        "correctAnswer": "24-30 hours",
+        "explanation": "4-5 t½ = 24-30 h for ~94-97% Css.",
+        "whyNotOtherOptions": {
+            "a": "1 t½.",
+            "b": "2 t½.",
+            "d": "6 t½."
+        },
+        "relatedQuestions": ["62"],
+        "category": "Pharmacokinetics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 68,
+        "question": "Which of the following is NOT a primary mechanism of drug absorption?",
+        "options": [
+            "Active Transport",
+            "Passive Diffusion",
+            "Glomerular Filtration",
+            "Pinocytosis"
+        ],
+        "answer": 2,
+        "correctAnswer": "Glomerular Filtration",
+        "explanation": "Filtration is elimination, not absorption.",
+        "whyNotOtherOptions": {
+            "a": "Yes.",
+            "b": "Yes.",
+            "d": "Yes."
+        },
+        "relatedQuestions": ["15"],
+        "category": "Absorption",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 69,
+        "question": "The extent of ionization of a weak acid or base drug depends on the:",
+        "options": [
+            "Lipid solubility of the drug",
+            "pKa of the drug and the pH of the environment",
+            "Blood flow to the absorption site",
+            "Surface area of absorption"
+        ],
+        "answer": 1,
+        "correctAnswer": "pKa of the drug and the pH of the environment",
+        "explanation": "Henderson-Hasselbalch equation.",
+        "whyNotOtherOptions": {
+            "a": "Unionized fraction.",
+            "c": "Rate factor.",
+            "d": "Rate factor."
+        },
+        "relatedQuestions": ["19"],
+        "category": "Absorption",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 70,
+        "question": "A weak acid drug would be best absorbed in the:",
+        "options": [
+            "Stomach (acidic pH)",
+            "Small intestine (basic pH)",
+            "Colon (neutral pH)",
+            "Mouth (neutral pH)"
+        ],
+        "answer": 0,
+        "correctAnswer": "Stomach (acidic pH)",
+        "explanation": "Low pH favors unionized HA form for weak acids.",
+        "whyNotOtherOptions": {
+            "b": "Ionized.",
+            "c": "Variable.",
+            "d": "Neutral."
+        },
+        "relatedQuestions": [],
+        "category": "Absorption",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 71,
+        "question": "P-glycoprotein (Pgp) transport system primarily:",
+        "options": [
+            "Enhances drug absorption in the gut",
+            "Pumps drugs out of cells, reducing their concentration (e.g., in CNS)",
+            "Conjugates drugs for excretion",
+            "Binds drugs to plasma proteins"
+        ],
+        "answer": 1,
+        "correctAnswer": "Pumps drugs out of cells, reducing their concentration (e.g., in CNS)",
+        "explanation": "Efflux transporter limits absorption, brain penetration.",
+        "whyNotOtherOptions": {
+            "a": "Reduces.",
+            "c": "Phase II.",
+            "d": "Binding separate."
+        },
+        "relatedQuestions": [],
+        "category": "Absorption",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 72,
+        "question": "Which route of administration completely bypasses first-pass metabolism?",
+        "options": [
+            "Oral",
+            "Rectal",
+            "Intravenous",
+            "A and B"
+        ],
+        "answer": 2,
+        "correctAnswer": "Intravenous",
+        "explanation": "Direct systemic; rectal partial bypass.",
+        "whyNotOtherOptions": {
+            "a": "Full.",
+            "b": "Partial.",
+            "d": "Only IV."
+        },
+        "relatedQuestions": ["27"],
+        "category": "Routes",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 73,
+        "question": "The term \"bioavailability\" is most concerned with which pharmacokinetic process?",
+        "options": [
+            "Distribution",
+            "Metabolism",
+            "Absorption",
+            "Excretion"
+        ],
+        "answer": 2,
+        "correctAnswer": "Absorption",
+        "explanation": "Fraction reaching circulation post-absorption and first-pass.",
+        "whyNotOtherOptions": {
+            "a": "Post.",
+            "b": "Reduces F.",
+            "d": "Clearance."
+        },
+        "relatedQuestions": ["55"],
+        "category": "Pharmacokinetics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 74,
+        "question": "Two drugs highly bound to plasma albumin administered together are likely to:",
+        "options": [
+            "Have no interaction",
+            "Increase each other's metabolism",
+            "Displace each other, leading to increased free concentrations",
+            "Form a complex that is rapidly excreted"
+        ],
+        "answer": 2,
+        "correctAnswer": "Displace each other, leading to increased free concentrations",
+        "explanation": "Competition for binding sites.",
+        "whyNotOtherOptions": {
+            "a": "Interaction occurs.",
+            "b": "Separate.",
+            "d": "Rare."
+        },
+        "relatedQuestions": [],
+        "category": "Distribution",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 75,
+        "question": "The phenomenon where the body's response to a drug diminishes over time is known as:",
+        "options": [
+            "Tachyphylaxis",
+            "Tolerance",
+            "Dependence",
+            "Idiosyncrasy"
+        ],
+        "answer": 1,
+        "correctAnswer": "Tolerance",
+        "explanation": "Reduced responsiveness with continued exposure.",
+        "whyNotOtherOptions": {
+            "a": "Acute.",
+            "c": "Withdrawal.",
+            "d": "Genetic."
+        },
+        "relatedQuestions": ["76"],
+        "category": "Pharmacodynamics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 76,
+        "question": "Rapid development of tolerance upon repeated administration in a short time is specifically called:",
+        "options": [
+            "Down-regulation",
+            "Desensitization",
+            "Tachyphylaxis",
+            "Enzyme induction"
+        ],
+        "answer": 2,
+        "correctAnswer": "Tachyphylaxis",
+        "explanation": "Acute depletion/desensitization (e.g., amphetamines).",
+        "whyNotOtherOptions": {
+            "a": "Mechanism.",
+            "b": "General.",
+            "d": "PK."
+        },
+        "relatedQuestions": ["75"],
+        "category": "Pharmacodynamics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 77,
+        "question": "A drug interaction where one drug inhibits the metabolism of another is a:",
+        "options": [
+            "Pharmacodynamic interaction",
+            "Physiologic antagonism",
+            "Pharmacokinetic interaction (metabolism level)",
+            "Chemical antagonism"
+        ],
+        "answer": 2,
+        "correctAnswer": "Pharmacokinetic interaction (metabolism level)",
+        "explanation": "Alters clearance via enzyme inhibition.",
+        "whyNotOtherOptions": {
+            "a": "At receptor.",
+            "b": "Opposite effects.",
+            "d": "Inactivation."
+        },
+        "relatedQuestions": [],
+        "category": "Interactions",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 78,
+        "question": "The interaction between Tetracycline and Antacids leading to decreased absorption is due to:",
+        "options": [
+            "Enzyme induction",
+            "Chelation complex formation",
+            "Plasma protein displacement",
+            "Synergism"
+        ],
+        "answer": 1,
+        "correctAnswer": "Chelation complex formation",
+        "explanation": "Divalent cations form insoluble complexes.",
+        "whyNotOtherOptions": {
+            "a": "Induction increases.",
+            "c": "Distribution.",
+            "d": "Enhanced effect."
+        },
+        "relatedQuestions": [],
+        "category": "Interactions",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 79,
+        "question": "Probenecid delays the excretion of penicillin by competing for:",
+        "options": [
+            "Glomerular filtration",
+            "Tubular reabsorption",
+            "Tubular secretion",
+            "Bile acid transporters"
+        ],
+        "answer": 2,
+        "correctAnswer": "Tubular secretion",
+        "explanation": "OAT inhibition prolongs penicillin t½.",
+        "whyNotOtherOptions": {
+            "a": "Passive.",
+            "b": "Not primary.",
+            "d": "Different."
+        },
+        "relatedQuestions": [],
+        "category": "Excretion",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 80,
+        "question": "When the combined effect of two drugs is equal to the sum of their individual effects, it is called:",
+        "options": [
+            "Potentiation",
+            "Synergism",
+            "Additive effect",
+            "Antagonism"
+        ],
+        "answer": 2,
+        "correctAnswer": "Additive effect",
+        "explanation": "1 + 1 = 2.",
+        "whyNotOtherOptions": {
+            "a": "1 + 0 = 2.",
+            "b": "1 + 1 > 2.",
+            "d": "Reduction."
+        },
+        "relatedQuestions": [],
+        "category": "Pharmacodynamics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 81,
+        "question": "The use of activated charcoal in alkaloid poisoning is an example of which type of antagonism?",
+        "options": [
+            "Chemical",
+            "Physiological",
+            "Physical",
+            "Receptor"
+        ],
+        "answer": 2,
+        "correctAnswer": "Physical",
+        "explanation": "Adsorption prevents absorption.",
+        "whyNotOtherOptions": {
+            "a": "Neutralization.",
+            "b": "Opposite systems.",
+            "d": "Blocking."
+        },
+        "relatedQuestions": [],
+        "category": "Interactions",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 82,
+        "question": "The use of a chelating agent for heavy metal poisoning is an example of which type of antagonism?",
+        "options": [
+            "Chemical",
+            "Physiological",
+            "Physical",
+            "Receptor"
+        ],
+        "answer": 0,
+        "correctAnswer": "Chemical",
+        "explanation": "Forms stable complex, inactivates metal.",
+        "whyNotOtherOptions": {
+            "b": "Different.",
+            "c": "Adsorption.",
+            "d": "No."
+        },
+        "relatedQuestions": [],
+        "category": "Interactions",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 83,
+        "question": "A drug that binds to a receptor but produces no effect itself, while blocking the agonist, is called a:",
+        "options": [
+            "Partial Agonist",
+            "Full Agonist",
+            "Inverse Agonist",
+            "Competitive Antagonist"
+        ],
+        "answer": 3,
+        "correctAnswer": "Competitive Antagonist",
+        "explanation": "Zero efficacy, reversible binding.",
+        "whyNotOtherOptions": {
+            "a": "Submaximal.",
+            "b": "Full.",
+            "c": "Reduces basal."
+        },
+        "relatedQuestions": [],
+        "category": "Pharmacodynamics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 84,
+        "question": "The therapeutic index (TI) of a drug is a measure of its:",
+        "options": [
+            "Potency",
+            "Efficacy",
+            "Safety",
+            "Bioavailability"
+        ],
+        "answer": 2,
+        "correctAnswer": "Safety",
+        "explanation": "TI = TD50 / ED50 or LD50 / ED50.",
+        "whyNotOtherOptions": {
+            "a": "ED50.",
+            "b": "Emax.",
+            "d": "F."
+        },
+        "relatedQuestions": ["85"],
+        "category": "Pharmacodynamics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 85,
+        "question": "Drugs with a low therapeutic index, such as warfarin and digoxin:",
+        "options": [
+            "Are considered highly safe and do not need monitoring",
+            "Should be used with caution and require periodic monitoring",
+            "Have a wide safety margin",
+            "Are always over-the-counter medications"
+        ],
+        "answer": 1,
+        "correctAnswer": "Should be used with caution and require periodic monitoring",
+        "explanation": "Narrow margin between effective and toxic doses.",
+        "whyNotOtherOptions": {
+            "a": "Opposite.",
+            "c": "High TI.",
+            "d": "Prescription."
+        },
+        "relatedQuestions": ["84"],
+        "category": "Pharmacodynamics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 86,
+        "question": "Factors affecting drug plasma protein binding include all of the following EXCEPT:",
+        "options": [
+            "Age",
+            "Pregnancy",
+            "Disease state (e.g., hypoalbuminemia)",
+            "The patient's dietary preference for spicy food"
+        ],
+        "answer": 3,
+        "correctAnswer": "The patient's dietary preference for spicy food",
+        "explanation": "Dietary spice irrelevant; physiologic states alter albumin/AAG.",
+        "whyNotOtherOptions": {
+            "a": "Neonates/elderly low.",
+            "b": "Estrogen increases AAG.",
+            "c": "Liver/renal disease."
+        },
+        "relatedQuestions": [],
+        "category": "Distribution",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 87,
+        "question": "The tissue with affinity for chloroquine accumulation, advantageous for target therapy but risky for toxicity, is the:",
+        "options": [
+            "Kidney",
+            "Bone",
+            "Eye",
+            "Liver"
+        ],
+        "answer": 3,
+        "correctAnswer": "Liver",
+        "explanation": "High hepatic concentration for malaria; risk of retinopathy long-term.",
+        "whyNotOtherOptions": {
+            "a": "Excretion.",
+            "b": "Tetracycline.",
+            "c": "Retinopathy but not primary accumulation."
+        },
+        "relatedQuestions": ["38"],
+        "category": "Distribution",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 88,
+        "question": "The volume of injection for an intramuscular (IM) route should not exceed:",
+        "options": [
+            "1 ml",
+            "5 ml",
+            "10 ml",
+            "20 ml"
+        ],
+        "answer": 1,
+        "correctAnswer": "5 ml",
+        "explanation": "Maximum 5 mL per site to avoid pain/irritation.",
+        "whyNotOtherOptions": {
+            "a": "SC.",
+            "c": "Large muscle up to 5-10 mL.",
+            "d": "Excessive."
+        },
+        "relatedQuestions": ["29"],
+        "category": "Routes",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 89,
+        "question": "A common cytochrome P450 enzyme is:",
+        "options": [
+            "Acetyltransferase",
+            "Cyp3A4",
+            "Glucuronosyltransferase",
+            "Sulfotransferase"
+        ],
+        "answer": 1,
+        "correctAnswer": "Cyp3A4",
+        "explanation": "Major isoform (~50% drug metabolism).",
+        "whyNotOtherOptions": {
+            "a": "Phase II NAT.",
+            "c": "UGT Phase II.",
+            "d": "Phase II."
+        },
+        "relatedQuestions": ["46"],
+        "category": "Metabolism",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 90,
+        "question": "First-pass effect can occur in all the following locations EXCEPT:",
+        "options": [
+            "Gut lumen",
+            "Liver",
+            "Lungs",
+            "Skeletal Muscle"
+        ],
+        "answer": 3,
+        "correctAnswer": "Skeletal Muscle",
+        "explanation": "Gut enzymes, hepatic, pulmonary; muscle lacks significant metabolizing capacity.",
+        "whyNotOtherOptions": {
+            "a": "Bacterial/enzymatic.",
+            "b": "Primary.",
+            "c": "Some drugs."
+        },
+        "relatedQuestions": [],
+        "category": "Metabolism",
+        "difficulty": "Medium"
     }
-];
+]
+
+;
 
 // Core application variables
 const overlay = document.getElementById('overlay');
@@ -3751,7 +4883,7 @@ function showCustomQuestionCreator() {
     modal.className = 'custom-quiz-modal active';
     modal.innerHTML = `
         <div class="custom-quiz-content glass-effect" style="max-width: 600px; border-radius: 24px;">
-            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                 <h3 style="font-size: 24px; font-weight: 700; color: var(--text-primary);">Create Custom Question</h3>
                 <button class="action-btn" onclick="closeCustomQuestionModal()" style="background: rgba(239, 68, 68, 0.1); color: var(--error);">
                     <i class="fas fa-times"></i>
@@ -3761,8 +4893,13 @@ function showCustomQuestionCreator() {
             <div class="custom-question-creator">
                 <div style="display: grid; gap: 20px;">
                     <div>
-                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Question Text</label>
-                        <textarea id="customQuestionText" placeholder="Enter your question here..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 80px;"></textarea>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Question Text (Markdown supported for tables)</label>
+                        <textarea id="customQuestionText" placeholder="Enter your question here... Use Markdown for tables, e.g., | Col1 | Col2 |" style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 100px;"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Image URL (optional)</label>
+                        <input type="url" id="customImageUrl" placeholder="https://example.com/image.jpg" style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px;">
                     </div>
                     
                     <div>
@@ -3807,7 +4944,7 @@ function showCustomQuestionCreator() {
                     
                     <div>
                         <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Explanation</label>
-                        <textarea id="customExplanation" placeholder="Explain why the correct answer is right..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 60px;"></textarea>
+                        <textarea id="customExplanation" placeholder="Explain why the correct answer is right..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 80px;"></textarea>
                     </div>
                 </div>
                 
@@ -3844,6 +4981,7 @@ function closeCustomQuestionModal() {
 
 function saveCustomQuestion() {
     const questionText = document.getElementById('customQuestionText').value;
+    const imageUrl = document.getElementById('customImageUrl').value || '';
     const category = document.getElementById('customQuestionCategory').value;
     const difficulty = document.querySelector('.difficulty-btn.active').dataset.difficulty;
     const explanation = document.getElementById('customExplanation').value;
@@ -3889,7 +5027,8 @@ function saveCustomQuestion() {
         relatedQuestions: [],
         category: category,
         difficulty: difficulty,
-        custom: true
+        custom: true,
+        image: imageUrl
     };
     
     customQuestions.push(newQuestion);
@@ -3938,6 +5077,7 @@ function startCourse(courseName) {
     pageTitle.textContent = `Quiz Mode - ${courseName}`;
     
     hideAllSections();
+    quizContainer.classList.remove('hidden');
     renderQuizLayout();
 }
 
@@ -4208,7 +5348,7 @@ function highlightSearchTerms(query) {
     const categoryElements = document.querySelectorAll('.question-category');
     
     const highlightText = (element) => {
-        const originalText = element.textContent;
+        const originalText = element.innerHTML;  // Use innerHTML to preserve Markdown
         const regex = new RegExp(`(${query})`, 'gi');
         const highlighted = originalText.replace(regex, '<mark class="search-highlight">$1</mark>');
         element.innerHTML = highlighted;
@@ -4407,6 +5547,7 @@ function createCustomQuiz(options) {
     }
     
     hideAllSections();
+    quizContainer.classList.remove('hidden');
     renderQuizLayout();
     customQuizModal.classList.remove('active');
     showNotification(`Custom quiz created with ${questions.length} questions`, 'success');
@@ -4420,6 +5561,7 @@ function shuffleArray(array) {
     }
     return shuffled;
 }
+
 
 function generateStudyReport() {
     const allQuestions = [...quizData, ...customQuestions];
@@ -4806,7 +5948,7 @@ function renderExamLayout() {
                             <div class="question-meta">
                                 <div class="question-number">Q${question.id}</div>
                                 <div class="question-category">${question.category}</div>
-                                <div class="question-difficulty" style="padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: ${getDifficultyColor(question.difficulty)}; color: white;">
+                                <div class="question-difficulty" style="background: ${getDifficultyColor(question.difficulty)};">
                                     ${question.difficulty}
                                 </div>
                                 ${userAnswer !== undefined ? `
@@ -4821,7 +5963,10 @@ function renderExamLayout() {
                                 </button>
                             </div>
                         </div>
-                        <div class="question-text">${question.question}</div>
+                        <div class="question-image-container">
+                            ${question.image ? `<img src="${question.image}" alt="Question image" class="question-image">` : ''}
+                        </div>
+                        <div class="question-text">${marked.parse(question.question)}</div>
                         <div class="options-grid">
                             ${question.options.map((option, optIndex) => {
                                 const isSelected = userAnswer === optIndex;
@@ -4931,7 +6076,10 @@ function renderSingleQuestionLayout() {
                     </button>
                 </div>
             </div>
-            <div class="question-text">${question.question}</div>
+            <div class="question-image-container">
+                ${question.image ? `<img src="${question.image}" alt="Question image" class="question-image">` : ''}
+            </div>
+            <div class="question-text">${marked.parse(question.question)}</div>
             <div class="options-grid">
                 ${question.options.map((option, index) => {
                     const isSelected = userAnswer === index;

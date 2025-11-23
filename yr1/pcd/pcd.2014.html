@@ -1,10 +1,11 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ALIF | Advanced Medical Education</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="/protect.js"></script>
     <style type="text/css">
         /* Import Inter font */
@@ -555,6 +556,35 @@
             line-height: 1.6;
             margin-bottom: 24px;
             color: var(--text-primary);
+            overflow-x: auto;
+        }
+
+        .question-text table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            text-align: left;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .question-text th, .question-text td {
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .question-text th {
+            background-color: var(--surface);
+            font-weight: bold;
+        }
+
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
         }
 
         .options-grid {
@@ -958,173 +988,172 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* Custom Quiz Modal */
-/* Custom Quiz Modal Styles */
-.custom-quiz-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-}
+        /* Custom Quiz Modal Styles */
+        .custom-quiz-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
 
-.custom-quiz-modal.active {
-    display: flex;
-}
+        .custom-quiz-modal.active {
+            display: flex;
+        }
 
-.custom-quiz-content {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-xl);
-    border: 1px solid var(--border);
-}
+        .custom-quiz-content {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+        }
 
-.custom-quiz-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: var(--text-primary);
-}
+        .custom-quiz-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
 
-.custom-quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 24px;
-}
+        .custom-quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
 
-.custom-quiz-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: var(--transition);
-    background: var(--glass);
-}
+        .custom-quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--glass);
+        }
 
-.custom-quiz-option:hover {
-    border-color: var(--primary-light);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow);
-}
+        .custom-quiz-option:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
 
-.custom-quiz-option.selected {
-    border-color: var(--primary);
-    background: var(--primary-light);
-}
+        .custom-quiz-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
 
-.custom-quiz-option .option-selector {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-    flex-shrink: 0;
-}
+        .custom-quiz-option .option-selector {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
 
-.custom-quiz-option.selected .option-selector {
-    background: var(--primary);
-    border-color: var(--primary);
-}
+        .custom-quiz-option.selected .option-selector {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
 
-.custom-quiz-option.selected .option-selector::after {
-    content: '✓';
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-}
+        .custom-quiz-option.selected .option-selector::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-.custom-quiz-option label {
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--text-primary);
-    flex: 1;
-    margin: 0;
-}
+        .custom-quiz-option label {
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+            margin: 0;
+        }
 
-.quiz-options-section {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-}
+        .quiz-options-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
 
-.quiz-options-section label {
-    display: block;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-    font-weight: 600;
-}
+        .quiz-options-section label {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
 
-.custom-quiz-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 24px;
-}
+        .custom-quiz-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
 
-/* Modern Dropdown for Custom Quiz */
-.custom-quiz-content .modern-dropdown {
-    position: relative;
-    margin-top: 8px;
-}
+        /* Modern Dropdown for Custom Quiz */
+        .custom-quiz-content .modern-dropdown {
+            position: relative;
+            margin-top: 8px;
+        }
 
-.custom-quiz-content .modern-dropdown select {
-    width: 100%;
-    padding: 12px 48px 12px 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    color: var(--text-primary);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 18px;
-}
+        .custom-quiz-content .modern-dropdown select {
+            width: 100%;
+            padding: 12px 48px 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 18px;
+        }
 
-.custom-quiz-content .modern-dropdown select:hover {
-    border-color: var(--primary);
-    background-color: var(--primary-light);
-}
+        .custom-quiz-content .modern-dropdown select:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
 
-.custom-quiz-content .modern-dropdown select:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
+        .custom-quiz-content .modern-dropdown select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-/* Glass effect for modal */
-.custom-quiz-content.glass-effect {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
+        /* Glass effect for modal */
+        .custom-quiz-content.glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-.dark-mode .custom-quiz-content.glass-effect {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+        .dark-mode .custom-quiz-content.glass-effect {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
         /* Mobile Optimizations */
         @media (max-width: 768px) {
@@ -1754,7 +1783,377 @@
     background: var(--primary-dark);
     transform: scale(1.1);
 }
+/* Responsive Images */
+.question-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 16px 0;
+    display: block;
+    box-shadow: var(--shadow);
+}
 
+.question-image-container {
+    width: 100%;
+    text-align: center;
+    margin: 16px 0;
+}
+
+/* Ensure images don't overflow their containers */
+.question-image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+/* Responsive Tables */
+.question-text table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+    text-align: left;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.question-text th, .question-text td {
+    padding: 12px;
+    border: 1px solid var(--border);
+    min-width: 120px; /* Prevents columns from becoming too narrow */
+}
+
+.question-text th {
+    background-color: var(--surface);
+    font-weight: bold;
+    position: sticky;
+    left: 0;
+    color: var(--text-primary);
+}
+
+.question-text td {
+    color: var(--text-secondary);
+    background: var(--background);
+}
+
+/* Responsive Question Cards */
+.question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    width: 100%;
+    overflow: hidden;
+}
+
+.question-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    /* Question card mobile optimization */
+    .question-card {
+        padding: 16px;
+        margin-bottom: 12px;
+        border-radius: var(--radius);
+    }
+    
+    .question-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .question-meta {
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .question-actions {
+        align-self: flex-end;
+        margin-top: -40px; /* Position actions at top right */
+        position: relative;
+        z-index: 2;
+    }
+    
+    .question-text {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Image mobile optimization */
+    .question-image {
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+    
+    .question-image-container {
+        margin: 12px 0;
+    }
+    
+    /* Table mobile optimization */
+    .question-text table {
+        font-size: 12px;
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+    
+    .question-text th, .question-text td {
+        padding: 8px 10px;
+        min-width: 100px;
+    }
+    
+    /* Options grid mobile optimization */
+    .options-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .option {
+        padding: 14px;
+        min-height: auto;
+    }
+    
+    .option-letter {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+    }
+    
+    .option-text {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    
+    /* Quiz controls mobile optimization */
+    .quiz-controls {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+        padding-top: 20px;
+    }
+    
+    .quiz-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+    
+    /* Explanation section mobile optimization */
+    .explanation-section {
+        margin-top: 20px;
+        padding: 16px;
+    }
+    
+    .explanation-section summary {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .explanation-content {
+        padding: 12px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+}
+
+/* Extra small devices optimization (phones under 480px) */
+@media (max-width: 480px) {
+    .question-card {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .question-text {
+        font-size: 15px;
+        line-height: 1.4;
+    }
+    
+    /* Image optimization for very small screens */
+    .question-image {
+        margin: 10px 0;
+        border-radius: 4px;
+    }
+    
+    .question-image-container {
+        margin: 10px 0;
+    }
+    
+    /* Table optimization for very small screens */
+    .question-text table {
+        font-size: 11px;
+        margin: 10px 0;
+    }
+    
+    .question-text th, .question-text td {
+        padding: 6px 8px;
+        min-width: 80px;
+    }
+    
+    .question-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    
+    .question-number, .question-category, .question-difficulty {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .option {
+        padding: 12px 10px;
+    }
+    
+    .option-text {
+        font-size: 13px;
+    }
+    
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    /* Ensure proper spacing in exam mode */
+    .exam-mode-layout .question-card {
+        margin-bottom: 16px;
+    }
+}
+
+/* Fix for exam mode layout on mobile */
+.exam-mode-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .exam-mode-layout {
+        gap: 12px;
+    }
+    
+    .exam-header {
+        padding: 16px;
+    }
+    
+    .exam-header > div:first-child {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .exam-mode-toggle {
+        align-self: stretch;
+        display: flex;
+    }
+    
+    .mode-toggle-btn {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        padding: 10px 8px;
+    }
+    
+    .progress-info {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .progress-info .progress-bar {
+        width: 100%;
+    }
+}
+
+/* Fix for learn mode responsiveness */
+@media (max-width: 768px) {
+    .explanation-section {
+        padding: 16px;
+    }
+    
+    .explanation-section summary {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .explanation-content {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .related-questions-list {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .related-question-tag {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .correct-answer, .why-not-section, .related-questions {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+}
+
+/* Prevent horizontal scrolling on the entire page */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+    
+    .quiz-container {
+        padding: 0 16px 16px;
+    }
+    
+    .main-content {
+        width: 100%;
+    }
+}
+
+/* Ensure images in custom questions are also responsive */
+.custom-question-creator img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 10px 0;
+    display: block;
+}
+
+/* Fix for image loading states */
+.question-image {
+    background: var(--surface);
+    min-height: 50px;
+}
+
+.question-image:not([src]) {
+    display: none;
+}
+
+/* Animation for image loading */
+@keyframes imageFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.question-image.loaded {
+    animation: imageFadeIn 0.3s ease-in;
+}
     </style>
 </head>
 <body class="dark-mode">
@@ -1763,7 +2162,7 @@
     <!-- Custom Quiz Modal -->
 <div class="custom-quiz-modal" id="customQuizModal">
     <div class="custom-quiz-content glass-effect">
-        <h3 class="custom-quiz-title"> </h3>
+        <h3 class="custom-quiz-title">Create Custom Quiz</h3>
         <div class="custom-quiz-options">
             <div class="custom-quiz-option" data-category="all">
                 <div class="option-selector"></div>
@@ -2018,6 +2417,45 @@
             </div>
         </div>
     </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  // Check if running inside Telegram
+  const tg = window.Telegram?.WebApp;
+
+  // --- 1️⃣ Handle Telegram Mini App Back Button ---
+  if (tg) {
+    tg.ready(); // Initialize Telegram SDK
+    tg.BackButton.show();
+
+    tg.BackButton.onClick(() => {
+      console.log("Telegram back button pressed");
+      handleBackAction();
+    });
+  }
+
+  // --- 2️⃣ Handle Browser/Phone Back Button ---
+  window.addEventListener('popstate', () => {
+    console.log("Browser back button pressed");
+    handleBackAction();
+  });
+
+  // --- 3️⃣ Function to handle back action globally ---
+  function handleBackAction() {
+    // Example actions (customize as you wish):
+    // Go back if possible, otherwise go to home page
+    if (document.referrer && window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = '/'; // or your home page route
+    }
+  }
+
+  // --- 4️⃣ Optional: Prevent unwanted exits ---
+  // This ensures pressing back doesn’t immediately close the app
+  history.pushState(null, '', location.href);
+</script>
+
      <script>
         // Anti-copy, anti-inspect measures
 document.addEventListener('contextmenu', function(e) {
@@ -2030,508 +2468,532 @@ document.addEventListener('keydown', function(e) {
 });
 
 // Enhanced quiz data with more questions
-const quizData =[
-{
-"id": 1,
-"question": "Which of the following statements accurately distinguishes medical negligence from medical error?",
-"options": [
-"Medical negligence occurs only in cases of intentional harm, while medical error is accidental.",
-"Medical negligence involves a mistake in judgment, while medical error involves a mistake in the procedure.",
-"Medical mistake is a failure to meet a reasonable standard of care, while medical error is an unintended mistake that may or may not constitute negligence.",
-"Medical error is always considered negligent, while medical negligence can be excused if the healthcare provider acted in good faith."
-],
-"answer": 2,
-"correctAnswer": "Medical mistake is a failure to meet a reasonable standard of care, while medical error is an unintended mistake that may or may not constitute negligence.",
-"explanation": "Medical negligence is defined as a failure to meet the accepted standard of care, whereas medical error refers to an unintended mistake that may not necessarily breach that standard. Reference: General medical ethics principles.",
-"whyNotOtherOptions": {
-"a": "Medical negligence does not require intentional harm.",
-"b": "Both can involve mistakes in judgment or procedure.",
-"d": "Medical error is not always negligent."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 2,
-"question": "What term is used for the classic leadership style that encourages open communication and staff participation in decisions?",
-"options": [
-"Democratic",
-"Authoritarian",
-"Laissez-faire",
-"Egalitarian"
-],
-"answer": 0,
-"correctAnswer": "Democratic",
-"explanation": "The democratic leadership style promotes open communication and involves staff in decision-making processes, fostering a collaborative environment. Reference: General leadership principles.",
-"whyNotOtherOptions": {
-"b": "Authoritarian style is top-down and limits participation.",
-"c": "Laissez-faire style involves minimal leadership involvement.",
-"d": "Egalitarian style focuses on equality but not specifically on communication."
-},
-"relatedQuestions": [],
-"category": "Leadership",
-"difficulty": "Medium"
-},
-{
-"id": 3,
-"question": "Which of the following best defines the concept of breaking serious news?",
-"options": [
-"Telling someone information that adversely alters their expectations of the future",
-"Withholding information that adversely alters a person's expectations of the future",
-"Providing a summary regarding a disease",
-"Telling a patient a half-truth so that they maintain hope for the future"
-],
-"answer": 0,
-"correctAnswer": "Telling someone information that adversely alters their expectations of the future",
-"explanation": "Breaking serious news involves delivering information that significantly impacts a person's outlook or expectations, requiring sensitivity and clarity. Reference: General communication in healthcare.",
-"whyNotOtherOptions": {
-"b": "Withholding information is not breaking news.",
-"c": "A summary does not necessarily involve serious news.",
-"d": "Half-truths can undermine trust."
-},
-"relatedQuestions": [],
-"category": "Communication",
-"difficulty": "Medium"
-},
-{
-"id": 4,
-"question": "You have a patient in your clinic who is an elderly woman with multiple medical problems. Her family is extremely grateful for your care and they bring you a meal they cooked at home, a cake, and a scarf. What should you do?",
-"options": [
-"Accept the gift.",
-"Offer payment for the food.",
-"Refuse the gift.",
-"It is ethical to accept the gift if you share the food with the rest of the house staff."
-],
-"answer": 3,
-"correctAnswer": "It is ethical to accept the gift if you share the food with the rest of the house staff.",
-"explanation": "Accepting gifts can be ethical if they are shared with the team, avoiding personal bias or undue influence, while showing appreciation. Reference: Medical ethics guidelines.",
-"whyNotOtherOptions": {
-"a": "Accepting personally may raise ethical concerns.",
-"b": "Offering payment can offend the gesture.",
-"c": "Refusing may hurt the family's feelings."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 5,
-"question": "Which of the following is a component of the informed consent process?",
-"options": [
-"Defining non-maleficence",
-"Discussion of health insurance coverage",
-"Discussion of risks",
-"Defining patient autonomy"
-],
-"answer": 2,
-"correctAnswer": "Discussion of risks",
-"explanation": "Informed consent requires discussing risks, benefits, and alternatives with the patient to ensure they make an informed decision. Reference: Medical ethics standards.",
-"whyNotOtherOptions": {
-"a": "Non-maleficence is a principle, not a consent component.",
-"b": "Insurance coverage is not a core consent element.",
-"d": "Autonomy is a principle, not a process step."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 6,
-"question": "What is confidentiality?",
-"options": [
-"Obligation to protect information obtained in confidence",
-"Duty to reveal information obtained in a hospital",
-"Desire to protect information obtained in confidence",
-"Obligation to reveal information obtained in confidence"
-],
-"answer": 0,
-"correctAnswer": "Obligation to protect information obtained in confidence",
-"explanation": "Confidentiality in healthcare is the ethical and legal duty to safeguard patient information shared in trust. Reference: Medical ethics principles.",
-"whyNotOtherOptions": {
-"b": "Revealing hospital information breaches confidentiality.",
-"c": "Desire is not a formal obligation.",
-"d": "Revealing is the opposite of confidentiality."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Easy"
-},
-{
-"id": 7,
-"question": "Which of the following terms describes the process of hospitalizing a person against his or her will?",
-"options": [
-"Informed commitment",
-"Voluntary civil commitment",
-"Confidentiality",
-"Involuntary civil commitment"
-],
-"answer": 3,
-"correctAnswer": "Involuntary civil commitment",
-"explanation": "Involuntary civil commitment refers to hospitalizing someone against their will, typically for their safety or others'. Reference: Legal and ethical healthcare standards.",
-"whyNotOtherOptions": {
-"a": "Informed commitment is not a recognized term.",
-"b": "Voluntary implies consent.",
-"c": "Confidentiality relates to information protection."
-},
-"relatedQuestions": [],
-"category": "Legal Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 8,
-"question": "Why is it more appropriate to describe the consent process as informed decision-making instead of as informed consent?",
-"options": [
-"Patients should make their decision before meeting with a physician",
-"Patients should not listen to a physician during this process",
-"Patients have the right to consent and the right to refuse consent",
-"The patient is the only person involved in the decision-making process"
-],
-"answer": 2,
-"correctAnswer": "Patients have the right to consent and the right to refuse consent",
-"explanation": "Informed decision-making emphasizes patient autonomy, including the right to accept or refuse, beyond just giving consent. Reference: Patient rights in healthcare.",
-"whyNotOtherOptions": {
-"a": "Decisions are typically made with physician input.",
-"b": "Physician input is valuable.",
-"d": "Others like family or clinicians may be involved."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 9,
-"question": "What is NOT an important component of the informed consent process?",
-"options": [
-"Communication",
-"Deference",
-"Trust",
-"Respect"
-],
-"answer": 1,
-"correctAnswer": "Deference",
-"explanation": "Informed consent requires communication, trust, and respect, but deference (yielding to another's opinion) is not a core component. Reference: Informed consent guidelines.",
-"whyNotOtherOptions": {
-"a": "Communication is essential for understanding.",
-"c": "Trust is foundational to the process.",
-"d": "Respect ensures patient dignity."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 10,
-"question": "Which skills are important for breaking serious news?",
-"options": [
-"Being an active listener",
-"Being mechanistic",
-"Encouraging the patient to share",
-"Being present"
-],
-"answer": 0,
-"correctAnswer": "Being an active listener",
-"explanation": "Active listening is crucial for empathetically delivering serious news, ensuring the patient feels heard. Reference: Communication skills in healthcare.",
-"whyNotOtherOptions": {
-"b": "Mechanistic approaches lack empathy.",
-"c": "Sharing is secondary to listening.",
-"d": "Being present is helpful but not the primary skill."
-},
-"relatedQuestions": [],
-"category": "Communication",
-"difficulty": "Medium"
-},
-{
-"id": 11,
-"question": "What is not a quality required for good patient relationships?",
-"options": [
-"Apathy",
-"Respect",
-"Resilience",
-"Communication skills"
-],
-"answer": 0,
-"correctAnswer": "Apathy",
-"explanation": "Apathy (lack of interest or emotion) hinders patient relationships, while respect, resilience, and communication skills foster trust and care. Reference: Patient care principles.",
-"whyNotOtherOptions": {
-"b": "Respect is essential for trust.",
-"c": "Resilience helps manage challenges.",
-"d": "Communication is key to interaction."
-},
-"relatedQuestions": [],
-"category": "Patient Care",
-"difficulty": "Easy"
-},
-{
-"id": 12,
-"question": "What is the term for adhering to intellectual standards, being proficient in reasoning, and showing competent use of skills for making sound clinical judgments and safe decision-making?",
-"options": [
-"Deductive problem solving",
-"Intellectual reasoning",
-"Methodological deduction",
-"Critical thinking"
-],
-"answer": 3,
-"correctAnswer": "Critical thinking",
-"explanation": "Critical thinking involves applying intellectual standards and reasoning skills to ensure sound clinical judgments and safe decisions. Reference: Clinical practice standards.",
-"whyNotOtherOptions": {
-"a": "Deductive problem solving is a specific method.",
-"b": "Intellectual reasoning is a component, not the term.",
-"c": "Methodological deduction is too narrow."
-},
-"relatedQuestions": [],
-"category": "Clinical Skills",
-"difficulty": "Medium"
-},
-{
-"id": 13,
-"question": "What are two preconditions that a patient must meet in order to participate in informed decision-making?",
-"options": [
-"Reading and writing in English, Capacity to make a decision",
-"Competence, Reading and writing in English",
-"Voluntariness, Capacity to make a decision",
-"Competence, Capacity to make a decision"
-],
-"answer": 3,
-"correctAnswer": "Competence, Capacity to make a decision",
-"explanation": "Competence and capacity are essential for a patient to understand and make informed decisions about their care. Reference: Informed consent requirements.",
-"whyNotOtherOptions": {
-"a": "Language skills are not universal preconditions.",
-"b": "Reading and writing are not always required.",
-"c": "Voluntariness is part of the process, not a precondition."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 14,
-"question": "An 18-month-old child presents to the clinic with a runny nose. Since she is otherwise well, you realize that the patient was in the clinic. After she and her mother leave the clinic, you realize that the patient was in the clinic the week before and had also received immunizations then.",
-"options": [
-"It's okay; you will go ahead with the abortion",
-"No way, third-trimester abortions are prohibited",
-"Legally you can only do it if her life is at risk",
-"No, you can't do it because the fetus is normal"
-],
-"answer": null,
-"correctAnswer": "N/A",
-"explanation": "The question seems to contain a mismatch (mentioning abortion instead of immunizations). Based on the context of immunizations, no action is needed if already administered unless a specific issue arises. Reference: Pediatric immunization guidelines.",
-"whyNotOtherOptions": {
-"a": "Irrelevant to immunizations.",
-"b": "Irrelevant to immunizations.",
-"c": "Irrelevant to immunizations.",
-"d": "Irrelevant to immunizations."
-},
-"relatedQuestions": [],
-"category": "Pediatrics",
-"difficulty": "Medium"
-},
-{
-"id": 15,
-"question": "Should you tell the parents about your mistake?",
-"options": [
-"No because the error is trivial",
-"No because no harm is done",
-"No because the mother will never find out",
-"Yes because an open and honest approach to errors is most appropriate"
-],
-"answer": 3,
-"correctAnswer": "Yes because an open and honest approach to errors is most appropriate",
-"explanation": "Transparency with parents about mistakes fosters trust and aligns with ethical standards, even if the error is minor. Reference: Medical ethics on error disclosure.",
-"whyNotOtherOptions": {
-"a": "Triviality does not justify nondisclosure.",
-"b": "Potential harm is not the only factor.",
-"c": "Concealment undermines trust."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 16,
-"question": "A medical error has resulted in a patient illness. You are the doctor who made the error. What virtue must you demonstrate to remedy this situation?",
-"options": [
-"Integrity",
-"Prudence",
-"Technical competence",
-"Truthfulness"
-],
-"answer": 3,
-"correctAnswer": "Truthfulness",
-"explanation": "Truthfulness is crucial to acknowledge the error, apologize, and work toward resolution, maintaining patient trust. Reference: Medical ethics virtues.",
-"whyNotOtherOptions": {
-"a": "Integrity is broader but not specific to this context.",
-"b": "Prudence is about caution, not correction.",
-"c": "Technical competence prevents errors, not remedies them."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 17,
-"question": "You are a fourth-year medical student on a subinternship in obstetrics. You notice that the resident has come in with alcohol on his breath and some abnormal behavior. No one except you seems to notice.",
-"options": [
-"Nothing; you are subordinate to the resident",
-"Talk to the resident directly alone but don't mention it to the program director",
-"Report him to the state licensing board",
-"Report him to the program director or his department"
-],
-"answer": 3,
-"correctAnswer": "Report him to the program director or his department",
-"explanation": "Reporting to the program director ensures patient safety and addresses the resident's impairment appropriately. Reference: Professional conduct guidelines.",
-"whyNotOtherOptions": {
-"a": "Ignoring endangers patients.",
-"b": "Direct talk without escalation is insufficient.",
-"c": "State board is a higher step, not initial action."
-},
-"relatedQuestions": [],
-"category": "Professional Conduct",
-"difficulty": "Medium"
-},
-{
-"id": 18,
-"question": "You have a patient who is an HIV-positive program physician. He has recently found out that he is HIV-positive. He is very concerned about confidentiality and you are the only one who knows he is HIV-positive. What should you tell him?",
-"options": [
-"His insurance company",
-"His patients",
-"His patients, only if he performs a procedure such as surgery where transmission can occur",
-"No one without his direct written consent"
-],
-"answer": 3,
-"correctAnswer": "No one without his direct written consent",
-"explanation": "Confidentiality mandates protecting the patient's HIV status unless he consents to disclosure. Reference: HIPAA and medical confidentiality.",
-"whyNotOtherOptions": {
-"a": "Insurance disclosure requires consent.",
-"b": "General disclosure breaches confidentiality.",
-"c": "Disclosure is not automatic even for surgery."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 19,
-"question": "You have an HIV-positive patient in the office. You ask her if she has informed her partner that she is HIV-positive. She has repeatedly resisted your attempts to have her inform the partner. She is pregnant with his child. The partner is in the waiting room and you have met him many times.",
-"options": [
-"Inform the partner now",
-"Respect her confidentiality"
-],
-"answer": 1,
-"correctAnswer": "Respect her confidentiality",
-"explanation": "Respecting patient confidentiality is paramount unless there is an imminent risk, which requires legal and ethical consideration. Reference: Medical confidentiality laws.",
-"whyNotOtherOptions": {
-"a": "Disclosure without consent breaches confidentiality."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 20,
-"question": "A 67-year-old woman is diagnosed with breast cancer. She is fully alert and very specifically both verbally and in writing is diagnosed with breast cancer. She is fully alert and very specifically both verbally and in writing is diagnosed with breast cancer. She is fully alert and very specifically both verbally and in writing refuses surgery and son both disagrees with her condition and several weeks care. The husband and son both disagree with her condition and several weeks care. Which approach you to perform the surgery?",
-"options": [
-"Refuse to do surgery and follow the advance directive",
-"Perform the surgery only if the request is in writing",
-"Honor the family's request and perform the surgery",
-"Consult the ethics committee"
-],
-"answer": 0,
-"correctAnswer": "Refuse to do surgery and follow the advance directive",
-"explanation": "The patient's advance directive and competent refusal must be honored over family wishes. Reference: Patient autonomy in advance directives.",
-"whyNotOtherOptions": {
-"b": "Written request is irrelevant if she refuses.",
-"c": "Family's request cannot override her decision.",
-"d": "Consultation is not needed if directive is clear."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 21,
-"question": "Mr. M. consents to a procedure on his left ear. After the patient is anesthetized Dr. W. discovers that the right ear is in greater need of surgery.",
-"options": [
-"Perform the procedure on the right ear if it is clear that it is more necessary",
-"Wake the patient up and seek consent for a different procedure",
-"Seek a second opinion from another surgeon and proceed with the more necessary procedure",
-"Perform the procedure on both ears"
-],
-"answer": 2,
-"correctAnswer": "Seek a second opinion from another surgeon and proceed with the more necessary procedure",
-"explanation": "Obtaining a second opinion and consent ensures ethical practice when the initial consent does not cover the change. Reference: Surgical consent ethics.",
-"whyNotOtherOptions": {
-"a": "Performing without consent is unethical.",
-"b": "Waking may be unnecessary with proper consultation.",
-"d": "Both ears exceed initial consent."
-},
-"relatedQuestions": [],
-"category": "Surgical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 22,
-"question": "A 30-year-old woman presents to the clinic during her third trimester. The estimated gestational age of the fetus is 28 weeks and she is seeking an abortion. The patient is generally healthy. An ultrasound of the fetus at 26 weeks and routine genetic testing showed no abnormalities.",
-"options": [
-"It's okay; you will go ahead with the abortion",
-"No way, third-trimester abortions are prohibited",
-"Legally you can only do it if her life is at risk",
-"No, you can't do it because the fetus is normal"
-],
-"answer": 2,
-"correctAnswer": "Legally you can only do it if her life is at risk",
-"explanation": "Third-trimester abortions are legally restricted to cases where the mother's life is at risk, given the fetus's viability. Reference: Abortion laws.",
-"whyNotOtherOptions": {
-"a": "Not legally permissible without risk.",
-"b": "Not an absolute prohibition if life is at risk.",
-"d": "Normality does not override legal restrictions."
-},
-"relatedQuestions": [],
-"category": "Medical Law",
-"difficulty": "Medium"
-},
-{
-"id": 23,
-"question": "A 79-year-old man comes to see you for assistance in ending his life. The patient is fully competent and has been suffering from progressively worsening amyotrophic lateral sclerosis for several years. He is not immediately preterminal. He is not depressed. His family is aware of his desire and they are willing to honor the patient's wishes. You have discussed appropriate palliative care issues.",
-"options": [
-"You tell him that you will honor his wish because he is competent and not depressed",
-"You tell him that you will honor his wish because his condition will worsen over time",
-"You agree to his wish because he has a right to a better quality of life",
-"You tell him that under no circumstances can you participate in euthanasia"
-],
-"answer": 3,
-"correctAnswer": "You tell him that under no circumstances can you participate in euthanasia",
-"explanation": "Euthanasia is illegal and unethical in most medical contexts, with palliative care as the appropriate alternative. Reference: Medical ethics on euthanasia.",
-"whyNotOtherOptions": {
-"a": "Competence and lack of depression do not justify euthanasia.",
-"b": "Worsening condition is not a legal basis.",
-"c": "Quality of life does not permit euthanasia."
-},
-"relatedQuestions": [],
-"category": "Medical Ethics",
-"difficulty": "Medium"
-},
-{
-"id": 24,
-"question": "Write down the health tier system of Ethiopia? (3 Points)",
-"options": [
-"N/A",
-"N/A",
-"N/A",
-"N/A"
-],
-"answer": null,
-"correctAnswer": "N/A",
-"explanation": "The health tier system of Ethiopia includes Primary Health Care Units (Health Posts, Health Centers), General Hospitals, and Specialized Hospitals. Reference: Ethiopian health system structure.",
-"whyNotOtherOptions": {
-"a": "N/A",
-"b": "N/A",
-"c": "N/A"
-},
-"relatedQuestions": [],
-"category": "Health Systems",
-"difficulty": "Medium"
-}
+const quizData = [
+    {
+        "id": 1,
+        "question": "Which of the following is wrong about ethical obligation of physician?",
+        "options": [
+            "To benefit the patient",
+            "To avoid or minimize harm",
+            "To respect the values and preferences of the patient",
+            "To do something important for patient without involving patient"
+        ],
+        "answer": 3,
+        "correctAnswer": "To do something important for patient without involving patient",
+        "explanation": "The four pillars of medical ethics—autonomy, beneficence, non-maleficence, and justice—require physicians to respect patient autonomy by involving them in decision-making. Acting without patient involvement, even if deemed 'important,' is paternalistic and violates informed consent, a cornerstone of ethical practice as outlined in Beauchamp and Childress's Principles of Biomedical Ethics.",
+        "whyNotOtherOptions": {
+            "a": "This aligns with beneficence, obligating physicians to promote patient welfare.",
+            "b": "This reflects non-maleficence, emphasizing the avoidance of harm.",
+            "c": "This supports autonomy by honoring patient values and preferences."
+        },
+        "relatedQuestions": ["2", "4", "5"],
+        "category": "Medical Ethics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 2,
+        "question": "The principle of ethics which “Calls for not just avoiding harm, but also to benefit patients and to promote their welfare.”",
+        "options": [
+            "Justice",
+            "Beneficence",
+            "Non-maleficence",
+            "Autonomy"
+        ],
+        "answer": 1,
+        "correctAnswer": "Beneficence",
+        "explanation": "Beneficence goes beyond mere harm avoidance (non-maleficence) to actively require actions that benefit the patient and enhance their well-being. This principle is central to the physician's role in providing treatments, preventive care, and support, as detailed in ethical frameworks like those in the AMA Code of Medical Ethics and Beauchamp and Childress.",
+        "whyNotOtherOptions": {
+            "a": "Justice focuses on fair distribution of resources and equitable treatment.",
+            "c": "Non-maleficence is limited to 'do no harm' without the proactive benefit aspect.",
+            "d": "Autonomy respects patient self-determination, not direct welfare promotion."
+        },
+        "relatedQuestions": ["1", "3", "10"],
+        "category": "Medical Ethics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 3,
+        "question": "The principle of ethics which obey a physician not to harm the patient",
+        "options": [
+            "Autonomy",
+            "Non-maleficence",
+            "Justice",
+            "Beneficence"
+        ],
+        "answer": 1,
+        "correctAnswer": "Non-maleficence",
+        "explanation": "Non-maleficence, encapsulated in the Latin phrase 'Primum non nocere' (first, do no harm), mandates that physicians prioritize avoiding intentional harm, unnecessary risks, or actions where harm outweighs benefits. It underpins risk-benefit assessments in clinical practice.",
+        "whyNotOtherOptions": {
+            "a": "Autonomy involves patient decision-making rights.",
+            "c": "Justice pertains to fairness in healthcare allocation.",
+            "d remote": "Beneficence requires active good-doing, not just harm avoidance."
+        },
+        "relatedQuestions": ["2", "8", "9"],
+        "category": "Medical Ethics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 4,
+        "question": "The principle of patient autonomy will be respected if",
+        "options": [
+            "If patient lack the capacity",
+            "If the autonomous action of a patient causes harm to another person",
+            "If the patient is infant or child",
+            "Adult patient who can made rational decision"
+        ],
+        "answer": 3,
+        "correctAnswer": "Adult patient who can made rational decision",
+        "explanation": "Autonomy is upheld when competent adults (with decision-making capacity) make informed, voluntary choices. Capacity involves understanding information, appreciating consequences, reasoning, and communicating a choice. Exceptions apply in incapacity, minors, or public harm scenarios.",
+        "whyNotOtherOptions": {
+            "a": "Lack of capacity (e.g., coma, dementia) shifts to surrogate decision-making.",
+            "b": "Autonomy may be limited if it harms others (e.g., duty to report threats).",
+            "c": "Infants/children lack full autonomy; parents/guardians decide."
+        },
+        "relatedQuestions": ["1", "5", "10"],
+        "category": "Medical Ethics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 5,
+        "question": "Autonomy is one of the main principles of bioethics , which mean:",
+        "options": [
+            "Selfishness",
+            "The right to be selfish",
+            "Self-awareness",
+            "Self-governance"
+        ],
+        "answer": 3,
+        "correctAnswer": "Self-governance",
+        "explanation": "In bioethics, autonomy denotes the right and capacity for self-governance—individuals controlling their own body and medical decisions free from coercion. It requires informed consent and respect for personal values, distinct from selfishness.",
+        "whyNotOtherOptions": {
+            "a": "Selfishness implies disregard for others, opposite to ethical balance.",
+            "b": "Not a right to harm others or ignore duties.",
+            "c": "Self-awareness is cognitive, not decisional authority."
+        },
+        "relatedQuestions": ["1", "4", "10"],
+        "category": "Medical Ethics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 6,
+        "question": "Which of the following ethical issues form the foremost part of Hippocratic Oath?",
+        "options": [
+            "Confidentiality",
+            "Sexual boundaries",
+            "Advertising",
+            "Bribery"
+        ],
+        "answer": 0,
+        "correctAnswer": "Confidentiality",
+        "explanation": "The Hippocratic Oath (circa 400 BCE) prominently vows: 'All that may come to my knowledge in the exercise of my profession... I will keep secret and will never reveal.' This establishes confidentiality as a foundational duty, protecting patient trust.",
+        "whyNotOtherOptions": {
+            "b": "Sexual boundaries are implied but not foremost.",
+            "c": "Advertising is modern; Oath prohibits self-promotion.",
+            "d": "Bribery is unethical but not highlighted."
+        },
+        "relatedQuestions": ["11", "12"],
+        "category": "Medical Ethics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 7,
+        "question": "The concept of justice in ethics is:",
+        "options": [
+            "An obligation of the patient to the society",
+            "That the health resources must be distributed according to the principals of equity",
+            "Taken as patients right to choose or refuse treatment",
+            "For all medical Professionals to do good for all patients under circumstances"
+        ],
+        "answer": 1,
+        "correctAnswer": "That the health resources must be distributed according to the principals of equity",
+        "explanation": "Justice in medical ethics demands fair, equitable allocation of resources, treatments, and opportunities without discrimination. It includes distributive justice (e.g., need-based rationing) and procedural fairness.",
+        "whyNotOtherOptions": {
+            "a": "Patients have rights, not primary societal obligations here.",
+            "c": "This describes autonomy.",
+            "d": "This aligns with beneficence."
+        },
+        "relatedQuestions": ["9", "10"],
+        "category": "Medical Ethics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 8,
+        "question": "“Primum Non Nocere “ means",
+        "options": [
+            "First, do no harm",
+            "First, do not listen",
+            "Never be the first",
+            "Give nothing to the first"
+        ],
+        "answer": 0,
+        "correctAnswer": "First, do no harm",
+        "explanation": "This Latin maxim, attributed to Hippocratic traditions, forms the bedrock of non-maleficence. It guides clinicians to weigh interventions ensuring benefits exceed risks, influencing modern oaths and guidelines.",
+        "whyNotOtherOptions": {
+            "b": "Unrelated to medical ethics.",
+            "c": "No ethical relevance.",
+            "d": "Misinterpretation; not about withholding."
+        },
+        "relatedQuestions": ["3", "9"],
+        "category": "Medical Ethics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 9,
+        "question": "The principles of medical ethics are all, except:",
+        "options": [
+            "Non-Maleficence",
+            "Beneficence",
+            "Autonomy",
+            "Confidentiality"
+        ],
+        "answer": 3,
+        "correctAnswer": "Confidentiality",
+        "explanation": "Beauchamp and Childress's principlism identifies four core pillars: Autonomy, Beneficence, Non-maleficence, Justice. Confidentiality is a derivative duty (from autonomy/respect and non-maleficence) but not a core principle.",
+        "whyNotOtherOptions": {
+            "a": "Core principle: do no harm.",
+            "b": "Core: promote good.",
+            "c": "Core: self-determination."
+        },
+        "relatedQuestions": ["2", "3", "10"],
+        "category": "Medical Ethics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 10,
+        "question": "The four medical ethics principles which shared between Values Based Medicine and the principles of ethics",
+        "options": [
+            "Autonomy, privacy, respect, and confidentiality",
+            "Veracity, privacy, beneficence, and nonmaleficence",
+            "Autonomy, nonmaleficence, beneficence, and justice",
+            "Veracity, privacy, confidentiality, and fidelity"
+        ],
+        "answer": 2,
+        "correctAnswer": "Autonomy, nonmaleficence, beneficence, and justice",
+        "explanation": "The universal four-principle framework by Beauchamp and Childress—Autonomy, Beneficence, Non-maleficence, Justice—is integrated into Values-Based Medicine, emphasizing patient values alongside evidence.",
+        "whyNotOtherOptions": {
+            "a": "Privacy/confidentiality are important but not core principles.",
+            "b": "Veracity (truth-telling) is derived; mix incomplete.",
+            "d": "Fidelity (loyalty) is supportive, not core."
+        },
+        "relatedQuestions": ["1", "7", "9"],
+        "category": "Medical Ethics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 11,
+        "question": "An ethical principle that states that communication between a patient and a provider must remain private.",
+        "options": [
+            "Autonomy",
+            "Honesty",
+            "Consent",
+            "Confidentiality"
+        ],
+        "answer": 3,
+        "correctAnswer": "Confidentiality",
+        "explanation": "Confidentiality protects patient information from unauthorized disclosure, fostering trust essential for open communication. It is legally enforced (e.g., HIPAA) and ethically rooted in autonomy and non-maleficence.",
+        "whyNotOtherOptions": {
+            "a": "Autonomy is decision rights.",
+            "b": "Honesty is veracity.",
+            "c": "Consent is permission process."
+        },
+        "relatedQuestions": ["6", "12"],
+        "category": "Medical Ethics",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 12,
+        "question": "Confidentiality in the physician-patient relationship should be broken in which of the following clinical scenarios?",
+        "options": [
+            "A young woman has just tested positive for HIV. She begs you not to tell the test result to her boyfriend of 4 years.",
+            "Your 23 year-old patient is starting a new job and her employer requests the results of her genetic test",
+            "You see a patient in the psychiatry outpatient clinic who tells you he has recurring thoughts of murdering his wife, and he is now devising a realistic plan to do so.",
+            "A and C"
+        ],
+        "answer": 2,
+        "correctAnswer": "You see a patient in the psychiatry outpatient clinic who tells you he has recurring thoughts of murdering his wife, and he is now devising a realistic plan to do so.",
+        "explanation": "The Tarasoff ruling (duty to protect/warn) mandates breaching confidentiality for imminent, serious harm to identifiable others. Scenario C meets criteria: specific threat, plan, intent. HIV partner notification varies by jurisdiction but often allows/requires it; employer requests are invalid without consent.",
+        "whyNotOtherOptions": {
+            "a": "Complex; many laws mandate/permit partner notification, but not automatic breach without process.",
+            "b": "No consent; breach illegal/unethical.",
+            "d": "Only C justifies immediate breach."
+        },
+        "relatedQuestions": ["6", "11"],
+        "category": "Medical Ethics",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 13,
+        "question": "Who was responsible for human health during Stone Age?",
+        "options": [
+            "Priests",
+            "Shamans",
+            "Witch doctors",
+            "All"
+        ],
+        "answer": 3,
+        "correctAnswer": "All",
+        "explanation": "Paleolithic healing blended spirituality and empiricism. Shamans, priests, and witch doctors (spiritual healers) used rituals, herbs, and trephination, viewing illness as supernatural. No distinct medical profession existed.",
+        "whyNotOtherOptions": {
+            "a": "Part, but not exclusive.",
+            "b": "Part, but not exclusive.",
+            "c": "Part, but not exclusive."
+        },
+        "relatedQuestions": ["14", "15"],
+        "category": "History of Medicine",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 14,
+        "question": "Which of the following is true about ancient Egyptian medicine?",
+        "options": [
+            "Egyptian make diagnosis by studying the state of the pulse.",
+            "Specialist technicians and not by physicians did embalming",
+            "Medical papyri shows only magic",
+            "Egyptian physician’s knowledge of anatomy was extensive"
+        ],
+        "answer": 1,
+        "correctAnswer": "Specialist technicians and not by physicians did embalming",
+        "explanation": "Mummification was a religious rite by embalmer-priests (not physicians). It provided incidental anatomy knowledge, but Ebers/Smith papyri show rational treatments alongside magic. Pulse diagnosis was Chinese; Egyptian anatomy limited despite embalming.",
+        "whyNotOtherOptions": {
+            "a": "Pulse prominent in Chinese, not Egyptian diagnostics.",
+            "c": "Papyri mix rational (surgery, drugs) and magic.",
+            "d": "Knowledge basic; focused on surface/trauma."
+        },
+        "relatedQuestions": ["13", "16"],
+        "category": "History of Medicine",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 15,
+        "question": "Which of the following is true about “Yin and Yang” of Chinese medicine?",
+        "options": [
+            "Yin was masculine, dry, hot, creative, bright, and associated with fire.",
+            "Human health depended on a balance between Yin and Yang",
+            "Chinese knowledge of anatomy was extensive",
+            "Acupuncture-aimed as treatment for the Yang"
+        ],
+        "answer": 1,
+        "correctAnswer": "Human health depended on a balance between Yin and Yang",
+        "explanation": "Traditional Chinese Medicine views health as harmonious Yin-Yang balance (Yin: feminine, cold, dark; Yang: masculine, hot, light). Imbalance causes disease; treatments (acupuncture, herbs) restore equilibrium via meridians.",
+        "whyNotOtherOptions": {
+            "a": "Reversed: Yang is masculine/hot.",
+            "c": "Limited dissection due to cultural taboos.",
+            "d": "Acupuncture balances both, not Yang-specific."
+        },
+        "relatedQuestions": ["14", "16"],
+        "category": "History of Medicine",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 16,
+        "question": "Which country had developed surgery to a higher standard, than any of the other ancient civilizations?",
+        "options": [
+            "Greek",
+            "Egypt",
+            "India",
+            "Chinese"
+        ],
+        "answer": 2,
+        "correctAnswer": "India",
+        "explanation": "Sushruta Samhita (circa 600 BCE) details 300+ procedures: rhinoplasty, cataract couching, lithotomy, with instruments, anesthesia (cannabis), plastic techniques far advanced over contemporaries.",
+        "whyNotOtherOptions": {
+            "a": "Hippocrates cautious on surgery.",
+            "b": "Focused on conservation/magic.",
+            "d": "Acupuncture/herbs dominant; surgery limited."
+        },
+        "relatedQuestions": ["14", "17"],
+        "category": "History of Medicine",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 17,
+        "question": "Who was the first medical authority to understand the difference between measles and smallpox?",
+        "options": [
+            "Hippocrates",
+            "Avicenna",
+            "Galen",
+            "Rhazes"
+        ],
+        "answer": 3,
+        "correctAnswer": "Rhazes",
+        "explanation": "Muhammad ibn Zakariya al-Razi (Rhazes, 854–925 CE) wrote 'Kitab fi al-jadari wa al-hasbah' (On Smallpox and Measles), first differentiating them clinically: smallpox more severe, different rash progression.",
+        "whyNotOtherOptions": {
+            "a": "Described fevers but not distinguished.",
+            "b": "Canon compiled knowledge, no original distinction.",
+            "c": "Humoral theory; no specific differentiation."
+        },
+        "relatedQuestions": ["16", "18"],
+        "category": "History of Medicine",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 18,
+        "question": "Which of the following is false about Hippocratic writings?",
+        "options": [
+            "Greek medicine mainly comes from the Hippocratic writings",
+            "The human body contained three fluids",
+            "Medical practice of bleeding",
+            "Correct diet, bathing, exercise, sleep and sex would prevent illness"
+        ],
+        "answer": 1,
+        "correctAnswer": "The human body contained three fluids",
+        "explanation": "Hippocratic Corpus (60+ treatises) foundational to Greek medicine, advocating lifestyle (diet, exercise) for health, prognostication, and bleeding/phlebotomy. But four humors: blood, phlegm, yellow/black bile.",
+        "whyNotOtherOptions": {
+            "a": "Corpus is primary source.",
+            "c": "Bleeding to balance humors.",
+            "d": "Preventive regimen central."
+        },
+        "relatedQuestions": ["6", "17"],
+        "category": "History of Medicine",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 19,
+        "question": "Which country opened the first medical school?",
+        "options": [
+            "India",
+            "Greek",
+            "Italy",
+            "Egypt"
+        ],
+        "answer": 2,
+        "correctAnswer": "Italy",
+        "explanation": "Schola Medica Salernitana (9th–11th century, Salerno, Italy) is the earliest institutionalized medical school in Western Europe, teaching via lectures, dissections, evolving into universities.",
+        "whyNotOtherOptions": {
+            "a": "Apprenticeship-based (e.g., Sushruta).",
+            "b": "Hippocratic informal teaching.",
+            "d": "Temple-based, not formal school."
+        },
+        "relatedQuestions": ["16", "20"],
+        "category": "History of Medicine",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 20,
+        "question": "Who was the first to see microorganism?",
+        "options": [
+            "Anthony Leeuwenhoek",
+            "Robert Koch",
+            "Paasus Lewis",
+            "Ignaz Semmelweis"
+        ],
+        "answer": 0,
+        "correctAnswer": "Anthony Leeuwenhoek",
+        "explanation": "Antonie van Leeuwenhoek (1632–1723), using single-lens microscopes (up to 300x), first observed bacteria, protozoa, sperm in 1670s, calling them 'animalcules' in Royal Society letters.",
+        "whyNotOtherOptions": {
+            "b": "Germ theory postulates (1880s).",
+            "c": "Likely typo; no such figure.",
+            "d": "Handwashing advocacy (1840s)."
+        },
+        "relatedQuestions": ["19", "21"],
+        "category": "History of Medicine",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 21,
+        "question": "Which of the following antibiotic is first discovered?",
+        "options": [
+            "Tetracycline",
+            "Penicillin",
+            "Streptomycin",
+            "Chloramphenicol"
+        ],
+        "answer": 1,
+        "correctAnswer": "Penicillin",
+        "explanation": "Alexander Fleming discovered penicillin in 1928 from Penicillium mold inhibiting Staphylococcus. Florey/Chain developed it clinically in 1940s, first antibiotic revolutionizing infection treatment.",
+        "whyNotOtherOptions": {
+            "a": "1940s (soil bacteria).",
+            "c": "1944 (Streptomycetes).",
+            "d": "1947."
+        },
+        "relatedQuestions": ["20", "22"],
+        "category": "History of Medicine",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 22,
+        "question": "When did modern Medicine started in Ethiopia?",
+        "options": [
+            "16th century",
+            "17th century",
+            "18th century",
+            "19th century"
+        ],
+        "answer": 3,
+        "correctAnswer": "19th century",
+        "explanation": "Modern medicine entered Ethiopia in late 19th century via European missionaries (e.g., Swedish Protestants) and imperial courts. Menelik II established first hospitals (e.g., Menelik II Hospital, 1909); earlier centuries had traditional healers.",
+        "whyNotOtherOptions": {
+            "a": "Jesuit influences minor.",
+            "b": "No significant modern intro.",
+            "c": "Isolated missions."
+        },
+        "relatedQuestions": ["23", "24"],
+        "category": "History of Medicine (Ethiopia)",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 23,
+        "question": "Who was the first Ethiopian Doctor?",
+        "options": [
+            "Negadras Oshrohiwa Balkedago",
+            "Hakim Workineh",
+            "Mehaku Beyan",
+            "Solomon Haile"
+        ],
+        "answer": 1,
+        "correctAnswer": "Hakim Workineh",
+        "explanation": "Hakim Workineh Aräde (Dr. Charles Martin, 1880s–1950s) was the first Ethiopian trained in Western medicine (Scotland), returning to serve Emperor Menelik II, establishing practices and training others.",
+        "whyNotOtherOptions": {
+            "a": "Later figures or incorrect.",
+            "c": "Unverified.",
+            "d": "Later."
+        },
+        "relatedQuestions": ["22", "24"],
+        "category": "History of Medicine (Ethiopia)",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 24,
+        "question": "Which university started the first Faculty of Medicine in Ethiopia?",
+        "options": [
+            "University of Cronbar",
+            "Addis Ababa University",
+            "Jimma University",
+            "Haramaya University"
+        ],
+        "answer": 1,
+        "correctAnswer": "Addis Ababa University",
+        "explanation": "Gondar Public Health College (1954) preceded, but first full Medical Faculty was at Haile Selassie I University (now Addis Ababa University) in 1964, graduating MDs from 1966 under Swedish aid.",
+        "whyNotOtherOptions": {
+            "a": "Fictional/misspelled.",
+            "c": "1970s.",
+            "d": "Later health sciences."
+        },
+        "relatedQuestions": ["22", "23"],
+        "category": "History of Medicine (Ethiopia)",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 25,
+        "question": "Which of the following was a not harmful belief in Ethiopia?",
+        "options": [
+            "Gum cutting and pulling out of the basic teeth for breast function",
+            "Sunlight is useful for small babies",
+            "Cure for syphilis is to have as many sexes consume as syphilis",
+            "Old butter for these or four days for malaria"
+        ],
+        "answer": 1,
+        "correctAnswer": "Sunlight is useful for small babies",
+        "explanation": "Moderate sunlight aids vitamin D synthesis in infants, preventing rickets. Others: uvulectomy/tooth extraction risks infection; promiscuity spreads STDs; rancid butter (traditional malaria remedy) is unhygienic/ineffective.",
+        "whyNotOtherOptions": {
+            "a": "Traditional uvulectomy causes bleeding/infection.",
+            "c": "Myth promotes HIV/syphilis transmission.",
+            "d": "Rancid butter risks gastroenteritis."
+        },
+        "relatedQuestions": ["13", "22"],
+        "category": "History of Medicine (Ethiopia)",
+        "difficulty": "Easy"
+    }
 ];
 
 // Core application variables
@@ -3054,7 +3516,7 @@ function showCustomQuestionCreator() {
     modal.className = 'custom-quiz-modal active';
     modal.innerHTML = `
         <div class="custom-quiz-content glass-effect" style="max-width: 600px; border-radius: 24px;">
-            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                 <h3 style="font-size: 24px; font-weight: 700; color: var(--text-primary);">Create Custom Question</h3>
                 <button class="action-btn" onclick="closeCustomQuestionModal()" style="background: rgba(239, 68, 68, 0.1); color: var(--error);">
                     <i class="fas fa-times"></i>
@@ -3064,8 +3526,13 @@ function showCustomQuestionCreator() {
             <div class="custom-question-creator">
                 <div style="display: grid; gap: 20px;">
                     <div>
-                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Question Text</label>
-                        <textarea id="customQuestionText" placeholder="Enter your question here..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 80px;"></textarea>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Question Text (Markdown supported for tables)</label>
+                        <textarea id="customQuestionText" placeholder="Enter your question here... Use Markdown for tables, e.g., | Col1 | Col2 |" style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 100px;"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Image URL (optional)</label>
+                        <input type="url" id="customImageUrl" placeholder="https://example.com/image.jpg" style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px;">
                     </div>
                     
                     <div>
@@ -3110,7 +3577,7 @@ function showCustomQuestionCreator() {
                     
                     <div>
                         <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Explanation</label>
-                        <textarea id="customExplanation" placeholder="Explain why the correct answer is right..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 60px;"></textarea>
+                        <textarea id="customExplanation" placeholder="Explain why the correct answer is right..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 80px;"></textarea>
                     </div>
                 </div>
                 
@@ -3147,6 +3614,7 @@ function closeCustomQuestionModal() {
 
 function saveCustomQuestion() {
     const questionText = document.getElementById('customQuestionText').value;
+    const imageUrl = document.getElementById('customImageUrl').value || '';
     const category = document.getElementById('customQuestionCategory').value;
     const difficulty = document.querySelector('.difficulty-btn.active').dataset.difficulty;
     const explanation = document.getElementById('customExplanation').value;
@@ -3192,7 +3660,8 @@ function saveCustomQuestion() {
         relatedQuestions: [],
         category: category,
         difficulty: difficulty,
-        custom: true
+        custom: true,
+        image: imageUrl
     };
     
     customQuestions.push(newQuestion);
@@ -3241,6 +3710,7 @@ function startCourse(courseName) {
     pageTitle.textContent = `Quiz Mode - ${courseName}`;
     
     hideAllSections();
+    quizContainer.classList.remove('hidden');
     renderQuizLayout();
 }
 
@@ -3511,7 +3981,7 @@ function highlightSearchTerms(query) {
     const categoryElements = document.querySelectorAll('.question-category');
     
     const highlightText = (element) => {
-        const originalText = element.textContent;
+        const originalText = element.innerHTML;  // Use innerHTML to preserve Markdown
         const regex = new RegExp(`(${query})`, 'gi');
         const highlighted = originalText.replace(regex, '<mark class="search-highlight">$1</mark>');
         element.innerHTML = highlighted;
@@ -3710,6 +4180,7 @@ function createCustomQuiz(options) {
     }
     
     hideAllSections();
+    quizContainer.classList.remove('hidden');
     renderQuizLayout();
     customQuizModal.classList.remove('active');
     showNotification(`Custom quiz created with ${questions.length} questions`, 'success');
@@ -3723,6 +4194,7 @@ function shuffleArray(array) {
     }
     return shuffled;
 }
+
 
 function generateStudyReport() {
     const allQuestions = [...quizData, ...customQuestions];
@@ -4109,7 +4581,7 @@ function renderExamLayout() {
                             <div class="question-meta">
                                 <div class="question-number">Q${question.id}</div>
                                 <div class="question-category">${question.category}</div>
-                                <div class="question-difficulty" style="padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: ${getDifficultyColor(question.difficulty)}; color: white;">
+                                <div class="question-difficulty" style="background: ${getDifficultyColor(question.difficulty)};">
                                     ${question.difficulty}
                                 </div>
                                 ${userAnswer !== undefined ? `
@@ -4124,7 +4596,10 @@ function renderExamLayout() {
                                 </button>
                             </div>
                         </div>
-                        <div class="question-text">${question.question}</div>
+                        <div class="question-image-container">
+                            ${question.image ? `<img src="${question.image}" alt="Question image" class="question-image">` : ''}
+                        </div>
+                        <div class="question-text">${marked.parse(question.question)}</div>
                         <div class="options-grid">
                             ${question.options.map((option, optIndex) => {
                                 const isSelected = userAnswer === optIndex;
@@ -4234,7 +4709,10 @@ function renderSingleQuestionLayout() {
                     </button>
                 </div>
             </div>
-            <div class="question-text">${question.question}</div>
+            <div class="question-image-container">
+                ${question.image ? `<img src="${question.image}" alt="Question image" class="question-image">` : ''}
+            </div>
+            <div class="question-text">${marked.parse(question.question)}</div>
             <div class="options-grid">
                 ${question.options.map((option, index) => {
                     const isSelected = userAnswer === index;
@@ -4604,43 +5082,6 @@ function jumpToQuestion(questionId) {
 // Initialize the application
 init();
     </script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
-  // Check if running inside Telegram
-  const tg = window.Telegram?.WebApp;
-
-  // --- 1️⃣ Handle Telegram Mini App Back Button ---
-  if (tg) {
-    tg.ready(); // Initialize Telegram SDK
-    tg.BackButton.show();
-
-    tg.BackButton.onClick(() => {
-      console.log("Telegram back button pressed");
-      handleBackAction();
-    });
-  }
-
-  // --- 2️⃣ Handle Browser/Phone Back Button ---
-  window.addEventListener('popstate', () => {
-    console.log("Browser back button pressed");
-    handleBackAction();
-  });
-
-  // --- 3️⃣ Function to handle back action globally ---
-  function handleBackAction() {
-    // Example actions (customize as you wish):
-    // Go back if possible, otherwise go to home page
-    if (document.referrer && window.history.length > 1) {
-      window.history.back();
-    } else {
-      window.location.href = '/'; // or your home page route
-    }
-  }
-
-  // --- 4️⃣ Optional: Prevent unwanted exits ---
-  // This ensures pressing back doesn’t immediately close the app
-  history.pushState(null, '', location.href);
-</script>
-
 </body>
+
 </html>

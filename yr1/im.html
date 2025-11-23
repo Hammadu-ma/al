@@ -7,6 +7,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="/protect.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    // Production-ready service worker registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    const swUrl = '/sw.js';
+    
+    navigator.serviceWorker.register(swUrl)
+      .then(function(registration) {
+        console.log('✅ SW registered successfully on scope:', registration.scope);
+        
+        // Check if SW is controlling the page
+        if (navigator.serviceWorker.controller) {
+          console.log('🎯 SW is controlling the page');
+        } else {
+          console.log('⚠️ SW registered but not controlling the page');
+        }
+        
+        // Check cache after registration
+        setTimeout(() => {
+          caches.open('vercel-app-v1').then(cache => {
+            cache.keys().then(requests => {
+              console.log(`📦 Production cache: ${requests.length} files`);
+            });
+          });
+        }, 3000);
+      })
+      .catch(function(error) {
+        console.log('❌ SW registration failed:', error);
+      });
+  });
+}
+</script>
     <style>
         :root {
             --primary: #3b82f6;
@@ -688,9 +719,9 @@
 
         // Sample data
         const questionSets = [
-            { id: 1, year: "1", title: "Immunology Exam 2013", type: "exam", examYear: "2013", difficulty: "advanced", description: "2013 Final Exam", questions: 10,  rating: 4.9, featured: true, page: "im/ime2013.html" },
-            { id: 2, year: "1", title: "Immunology Exam 2014 & 2015", type: "exam", examYear: "2014, 2015", difficulty: "advanced", description: "2014, 2015 Final Exam", questions: 20,  rating: 4.7, page: "im/ime2014,2015.html" },
-            { id: 3, year: "1", title: "Immunology practice questions", type: "exam", examYear: "2014", difficulty: "beginner", description: "2014 practice questions", questions: 10,  rating: 4.8, page: "im/imp1.html" },
+            { id: 1, year: "1", title: "Immunology Exam 2013", type: "exam", examYear: "2013", difficulty: "advanced", description: "2013 Final Exam", questions: 20,  rating: 4.9, featured: true, page: "im/ime2013.html" },
+            { id: 2, year: "1", title: "Immunology Exam 2014 & 2015", type: "exam", examYear: "2014, 2015", difficulty: "advanced", description: "2014, 2015 Final Exam", questions: 25,  rating: 4.7, page: "im/ime2014,2015.html" },
+            { id: 3, year: "1", title: "Immunology practice questions", type: "exam", examYear: "2014", difficulty: "beginner", description: "2014 practice questions", questions: 20,  rating: 4.8, page: "im/imp1.html" },
             { id: 4, year: "1", title: "practice questions", type: "practice", examYear: "", difficulty: "intermediate", description: "practice", questions: 20, avgScore: 88, rating: 4.6, page: "imp1.html" },
             { id: 5, year: "1", title: "practice questions", type: "practice", examYear: "", difficulty: "advanced", description: "Brain functions.", questions: 90, avgScore: 70, rating: 4.5, page: "imp2.html" },
             { id: 6, year: "1", title: "practice questions", type: "practice", examYear: "", difficulty: "intermediate", description: "Heart and vessels.", questions: 60, avgScore: 80, rating: 4.7, page: "imp3.html" },

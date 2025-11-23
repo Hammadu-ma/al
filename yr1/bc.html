@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="/protect.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-   // Production-ready service worker registration
+    // Production-ready service worker registration
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     const swUrl = '/sw.js';
@@ -38,7 +38,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-   <style>
+    <style>
         :root {
             --primary: #3b82f6;
             --primary-dark: #2563eb;
@@ -58,9 +58,9 @@ if ('serviceWorker' in navigator) {
             --font-size-base: 14px;
             --padding-base: 0.75rem;
             --card-width: 280px;
-            --highlight-bg: #fefcbf; /* Softer yellow for light mode */
-            --highlight-border: #facc15; /* Subtle border color */
-            --highlight-color: #111827; /* Text color for highlighted matches */
+            --highlight-bg: #fefcbf;
+            --highlight-border: #facc15;
+            --highlight-color: #111827;
         }
 
         .dark-mode {
@@ -74,8 +74,8 @@ if ('serviceWorker' in navigator) {
             --border: #334155;
             --glass: rgba(30, 41, 59, 0.7);
             --glass-border: rgba(51, 65, 85, 0.2);
-            --highlight-bg: #4b5563; /* Softer gray for dark mode */
-            --highlight-border: #6b7280; /* Subtle border for dark mode */
+            --highlight-bg: #4b5563;
+            --highlight-border: #6b7280;
             --highlight-color: #f9fafb;
         }
 
@@ -104,18 +104,9 @@ if ('serviceWorker' in navigator) {
             height: 4px;
         }
 
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-light);
-            border-radius: 2px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
         #particles-js {
             position: fixed;
@@ -156,14 +147,9 @@ if ('serviceWorker' in navigator) {
             text-decoration: none;
         }
 
-        .logo i {
-            font-size: 1.2rem;
-        }
+        .logo i { font-size: 1.2rem; }
 
-        .nav-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
+        .nav-actions { display: flex; gap: 0.5rem; }
 
         .action-btn {
             background: transparent;
@@ -190,14 +176,13 @@ if ('serviceWorker' in navigator) {
             color: white;
         }
 
-        .action-btn.primary:hover {
-            background: var(--primary-dark);
-        }
+        .action-btn.primary:hover { background: var(--primary-dark); }
 
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 4rem 1rem 1rem;
+            position: relative;
         }
 
         .page-header {
@@ -238,27 +223,60 @@ if ('serviceWorker' in navigator) {
             color: var(--text-secondary);
         }
 
-        .filters-section {
-            margin-bottom: 1rem;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .filters-section::-webkit-scrollbar {
+        /* Progress Bar Styles */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            z-index: 1001;
+            border-radius: var(--radius) var(--radius) 0 0;
             display: none;
         }
 
-        .filters-container {
-            display: flex;
-            gap: 0.75rem;
-            white-space: nowrap;
-            padding-bottom: 0.5rem;
+        .dark-mode .progress-container {
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .filter-group {
-            min-width: 140px;
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius);
+            transition: width 1s ease;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+            position: relative;
         }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 1.5s infinite;
+            border-radius: var(--radius);
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Fade out animation */
+        .progress-fade-out {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .filters-section { margin-bottom: 1rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .filters-section::-webkit-scrollbar { display: none; }
+
+        .filters-container { display: flex; gap: 0.75rem; white-space: nowrap; padding-bottom: 0.5rem; }
+
+        .filter-group { min-width: 140px; }
 
         .filter-label {
             display: block;
@@ -279,22 +297,15 @@ if ('serviceWorker' in navigator) {
             transition: var(--transition);
         }
 
-        .filter-select {
-            cursor: pointer;
-        }
-
-        .filter-input {
-            cursor: text;
-        }
+        .filter-select { cursor: pointer; }
+        .filter-input { cursor: text; }
 
         .filter-select:focus, .filter-input:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
         }
 
-        .question-sets-section {
-            margin-bottom: 1.5rem;
-        }
+        .question-sets-section { margin-bottom: 1.5rem; }
 
         .section-title {
             font-size: 1.2rem;
@@ -325,27 +336,17 @@ if ('serviceWorker' in navigator) {
             text-decoration: none;
             color: inherit;
             width: 100%;
+            position: relative;
         }
 
         @media (max-width: 768px) {
-            :root {
-                --card-width: 220px;
-            }
-
-            .sets-grid {
-                grid-template-columns: repeat(auto-fit, minmax(var(--card-width), 1fr));
-            }
+            :root { --card-width: 220px; }
+            .sets-grid { grid-template-columns: repeat(auto-fit, minmax(var(--card-width), 1fr)); }
         }
 
         @media (max-width: 480px) {
-            :root {
-                --card-width: 160px;
-                --font-size-base: 12px;
-            }
-
-            .sets-grid {
-                grid-template-columns: 1fr;
-            }
+            :root { --card-width: 160px; --font-size-base: 12px; }
+            .sets-grid { grid-template-columns: 1fr; }
         }
 
         .set-card:hover {
@@ -353,12 +354,7 @@ if ('serviceWorker' in navigator) {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .set-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.5rem;
-        }
+        .set-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
 
         .set-title {
             font-size: 1rem;
@@ -394,31 +390,13 @@ if ('serviceWorker' in navigator) {
             font-size: 0.8rem;
         }
 
-        .meta-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .meta-item { display: flex; flex-direction: column; align-items: center; }
 
-        .meta-value {
-            font-weight: 600;
-            color: var(--primary);
-        }
+        .meta-value { font-weight: 600; color: var(--primary); }
+        .meta-label { font-size: 0.7rem; color: var(--text-secondary); }
 
-        .meta-label {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-        }
-
-        .featured-set {
-            background: linear-gradient(135deg, var(--glass), var(--primary-light));
-        }
-
-        .featured-set .set-title,
-        .featured-set .set-description,
-        .featured-set .meta-value {
-            color: var(--text-primary);
-        }
+        .featured-set { background: linear-gradient(135deg, var(--glass), var(--primary-light)); }
+        .featured-set .set-title, .featured-set .set-description, .featured-set .meta-value { color: var(--text-primary); }
 
         .featured-badge {
             position: absolute;
@@ -432,12 +410,20 @@ if ('serviceWorker' in navigator) {
             font-weight: 500;
         }
 
+        /* Enhanced Skeleton */
         .skeleton {
             background: linear-gradient(90deg, var(--border) 25%, var(--surface) 50%, var(--border) 75%);
             background-size: 200% 100%;
             animation: loading 1.5s infinite;
-            border-radius: var(--radius);
+            border-radius: 6px;
         }
+
+        .skeleton-title { width: 70%; height: 1rem; border-radius: 4px; }
+        .skeleton-type { width: 50px; height: 0.8rem; border-radius: 4px; }
+        .skeleton-description-line { width: 100%; height: 0.8rem; margin-bottom: 0.25rem; border-radius: 4px; }
+        .skeleton-description-line.short { width: 80%; }
+        .skeleton-meta-value { width: 30px; height: 0.9rem; border-radius: 4px; }
+        .skeleton-meta-label { width: 25px; height: 0.7rem; margin-top: 0.25rem; border-radius: 4px; }
 
         .no-results {
             text-align: center;
@@ -450,78 +436,6 @@ if ('serviceWorker' in navigator) {
             font-size: 2rem;
             margin-bottom: 0.5rem;
             color: var(--text-secondary);
-        }
-
-        .recent-activity {
-            background: var(--glass);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            padding: var(--padding-base);
-            margin-bottom: 1rem;
-            box-shadow: var(--shadow);
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .activity-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .activity-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem;
-            border-radius: var(--radius);
-            transition: var(--transition);
-        }
-
-        .activity-item:hover {
-            background: var(--primary-light);
-        }
-
-        .activity-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--primary-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-size: 0.9rem;
-        }
-
-        .activity-info {
-            flex: 1;
-        }
-
-        .activity-name {
-            font-weight: 500;
-            font-size: 0.9rem;
-            margin-bottom: 0.1rem;
-        }
-
-        .activity-details {
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-        }
-
-        .activity-score {
-            font-weight: 600;
-            color: var(--primary);
         }
 
         .highlight {
@@ -539,43 +453,24 @@ if ('serviceWorker' in navigator) {
             transform: scale(1.05);
         }
 
-        @media (max-width: 768px) {
-            :root {
-                --card-width: calc(33.33% - 0.75rem);
-            }
-
-            .sets-grid {
-                gap: 0.75rem;
-            }
-
-            .main-content {
-                padding: 3.5rem 0.75rem 0.75rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            :root {
-                --card-width: calc(50% - 0.5rem);
-                --font-size-base: 13px;
-            }
-
-            .filters-container {
-                gap: 0.5rem;
-            }
-
-            .filter-group {
-                min-width: 120px;
-            }
-        }
-
         @keyframes loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body class="dark-mode">
     <div id="particles-js"></div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container" id="progressContainer">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
 
     <header class="header">
         <div class="header-container">
@@ -603,8 +498,8 @@ if ('serviceWorker' in navigator) {
                 <i class="fas fa-arrow-left"></i>
             </a>
             <div>
-                <h1 class="page-title"></h1>
-                <p class="page-subtitle"></p>
+                <h1 class="page-title">biochemistry Question Sets</h1>
+                <p class="page-subtitle">Browse available question sets for practice and exams</p>
             </div>
         </div>
 
@@ -628,13 +523,13 @@ if ('serviceWorker' in navigator) {
                     <label class="filter-label" for="year">Year</label>
                     <select class="filter-select" id="year">
                         <option value="all">All</option>
-                        <option value="2023">2023</option>
-                        <option value="2022">2022</option>
-                        <option value="2021">2021</option>
-                        <option value="2020">2020</option>
-                        <option value="2019">2019</option>
-                        <option value="2018">2018</option>
                         <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                        <option value="2014">2014</option>
+                        <option value="2013">2013</option>
+                        <option value="2012">2012</option>
+                        <option value="2011">2011</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -650,34 +545,23 @@ if ('serviceWorker' in navigator) {
         </section>
 
         <section class="question-sets-section">
-            <h2 class="section-title"></h2>
-            <div class="sets-grid" id="setsGrid">
-                <!-- Cards here -->
-            </div>
+            <h2 class="section-title">Available Sets</h2>
+            <div class="sets-grid" id="setsGrid"></div>
         </section>
     </main>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-        // Check if running inside Telegram
-        const tg = window.Telegram?.WebApp;
 
-        // Handle Telegram Mini App Back Button
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Telegram & Back Button Handling
+        const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
             tg.BackButton.show();
-            tg.BackButton.onClick(() => {
-                console.log("Telegram back button pressed");
-                handleBackAction();
-            });
+            tg.BackButton.onClick(() => handleBackAction());
         }
 
-        // Handle Browser/Phone Back Button
-        window.addEventListener('popstate', () => {
-            console.log("Browser back button pressed");
-            handleBackAction();
-        });
-
-        // Function to handle back action globally
+        window.addEventListener('popstate', () => handleBackAction());
         function handleBackAction() {
             if (document.referrer && window.history.length > 1) {
                 window.history.back();
@@ -685,12 +569,8 @@ if ('serviceWorker' in navigator) {
                 window.location.href = '/';
             }
         }
-
-        // Prevent unwanted exits
         history.pushState(null, '', location.href);
-    </script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
+
         // Security
         document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -709,7 +589,7 @@ if ('serviceWorker' in navigator) {
             retina_detect: true
         });
 
-        // Theme toggle
+        // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
@@ -717,19 +597,19 @@ if ('serviceWorker' in navigator) {
             icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
         });
 
-        // Sample data
+        // Sample Data
         const questionSets = [
-            { id: 1, year: "1", title: "Physiology Exam 2016", type: "exam", examYear: "2016", difficulty: "advanced", description: "2016 Final Exam", questions: 90, avgScore: 79, rating: 4.9, featured: true, page: "ps/physiologyexam2016.html" },
-            { id: 19, year: "1", title: "Physiology Exam 2017", type: "exam", examYear: "2017", difficulty: "advanced", description: "2017 Final Exam", questions: 80, avgScore: 89, rating: 4.9, featured: true, page: "ps/physiologyexam2017.html" },
-            { id: 2, year: "1", title: "Physiology Exam 2015", type: "exam", examYear: "2015", difficulty: "advanced", description: "2015 Final Exam", questions: 68, avgScore: 81, rating: 4.7, page: "ps/pse2015.html" },
-            { id: 3, year: "1", title: "Physiology Exam 2014", type: "exam", examYear: "2014", difficulty: "beginner", description: "2014 Final Exam", questions: 200, avgScore: 82, rating: 4.8, page: "ps/pse2014.html" },
-            { id: 4, year: "1", title: "Physiology Exam 2013", type: "exam", examYear: "2013", difficulty: "intermediate", description: "2013 Final Exam", questions: 75, avgScore: 88, rating: 4.6, page: "ps/pse2013.html" },
-            { id: 5, year: "1", title: "Neurophysiology Challenge", type: "practice", examYear: "2021", difficulty: "advanced", description: "Brain functions.", questions: 90, avgScore: 70, rating: 4.5, page: "ps/upsp1.html" },
-            { id: 6, year: "1", title: "Cardiovascular Physiology", type: "quiz", examYear: "2020", difficulty: "intermediate", description: "Heart and vessels.", questions: 60, avgScore: 80, rating: 4.7, page: "ps/psp2.html" },
-            { id: 7, year: "1", title: "Respiratory Physiology", type: "worksheet", examYear: "2019", difficulty: "advanced", description: "Lung functions.", questions: 85, avgScore: 75, rating: 4.4, page: "ps/psp3.html" },
-            { id: 8, year: "1", title: "Renal Physiology", type: "practice", examYear: "2022", difficulty: "beginner", description: "Kidney functions.", questions: 70, avgScore: 83, rating: 4.6, page: "renal.html" },
-            { id: 9, year: "1", title: "Gastrointestinal Physiology", type: "quiz", examYear: "2023", difficulty: "intermediate", description: "Digestive system.", questions: 95, avgScore: 79, rating: 4.7, page: "gi-physiology.html" },
-            { id: 10, year: "1", title: "Endocrine Physiology", type: "practice", examYear: "2017", difficulty: "intermediate", description: "Hormonal systems.", questions: 60, avgScore: 84, rating: 4.9, featured: true, page: "endocrine.html" }
+            { id: 1, year: "1", title: "Bio-chemistry Exam 2013", type: "exam", examYear: "2013", difficulty: "advanced", description: "2013 Final Exam", questions: 44, rating: 4.9, featured: true, page: "bc/bio-chem.2013.html" },
+            { id: 2, year: "1", title: "Bio-chemistry Exam 2015", type: "exam", examYear: "2015", difficulty: "advanced", description: "2015 Final Exam", questions: 87, rating: 4.9, featured: true, page: "bc/bio-chem.2015.html" },
+            { id: 3, year: "1", title: "Bio-chemistry Exam 2016", type: "exam", examYear: "2016", difficulty: "advanced", description: "2016 Final Exam", questions: 25, rating: 4.7, page: "pc/pc20.html" },
+            { id: 4, year: "1", title: "Bio-chemistry Exam 2014", type: "exam", examYear: "2014", difficulty: "beginner", description: "2014 final exam", questions: 100, rating: 4.8, page: "bc/bce2014" },
+            { id: 5, year: "1", title: "Bio-chemistry Exam waiting...", type: "exam", examYear: "2013", difficulty: "intermediate", description: "waiting", questions: 75, avgScore: 88, rating: 4.6, page: "#" },
+            { id: 6, year: "1", title: "Bio-chemistry Exam waiting...", type: "practice", examYear: "2021", difficulty: "advanced", description: "Brain functions.", questions: 90, avgScore: 70, rating: 4.5, page: "#" },
+            { id: 7, year: "1", title: "Bio-chemistry Exam waiting...", type: "quiz", examYear: "2020", difficulty: "intermediate", description: "Heart and vessels.", questions: 60, avgScore: 80, rating: 4.7, page: "#" },
+            { id: 8, year: "1", title: "Bio-chemistry Exam waiting...", type: "worksheet", examYear: "2019", difficulty: "advanced", description: "Lung functions.", questions: 85, avgScore: 75, rating: 4.4, page: "#" },
+            { id: 10, year: "1", title: "Bio-chemistry Exam waiting...", type: "practice", examYear: "2022", difficulty: "beginner", description: "Kidney functions.", questions: 70, avgScore: 83, rating: 4.6, page: "#" },
+            { id: 11, year: "1", title: "Bio-chemistry Exam waiting...", type: "quiz", examYear: "2023", difficulty: "intermediate", description: "Digestive system.", questions: 95, avgScore: 79, rating: 4.7, page: "#" },
+            { id: 12, year: "1", title: "Bio-chemistry Exam waiting...", type: "practice", examYear: "2017", difficulty: "intermediate", description: "Hormonal systems.", questions: 60, avgScore: 84, rating: 4.9, featured: true, page: "#" }
         ];
 
         const setsGrid = document.getElementById('setsGrid');
@@ -737,18 +617,82 @@ if ('serviceWorker' in navigator) {
         const setTypeFilter = document.getElementById('setType');
         const yearFilter = document.getElementById('year');
         const difficultyFilter = document.getElementById('difficulty');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+
+        // Progress Animation for initial load
+        function startProgress() {
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 90) {
+                    clearInterval(interval);
+                } else {
+                    width += 2;
+                    progressBar.style.width = width + '%';
+                }
+            }, 20);
+            return interval;
+        }
+
+        function completeProgress() {
+            progressBar.style.width = '100%';
+            setTimeout(() => {
+                progressContainer.classList.add('progress-fade-out');
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                }, 400);
+            }, 300);
+        }
+
+        // Show progress for card click
+        function showCardProgress(callback) {
+            progressContainer.style.display = 'block';
+            progressContainer.classList.remove('progress-fade-out');
+            progressBar.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 10);
+            setTimeout(() => {
+                completeProgress();
+                if (callback) callback();
+            }, 1000); // Duration matching transition
+        }
 
         function createSkeletonCards(count) {
             setsGrid.innerHTML = '';
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < count; i++) {
                 const skeletonCard = document.createElement('div');
-                skeletonCard.className = 'set-card skeleton';
-                skeletonCard.style.height = '160px';
+                skeletonCard.className = 'set-card';
+                skeletonCard.innerHTML = `
+                    <div class="set-header">
+                        <div>
+                            <div class="skeleton-title skeleton"></div>
+                            <div class="skeleton-type skeleton"></div>
+                        </div>
+                    </div>
+                    <div class="set-description">
+                        <div class="skeleton-description-line skeleton"></div>
+                        <div class="skeleton-description-line skeleton short"></div>
+                    </div>
+                    <div class="set-meta">
+                        <div class="meta-item">
+                            <div class="skeleton-meta-value skeleton"></div>
+                            <div class="skeleton-meta-label skeleton"></div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="skeleton-meta-value skeleton"></div>
+                            <div class="skeleton-meta-label skeleton"></div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="skeleton-meta-value skeleton"></div>
+                            <div class="skeleton-meta-label skeleton"></div>
+                        </div>
+                    </div>
+                `;
                 setsGrid.appendChild(skeletonCard);
             }
         }
 
-        // Function to highlight matched search terms
         function highlightText(text, queryWords) {
             if (!queryWords || queryWords.length === 0) return text;
             let result = text;
@@ -766,10 +710,10 @@ if ('serviceWorker' in navigator) {
                 setsGrid.innerHTML = `<div class="no-results"><i class="fas fa-search"></i><p>No sets found.</p></div>`;
                 return;
             }
-            sets.forEach(set => {
+            sets.forEach((set, index) => {
                 const setCard = document.createElement('a');
                 setCard.className = `set-card ${set.featured ? 'featured-set' : ''}`;
-                setCard.href = set.page;
+                setCard.dataset.page = set.page; // Use data attribute instead of href
                 setCard.innerHTML = `
                     ${set.featured ? '<div class="featured-badge">Featured</div>' : ''}
                     <div class="set-header">
@@ -785,7 +729,7 @@ if ('serviceWorker' in navigator) {
                             <span class="meta-label">Q</span>
                         </div>
                         <div class="meta-item">
-                            <span class="meta-value">${set.avgScore}%</span>
+                            <span class="meta-value">${set.avgScore || 'N/A'}%</span>
                             <span class="meta-label">Avg</span>
                         </div>
                         <div class="meta-item">
@@ -794,6 +738,21 @@ if ('serviceWorker' in navigator) {
                         </div>
                     </div>
                 `;
+                setCard.style.opacity = '0';
+                setCard.style.animation = 'fadeIn 0.3s ease-out forwards';
+                setCard.style.animationDelay = `${index * 0.05}s`;
+
+                // Add click event for loading animation
+                setCard.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = this.dataset.page;
+                    if (url && url !== '#') {
+                        showCardProgress(() => {
+                            window.location.href = url;
+                        });
+                    }
+                });
+
                 setsGrid.appendChild(setCard);
             });
         }
@@ -803,7 +762,6 @@ if ('serviceWorker' in navigator) {
             return labels[type] || type;
         }
 
-        // Fuzzy matching function (Levenshtein distance)
         function levenshteinDistance(a, b) {
             const matrix = Array(b.length + 1).fill().map(() => Array(a.length + 1).fill(0));
             for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
@@ -821,44 +779,31 @@ if ('serviceWorker' in navigator) {
             return matrix[b.length][a.length];
         }
 
-        // Fuzzy search: Scores items based on Levenshtein distance and partial matches
         function fuzzySearch(set, searchQuery) {
             if (!searchQuery) return { set, score: 0 };
-            const queryWords = searchQuery.toLowerCase().trim().split(/\s+/).filter(word => word.length >= 2);
-            const searchableText = [
-                set.title.toLowerCase(),
-                set.description.toLowerCase(),
-                set.type.toLowerCase(),
-                set.difficulty.toLowerCase(),
-                set.examYear.toLowerCase()
-            ].join(' ');
-
+            const queryWords = searchQuery.toLowerCase().trim().split(/\s+/).filter(w => w.length >= 2);
+            const text = [set.title, set.description, set.type, set.difficulty, set.examYear].join(' ').toLowerCase();
             let totalScore = 0;
             queryWords.forEach(word => {
-                let minDistance = Infinity;
-                const words = searchableText.split(/\s+/);
-                words.forEach(target => {
-                    if (target.includes(word)) {
-                        minDistance = 0;
-                    } else {
-                        const distance = levenshteinDistance(word, target);
-                        const normalizedDistance = distance / Math.max(word.length, target.length);
-                        minDistance = Math.min(minDistance, normalizedDistance);
+                let minDist = Infinity;
+                text.split(/\s+/).forEach(t => {
+                    if (t.includes(word)) minDist = 0;
+                    else {
+                        const d = levenshteinDistance(word, t);
+                        minDist = Math.min(minDist, d / Math.max(word.length, t.length));
                     }
                 });
-                totalScore += minDistance;
+                totalScore += minDist;
             });
-
-            const avgScore = queryWords.length > 0 ? totalScore / queryWords.length : 0;
-            return { set, score: avgScore };
+            return { set, score: queryWords.length > 0 ? totalScore / queryWords.length : 0 };
         }
 
         function filterQuestionSets() {
-            const searchQuery = searchInput.value;
-            const queryWords = searchQuery.toLowerCase().trim().split(/\s+/).filter(word => word.length >= 2);
-            let filtered = questionSets
-                .map(set => fuzzySearch(set, searchQuery))
-                .filter(({ set, score }) => 
+            const query = searchInput.value;
+            const words = query.toLowerCase().trim().split(/\s+/).filter(w => w.length >= 2);
+            const filtered = questionSets
+                .map(s => fuzzySearch(s, query))
+                .filter(({ set, score }) =>
                     score <= 0.5 &&
                     (setTypeFilter.value === 'all' || set.type === setTypeFilter.value) &&
                     (yearFilter.value === 'all' || set.examYear === yearFilter.value) &&
@@ -866,13 +811,20 @@ if ('serviceWorker' in navigator) {
                 )
                 .sort((a, b) => a.score - b.score)
                 .map(({ set }) => set);
-
-            renderQuestionSets(filtered, queryWords);
+            renderQuestionSets(filtered, words);
         }
 
         function initPage() {
-            createSkeletonCards(3);
-            setTimeout(() => renderQuestionSets(questionSets, []), 1000);
+            progressContainer.style.display = 'block';
+            createSkeletonCards(Math.min(questionSets.length, 6));
+            const progressInterval = startProgress();
+
+            setTimeout(() => {
+                clearInterval(progressInterval);
+                completeProgress();
+                renderQuestionSets(questionSets, []);
+            }, 1000);
+
             searchInput.addEventListener('input', filterQuestionSets);
             setTypeFilter.addEventListener('change', filterQuestionSets);
             yearFilter.addEventListener('change', filterQuestionSets);
@@ -883,3 +835,5 @@ if ('serviceWorker' in navigator) {
     </script>
 </body>
 </html>
+
+

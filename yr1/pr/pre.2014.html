@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ALIF | Advanced Medical Education</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="/protect.js"></script>
     <style type="text/css">
         /* Import Inter font */
@@ -555,6 +556,35 @@
             line-height: 1.6;
             margin-bottom: 24px;
             color: var(--text-primary);
+            overflow-x: auto;
+        }
+
+        .question-text table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            text-align: left;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .question-text th, .question-text td {
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .question-text th {
+            background-color: var(--surface);
+            font-weight: bold;
+        }
+
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
         }
 
         .options-grid {
@@ -958,173 +988,172 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* Custom Quiz Modal */
-/* Custom Quiz Modal Styles */
-.custom-quiz-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-}
+        /* Custom Quiz Modal Styles */
+        .custom-quiz-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
 
-.custom-quiz-modal.active {
-    display: flex;
-}
+        .custom-quiz-modal.active {
+            display: flex;
+        }
 
-.custom-quiz-content {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-xl);
-    border: 1px solid var(--border);
-}
+        .custom-quiz-content {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+        }
 
-.custom-quiz-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: var(--text-primary);
-}
+        .custom-quiz-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
 
-.custom-quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 24px;
-}
+        .custom-quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
 
-.custom-quiz-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: var(--transition);
-    background: var(--glass);
-}
+        .custom-quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--glass);
+        }
 
-.custom-quiz-option:hover {
-    border-color: var(--primary-light);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow);
-}
+        .custom-quiz-option:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
 
-.custom-quiz-option.selected {
-    border-color: var(--primary);
-    background: var(--primary-light);
-}
+        .custom-quiz-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
 
-.custom-quiz-option .option-selector {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-    flex-shrink: 0;
-}
+        .custom-quiz-option .option-selector {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
 
-.custom-quiz-option.selected .option-selector {
-    background: var(--primary);
-    border-color: var(--primary);
-}
+        .custom-quiz-option.selected .option-selector {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
 
-.custom-quiz-option.selected .option-selector::after {
-    content: '✓';
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-}
+        .custom-quiz-option.selected .option-selector::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-.custom-quiz-option label {
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--text-primary);
-    flex: 1;
-    margin: 0;
-}
+        .custom-quiz-option label {
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+            margin: 0;
+        }
 
-.quiz-options-section {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-}
+        .quiz-options-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
 
-.quiz-options-section label {
-    display: block;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-    font-weight: 600;
-}
+        .quiz-options-section label {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
 
-.custom-quiz-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 24px;
-}
+        .custom-quiz-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
 
-/* Modern Dropdown for Custom Quiz */
-.custom-quiz-content .modern-dropdown {
-    position: relative;
-    margin-top: 8px;
-}
+        /* Modern Dropdown for Custom Quiz */
+        .custom-quiz-content .modern-dropdown {
+            position: relative;
+            margin-top: 8px;
+        }
 
-.custom-quiz-content .modern-dropdown select {
-    width: 100%;
-    padding: 12px 48px 12px 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    color: var(--text-primary);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 18px;
-}
+        .custom-quiz-content .modern-dropdown select {
+            width: 100%;
+            padding: 12px 48px 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 18px;
+        }
 
-.custom-quiz-content .modern-dropdown select:hover {
-    border-color: var(--primary);
-    background-color: var(--primary-light);
-}
+        .custom-quiz-content .modern-dropdown select:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
 
-.custom-quiz-content .modern-dropdown select:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
+        .custom-quiz-content .modern-dropdown select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-/* Glass effect for modal */
-.custom-quiz-content.glass-effect {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
+        /* Glass effect for modal */
+        .custom-quiz-content.glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-.dark-mode .custom-quiz-content.glass-effect {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+        .dark-mode .custom-quiz-content.glass-effect {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
         /* Mobile Optimizations */
         @media (max-width: 768px) {
@@ -1754,17 +1783,377 @@
     background: var(--primary-dark);
     transform: scale(1.1);
 }
-/* Primary action button */
-.action-btn.primary {
-    background: var(--primary);
-    color: white;
+/* Responsive Images */
+.question-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 16px 0;
+    display: block;
+    box-shadow: var(--shadow);
 }
 
-.action-btn.primary:hover {
-    background: var(--primary-dark);
-    transform: scale(1.1);
+.question-image-container {
+    width: 100%;
+    text-align: center;
+    margin: 16px 0;
 }
 
+/* Ensure images don't overflow their containers */
+.question-image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+/* Responsive Tables */
+.question-text table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+    text-align: left;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.question-text th, .question-text td {
+    padding: 12px;
+    border: 1px solid var(--border);
+    min-width: 120px; /* Prevents columns from becoming too narrow */
+}
+
+.question-text th {
+    background-color: var(--surface);
+    font-weight: bold;
+    position: sticky;
+    left: 0;
+    color: var(--text-primary);
+}
+
+.question-text td {
+    color: var(--text-secondary);
+    background: var(--background);
+}
+
+/* Responsive Question Cards */
+.question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    width: 100%;
+    overflow: hidden;
+}
+
+.question-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    /* Question card mobile optimization */
+    .question-card {
+        padding: 16px;
+        margin-bottom: 12px;
+        border-radius: var(--radius);
+    }
+    
+    .question-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .question-meta {
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .question-actions {
+        align-self: flex-end;
+        margin-top: -40px; /* Position actions at top right */
+        position: relative;
+        z-index: 2;
+    }
+    
+    .question-text {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Image mobile optimization */
+    .question-image {
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+    
+    .question-image-container {
+        margin: 12px 0;
+    }
+    
+    /* Table mobile optimization */
+    .question-text table {
+        font-size: 12px;
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+    
+    .question-text th, .question-text td {
+        padding: 8px 10px;
+        min-width: 100px;
+    }
+    
+    /* Options grid mobile optimization */
+    .options-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .option {
+        padding: 14px;
+        min-height: auto;
+    }
+    
+    .option-letter {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+    }
+    
+    .option-text {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    
+    /* Quiz controls mobile optimization */
+    .quiz-controls {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+        padding-top: 20px;
+    }
+    
+    .quiz-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+    
+    /* Explanation section mobile optimization */
+    .explanation-section {
+        margin-top: 20px;
+        padding: 16px;
+    }
+    
+    .explanation-section summary {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .explanation-content {
+        padding: 12px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+}
+
+/* Extra small devices optimization (phones under 480px) */
+@media (max-width: 480px) {
+    .question-card {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .question-text {
+        font-size: 15px;
+        line-height: 1.4;
+    }
+    
+    /* Image optimization for very small screens */
+    .question-image {
+        margin: 10px 0;
+        border-radius: 4px;
+    }
+    
+    .question-image-container {
+        margin: 10px 0;
+    }
+    
+    /* Table optimization for very small screens */
+    .question-text table {
+        font-size: 11px;
+        margin: 10px 0;
+    }
+    
+    .question-text th, .question-text td {
+        padding: 6px 8px;
+        min-width: 80px;
+    }
+    
+    .question-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    
+    .question-number, .question-category, .question-difficulty {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .option {
+        padding: 12px 10px;
+    }
+    
+    .option-text {
+        font-size: 13px;
+    }
+    
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    /* Ensure proper spacing in exam mode */
+    .exam-mode-layout .question-card {
+        margin-bottom: 16px;
+    }
+}
+
+/* Fix for exam mode layout on mobile */
+.exam-mode-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .exam-mode-layout {
+        gap: 12px;
+    }
+    
+    .exam-header {
+        padding: 16px;
+    }
+    
+    .exam-header > div:first-child {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .exam-mode-toggle {
+        align-self: stretch;
+        display: flex;
+    }
+    
+    .mode-toggle-btn {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        padding: 10px 8px;
+    }
+    
+    .progress-info {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .progress-info .progress-bar {
+        width: 100%;
+    }
+}
+
+/* Fix for learn mode responsiveness */
+@media (max-width: 768px) {
+    .explanation-section {
+        padding: 16px;
+    }
+    
+    .explanation-section summary {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .explanation-content {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .related-questions-list {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .related-question-tag {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .correct-answer, .why-not-section, .related-questions {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+}
+
+/* Prevent horizontal scrolling on the entire page */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+    
+    .quiz-container {
+        padding: 0 16px 16px;
+    }
+    
+    .main-content {
+        width: 100%;
+    }
+}
+
+/* Ensure images in custom questions are also responsive */
+.custom-question-creator img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 10px 0;
+    display: block;
+}
+
+/* Fix for image loading states */
+.question-image {
+    background: var(--surface);
+    min-height: 50px;
+}
+
+.question-image:not([src]) {
+    display: none;
+}
+
+/* Animation for image loading */
+@keyframes imageFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.question-image.loaded {
+    animation: imageFadeIn 0.3s ease-in;
+}
     </style>
 </head>
 <body class="dark-mode">
@@ -1773,7 +2162,7 @@
     <!-- Custom Quiz Modal -->
 <div class="custom-quiz-modal" id="customQuizModal">
     <div class="custom-quiz-content glass-effect">
-        <h3 class="custom-quiz-title"> </h3>
+        <h3 class="custom-quiz-title">Create Custom Quiz</h3>
         <div class="custom-quiz-options">
             <div class="custom-quiz-option" data-category="all">
                 <div class="option-selector"></div>
@@ -1885,8 +2274,7 @@
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
             <!-- Top Navigation -->
-            <!-- Top Navigation -->
-<div class="top-nav">
+            <div class="top-nav">
     <div class="nav-left">
         <button class="menu-toggle" id="menuToggle" aria-label="Toggle Sidebar">
             <i class="fas fa-bars"></i>
@@ -2080,321 +2468,216 @@ document.addEventListener('keydown', function(e) {
 });
 
 // Enhanced quiz data with more questions
-const quizData =[
+const quizData = 
+[
 {
 "id": 1,
-"question": "The best answer is the one where the adult form of the parasite resides or in which sexual maturity occurs.",
+"question": "A parasite transmitted to human accidentally while it is normally free living is called",
 "options": [
-"A. Definitive host",
-"B. Paratenic host",
-"C. Intermediate host",
-"D. Carrier host"
+"Extracellular parasite",
+"Adaptive parasite",
+"Facultative parasite",
+"Opportunistic parasite"
 ],
-"answer": 0,
-"correctAnswer": "A. Definitive host",
-"explanation": "The definitive host harbors the adult parasite or where sexual reproduction occurs. Intermediate hosts support larval stages. Reference: Parasitology basics, definitive host definition.",
+"answer": 2,
+"correctAnswer": "Facultative parasite",
+"explanation": "Facultative parasites are organisms that are normally free-living in nature and do not depend on a host for completion of their life cycle, but can opportunistically infect a host and adopt a parasitic mode of life when accidentally introduced into a suitable host (e.g., Naegleria fowleri, Acanthamoeba spp.). This is distinct from obligate parasites that require a host throughout their life cycle.",
 "whyNotOtherOptions": {
-"b": "Paratenic host stores larvae but no development to adult.",
-"c": "Intermediate host for asexual stages or larvae.",
-"d": "Carrier host implies asymptomatic infection, not specific to maturity."
+"a": "Extracellular parasite refers to location of parasitism (outside host cells), not life cycle dependency.",
+"b": "Adaptive parasite is not a standard parasitological term.",
+"d": "Opportunistic parasites cause disease primarily in immunocompromised hosts, not necessarily free-living organisms."
 },
 "relatedQuestions": [],
-"category": "Parasitology",
+"category": "Parasitology - General Concepts",
 "difficulty": "Easy"
 },
 {
 "id": 2,
-"question": "Any animal that harbors parasite infection that can be transmitted.",
+"question": "Black flies take microfilariae from Onchocerca volvulus infected human during blood meal and the microfilariae develop to stage-3 larvae (infective stage to human). This type of insect vectors are:",
 "options": [
-"A. Carrier host known as",
-"B. Incidental host",
-"C. Reservoir host",
-"D. Transport host"
+"Definitive host",
+"Paratenic host",
+"Intermediate host",
+"Reservoir host"
 ],
 "answer": 2,
-"correctAnswer": "C. Reservoir host",
-"explanation": "Reservoir host maintains the parasite in nature and serves as source for transmission to humans or other animals.",
+"correctAnswer": "Intermediate host",
+"explanation": "In onchocerciasis (river blindness), humans are the definitive host harboring sexually mature adult worms that produce microfilariae. The black fly (Simulium spp.) acts as the intermediate host where essential larval development occurs: ingested microfilariae molt twice to become infective third-stage larvae (L3) capable of infecting humans upon subsequent bite.",
 "whyNotOtherOptions": {
-"a": "Carrier host is infected but not transmitting typically.",
-"b": "Incidental host is accidental, not natural reservoir.",
-"d": "Transport host transports without multiplication."
+"a": "Definitive host is where sexual reproduction of the parasite occurs (human in this case).",
+"b": "Paratenic host only transports the parasite without development (no change in larval stage).",
+"d": "Reservoir host maintains the parasite in nature and serves as source of human infection; humans themselves are the primary reservoir for O. volvulus."
 },
 "relatedQuestions": [],
-"category": "Parasitology",
-"difficulty": "Easy"
+"category": "Parasitology - Medical Entomology & Filariasis",
+"difficulty": "Medium"
 },
 {
 "id": 3,
-"question": "Which of the following can not true?",
+"question": "Which of the following parasite transmission mode is different from the others?",
 "options": [
-"A. A parasite can cause asymptomatic infection",
-"B. Protozoa parasites are prokaryotic organisms",
-"C. Some human parasitic infections are insect borne",
-"D. None of these"
+"Feco-oral",
+"Sexual intercourse",
+"Blood transfusion",
+"Transmammary"
 ],
-"answer": 1,
-"correctAnswer": "B. Protozoa parasites are prokaryotic organisms",
-"explanation": "Protozoa are eukaryotic, not prokaryotic. They have nuclei and organelles unlike bacteria.",
+"answer": 3,
+"correctAnswer": "Transmammary",
+"explanation": "Feco-oral (e.g., Giardia, Entamoeba), sexual intercourse (e.g., Trichomonas vaginalis), and blood transfusion (e.g., Plasmodium, Babesia) are all horizontal transmission mechanisms occurring between individuals of the same generation. Transmammary transmission (e.g., Ancylostoma caninum in dogs, Toxoplasma gondii in some mammals, rarely Strongyloides in humans) is vertical transmission from mother to offspring via breast milk.",
 "whyNotOtherOptions": {
-"a": "Asymptomatic infections occur in carriers.",
-"c": "Many like malaria are insect-borne.",
-"d": "Incorrect as B is false."
+"a": "Horizontal transmission.",
+"b": "Horizontal transmission.",
+"c": "Horizontal transmission (iatrogenic)."
 },
 "relatedQuestions": [],
-"category": "Parasitology",
+"category": "Parasitology - Transmission",
 "difficulty": "Medium"
 },
 {
 "id": 4,
-"question": "Organisms that are not normally parasitic but can survive for a limited period in the host when they are transmitted accidentally are called",
+"question": "Any animal that harbors parasite infection that can be transmitted to humans where the animal is a normal host of the parasite",
 "options": [
-"A. Extracellular parasites",
-"C. Facultative parasites",
-"B. Adaptive parasites",
-"D. None"
+"Carrier host",
+"Transport host",
+"Incidental host",
+"Reservoir host"
 ],
-"answer": 1,
-"correctAnswer": "C. Facultative parasites",
-"explanation": "Facultative parasites can live free or parasitic, accidental in hosts unlike obligate parasites.",
+"answer": 3,
+"correctAnswer": "Reservoir host",
+"explanation": "A reservoir host is an animal (wild or domestic) in which the parasite naturally lives, completes its life cycle, and serves as a continuing source of infection for vectors or directly to humans (e.g., dogs for Echinococcus granulosus, rodents for Toxoplasma gondii, armadillos for Trypanosoma cruzi in some regions).",
 "whyNotOtherOptions": {
-"a": "Extracellular refers to location, not accidental survival.",
-"b": "Adaptive not standard term.",
-"d": "Incorrect, C is correct."
+"a": "Carrier host usually refers to infected humans who show no symptoms.",
+"b": "Transport (paratenic) host harbors larva without development.",
+"c": "Incidental (accidental) host is when humans are infected but are not the normal host (e.g., humans in toxoplasmosis; cats are normal definitive host)."
 },
 "relatedQuestions": [],
-"category": "Parasitology",
-"difficulty": "Medium"
+"category": "Parasitology - Zoonoses & Epidemiology",
+"difficulty": "Easy"
 },
 {
 "id": 5,
-"question": "Which of the following is different from the others?",
+"question": "Tapeworm is a common name for",
 "options": [
-"A. Transplacental source of parasite transmission",
-"B. Sexual intercourse",
-"C. Blood transfusion",
-"D. Insect bite"
+"Cestode",
+"Trematode",
+"Nematode",
+"None of these"
 ],
 "answer": 0,
-"correctAnswer": "A. Transplacental source of parasite transmission",
-"explanation": "Transplacental is congenital, internal; others are direct contact or vector-borne.",
+"correctAnswer": "Cestode",
+"explanation": "Tapeworms belong to the class Cestoda (phylum Platyhelminthes). They are ribbon-like, segmented (proglottids), hermaphroditic flatworms lacking a digestive tract, absorbing nutrients directly through their tegument (e.g., Taenia saginata, Diphyllobothrium latum).",
 "whyNotOtherOptions": {
-"b": "Sexual transmission for parasites like Trichomonas.",
-"c": "Blood transfusion for blood parasites.",
-"d": "Insect bite common vector."
+"b": "Trematodes are flukes (leaf-like, non-segmented).",
+"c": "Nematodes are roundworms (cylindrical, non-segmented).",
+"d": "Incorrect."
 },
 "relatedQuestions": [],
-"category": "Parasitology",
-"difficulty": "Medium"
+"category": "Parasitology - Helminthology",
+"difficulty": "Easy"
 },
 {
 "id": 6,
-"question": "A parasite that can only cause symptomatic disease in HIV infected but not in healthy person",
+"question": "The type of asexual reproduction of protozoa where a cell divides into two daughter cells",
 "options": [
-"A. Adaptive parasite",
-"B. Facultative parasite",
-"C. Opportunistic parasite",
-"D. Temporary parasite"
+"Binary fission",
+"Sporogony",
+"Schizogony",
+"Multiple fission"
 ],
-"answer": 2,
-"correctAnswer": "C. Opportunistic parasite",
-"explanation": "Opportunistic parasites cause disease in immunocompromised like HIV, asymptomatic in healthy.",
+"answer": 0,
+"correctAnswer": "Binary fission",
+"explanation": "Binary fission is the simplest and most common form of asexual reproduction in protozoa: the nucleus divides by mitosis followed by cytoplasmic division, producing two genetically identical daughter cells (e.g., seen in Entamoeba coli, Giardia, Trichomonas).",
 "whyNotOtherOptions": {
-"a": "Adaptive not standard.",
-"b": "Facultative can be free-living.",
-"d": "Temporary not specific to immunity."
+"b": "Sporogony is multiple fission producing sporozoites in mosquito (malaria).",
+"c": "Schizogony (merogony) is multiple fission producing merozoites in liver/RBC (malaria).",
+"d": "Multiple fission is a broader term encompassing schizogony and sporogony."
 },
 "relatedQuestions": [],
-"category": "Parasitology",
-"difficulty": "Medium"
+"category": "Parasitology - Protozoology",
+"difficulty": "Easy"
 },
 {
 "id": 7,
-"question": "A parasitic disease due to the transmission of parasite",
+"question": "Which of the following is not true?",
 "options": [
-"A. Zoonotic disease",
-"C. Malignant disease",
-"B. Symptomatic disease",
-"D. Opportunistic disease"
+"A parasite can cause asymptomatic infection",
+"Protozoa parasites are prokaryotic organisms",
+"Some human parasitic infections are insect borne",
+"None"
 ],
-"answer": 0,
-"correctAnswer": "A. Zoonotic disease",
-"explanation": "Zoonotic from animals to humans via parasite transmission.",
+"answer": 1,
+"correctAnswer": "Protozoa parasites are prokaryotic organisms",
+"explanation": "Protozoa are eukaryotic organisms possessing a true nucleus, nuclear membrane, and organelles (mitochondria, Golgi, etc.). Prokaryotes (bacteria, archaea) lack these structures. All medically important protozoa (Plasmodium, Entamoeba, Leishmania, Trypanosoma, etc.) are eukaryotes.",
 "whyNotOtherOptions": {
-"b": "Symptomatic general.",
-"c": "Malignant for cancer.",
-"d": "Opportunistic for immunocompromised."
+"a": "True – many parasitic infections are subclinical or asymptomatic.",
+"c": "True – vector-borne (malaria, leishmaniasis, trypanosomiasis).",
+"d": "Incorrect because option b is false."
 },
 "relatedQuestions": [],
-"category": "Parasitology",
+"category": "Parasitology - General Concepts",
 "difficulty": "Easy"
 },
 {
 "id": 8,
-"question": "Those parasites known as",
+"question": "A parasite that can only cause symptomatic disease in HIV infected but not in healthy person",
 "options": [
-"A. Ecto- and Endoparasites",
-"B. Adaptive parasites",
-"C. Facultative parasites",
-"D. None of these"
+"Adaptive parasite",
+"Facultative parasite",
+"Opportunistic parasite",
+"Temporary parasite"
 ],
 "answer": 2,
-"correctAnswer": "C. Facultative parasites",
-"explanation": "Context suggests group of worm parasites; but standardly ecto/endo are external/internal. Assuming image context for worms as facultative? Wait, likely A for ecto/endo.",
-"explanation": "Ecto and endoparasites are external and internal parasites.",
+"correctAnswer": "Opportunistic parasite",
+"explanation": "Opportunistic parasites normally cause little or no disease in immunocompetent individuals but produce severe, often life-threatening infections when host immunity is compromised, especially CD4 count <200 cells/µL in HIV/AIDS (classic examples: Toxoplasma gondii, Cryptosporidium parvum, Cyclospora cayetanensis, Microsporidia, Pneumocystis jirovecii – though now classified as fungus, historically considered protozoan).",
 "whyNotOtherOptions": {
-"b": "Adaptive not standard.",
-"c": "Facultative different.",
-"d": "Incorrect."
+"a": "Not a standard term.",
+"b": "Facultative = free-living but can become parasitic.",
+"d": "Temporary parasite spends only part of its life on host (e.g., fleas, ticks)."
 },
 "relatedQuestions": [],
-"category": "Parasitology",
-"difficulty": "Easy"
+"category": "Parasitology - Opportunistic Infections",
+"difficulty": "Medium"
 },
 {
 "id": 9,
-"question": "Tapeworm is a",
+"question": "Helminth parasites known as roundworms are",
 "options": [
-"A. Trematode",
-"B. Cestode",
-"C. Nematodes",
-"D. None of these"
+"Nematodes",
+"Cestodes",
+"Trematodes",
+"Arthropods"
 ],
-"answer": 1,
-"correctAnswer": "B. Cestode",
-"explanation": "Tapeworms are cestodes, flat segmented worms.",
+"answer": 0,
+"correctAnswer": "Nematodes",
+"explanation": "Helminths are divided into three major groups: Nematodes (roundworms – cylindrical, separate sexes, complete digestive tract, e.g., Ascaris, hookworms, pinworms), Cestodes (tapeworms – flat, segmented, hermaphroditic), and Trematodes (flukes – flat, leaf-like, hermaphroditic except Schistosoma).",
 "whyNotOtherOptions": {
-"a": "Trematodes are flukes.",
-"c": "Nematodes roundworms.",
-"d": "Incorrect."
+"b": "Cestodes = tapeworms.",
+"c": "Trematodes = flukes.",
+"d": "Arthropods are vectors or ectoparasites, not helminths."
 },
 "relatedQuestions": [],
-"category": "Parasitology",
+"category": "Parasitology - Helminthology",
 "difficulty": "Easy"
 },
 {
 "id": 10,
-"question": "Helminth parasites known as roundworms are referred",
+"question": "A parasitic disease due to the transmission of parasite to human normally found in wild and/or domestic animals is referred as",
 "options": [
-"A. Cestodes",
-"B. Trematodes",
-"C. Nematodes",
-"D. Arthropods"
-],
-"answer": 2,
-"correctAnswer": "C. Nematodes",
-"explanation": "Roundworms are nematodes.",
-"whyNotOtherOptions": {
-"a": "Cestodes tapeworms.",
-"b": "Trematodes flukes.",
-"d": "Arthropods insects."
-},
-"relatedQuestions": [],
-"category": "Parasitology",
-"difficulty": "Easy"
-},
-{
-"id": 11,
-"question": "Platyhelminth parasites are",
-"options": [
-"A. Flat worms",
-"B. Round worms",
-"C. a and b are answers",
-"D. None of these"
-],
-"answer": 0,
-"correctAnswer": "A. Flat worms",
-"explanation": "Platyhelminthes are flatworms, including trematodes and cestodes.",
-"whyNotOtherOptions": {
-"b": "Roundworms nematodes.",
-"c": "Not both.",
-"d": "Incorrect."
-},
-"relatedQuestions": [],
-"category": "Parasitology",
-"difficulty": "Easy"
-},
-{
-"id": 12,
-"question": "Blood flukes are in the genus",
-"options": [
-"A. Schistosoma",
-"B. Clonorchis",
-"C. Paragonimus",
-"D. None"
-],
-"answer": 0,
-"correctAnswer": "A. Schistosoma",
-"explanation": "Schistosoma causes schistosomiasis, blood flukes.",
-"whyNotOtherOptions": {
-"b": "Clonorchis liver fluke.",
-"c": "Paragonimus lung fluke.",
-"d": "Incorrect."
-},
-"relatedQuestions": [],
-"category": "Parasitology",
-"difficulty": "Medium"
-},
-{
-"id": 13,
-"question": "All of the following are intestinal nematode parasites except",
-"options": [
-"A. Ascaris lumbricoides",
-"B. Trichuris trichiura",
-"C. Enterobius vermicularis",
-"D. Taenia saginata"
+"Opportunistic disease",
+"Symptomatic disease",
+"Malignant disease",
+"Zoonotic disease"
 ],
 "answer": 3,
-"correctAnswer": "D. Taenia saginata",
-"explanation": "Taenia saginata is cestode tapeworm, not nematode.",
+"correctAnswer": "Zoonotic disease",
+"explanation": "Zoonoses are infectious diseases that can be naturally transmitted from vertebrate animals to humans (and sometimes vice versa). Over 60% of human pathogens are zoonotic. Major parasitic zoonoses include toxoplasmosis (cats), hydatid disease (dogs/sheep), trichinellosis (pigs/bears), leishmaniasis (dogs/rodents), Chagas disease (triatomine bugs/armadillos), taeniasis (pigs/cattle).",
 "whyNotOtherOptions": {
-"a": "Ascaris intestinal roundworm.",
-"b": "Trichuris whipworm.",
-"c": "Enterobius pinworm."
+"a": "Opportunistic refers to immune status, not animal origin.",
+"b": "Symptomatic simply means causing symptoms.",
+"c": "Malignant is unrelated (cancer terminology)."
 },
 "relatedQuestions": [],
-"category": "Parasitology",
-"difficulty": "Medium"
-},
-{
-"id": 14,
-"question": "One of the following is a flagellated protozoa parasite",
-"options": [
-"A. Trichomonas vaginalis",
-"B. Plasmodium falciparum",
-"C. Entamoeba histolytica",
-"D. Balantidium coli"
-],
-"answer": 0,
-"correctAnswer": "A. Trichomonas vaginalis",
-"explanation": "Trichomonas is flagellated; others amoeboid or apicomplexan.",
-"whyNotOtherOptions": {
-"b": "Plasmodium no flagella in stages.",
-"c": "Entamoeba pseudopods.",
-"d": "Balantidium ciliate, cilia not flagella."
-},
-"relatedQuestions": [],
-"category": "Parasitology",
-"difficulty": "Medium"
-},
-{
-"id": 15,
-"question": "The host cell infected by malaria parasites (Plasmodium species) is",
-"options": [
-"A. Eosinophil",
-"B. Mast cell",
-"C. Red blood cell",
-"D. Neutrophil"
-],
-"answer": 2,
-"correctAnswer": "C. Red blood cell",
-"explanation": "Plasmodium infects erythrocytes (RBCs) in blood stage.",
-"whyNotOtherOptions": {
-"a": "Eosinophils in immune response.",
-"b": "Mast cells allergy.",
-"d": "Neutrophils bacteria."
-},
-"relatedQuestions": [],
-"category": "Parasitology",
+"category": "Parasitology - Zoonoses",
 "difficulty": "Easy"
 }
 ];
@@ -2919,7 +3202,7 @@ function showCustomQuestionCreator() {
     modal.className = 'custom-quiz-modal active';
     modal.innerHTML = `
         <div class="custom-quiz-content glass-effect" style="max-width: 600px; border-radius: 24px;">
-            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                 <h3 style="font-size: 24px; font-weight: 700; color: var(--text-primary);">Create Custom Question</h3>
                 <button class="action-btn" onclick="closeCustomQuestionModal()" style="background: rgba(239, 68, 68, 0.1); color: var(--error);">
                     <i class="fas fa-times"></i>
@@ -2929,8 +3212,13 @@ function showCustomQuestionCreator() {
             <div class="custom-question-creator">
                 <div style="display: grid; gap: 20px;">
                     <div>
-                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Question Text</label>
-                        <textarea id="customQuestionText" placeholder="Enter your question here..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 80px;"></textarea>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Question Text (Markdown supported for tables)</label>
+                        <textarea id="customQuestionText" placeholder="Enter your question here... Use Markdown for tables, e.g., | Col1 | Col2 |" style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 100px;"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Image URL (optional)</label>
+                        <input type="url" id="customImageUrl" placeholder="https://example.com/image.jpg" style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px;">
                     </div>
                     
                     <div>
@@ -2975,7 +3263,7 @@ function showCustomQuestionCreator() {
                     
                     <div>
                         <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Explanation</label>
-                        <textarea id="customExplanation" placeholder="Explain why the correct answer is right..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 60px;"></textarea>
+                        <textarea id="customExplanation" placeholder="Explain why the correct answer is right..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 80px;"></textarea>
                     </div>
                 </div>
                 
@@ -3012,6 +3300,7 @@ function closeCustomQuestionModal() {
 
 function saveCustomQuestion() {
     const questionText = document.getElementById('customQuestionText').value;
+    const imageUrl = document.getElementById('customImageUrl').value || '';
     const category = document.getElementById('customQuestionCategory').value;
     const difficulty = document.querySelector('.difficulty-btn.active').dataset.difficulty;
     const explanation = document.getElementById('customExplanation').value;
@@ -3057,7 +3346,8 @@ function saveCustomQuestion() {
         relatedQuestions: [],
         category: category,
         difficulty: difficulty,
-        custom: true
+        custom: true,
+        image: imageUrl
     };
     
     customQuestions.push(newQuestion);
@@ -3106,6 +3396,7 @@ function startCourse(courseName) {
     pageTitle.textContent = `Quiz Mode - ${courseName}`;
     
     hideAllSections();
+    quizContainer.classList.remove('hidden');
     renderQuizLayout();
 }
 
@@ -3376,7 +3667,7 @@ function highlightSearchTerms(query) {
     const categoryElements = document.querySelectorAll('.question-category');
     
     const highlightText = (element) => {
-        const originalText = element.textContent;
+        const originalText = element.innerHTML;  // Use innerHTML to preserve Markdown
         const regex = new RegExp(`(${query})`, 'gi');
         const highlighted = originalText.replace(regex, '<mark class="search-highlight">$1</mark>');
         element.innerHTML = highlighted;
@@ -3575,6 +3866,7 @@ function createCustomQuiz(options) {
     }
     
     hideAllSections();
+    quizContainer.classList.remove('hidden');
     renderQuizLayout();
     customQuizModal.classList.remove('active');
     showNotification(`Custom quiz created with ${questions.length} questions`, 'success');
@@ -3588,6 +3880,7 @@ function shuffleArray(array) {
     }
     return shuffled;
 }
+
 
 function generateStudyReport() {
     const allQuestions = [...quizData, ...customQuestions];
@@ -3974,7 +4267,7 @@ function renderExamLayout() {
                             <div class="question-meta">
                                 <div class="question-number">Q${question.id}</div>
                                 <div class="question-category">${question.category}</div>
-                                <div class="question-difficulty" style="padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: ${getDifficultyColor(question.difficulty)}; color: white;">
+                                <div class="question-difficulty" style="background: ${getDifficultyColor(question.difficulty)};">
                                     ${question.difficulty}
                                 </div>
                                 ${userAnswer !== undefined ? `
@@ -3989,7 +4282,10 @@ function renderExamLayout() {
                                 </button>
                             </div>
                         </div>
-                        <div class="question-text">${question.question}</div>
+                        <div class="question-image-container">
+                            ${question.image ? `<img src="${question.image}" alt="Question image" class="question-image">` : ''}
+                        </div>
+                        <div class="question-text">${marked.parse(question.question)}</div>
                         <div class="options-grid">
                             ${question.options.map((option, optIndex) => {
                                 const isSelected = userAnswer === optIndex;
@@ -4099,7 +4395,10 @@ function renderSingleQuestionLayout() {
                     </button>
                 </div>
             </div>
-            <div class="question-text">${question.question}</div>
+            <div class="question-image-container">
+                ${question.image ? `<img src="${question.image}" alt="Question image" class="question-image">` : ''}
+            </div>
+            <div class="question-text">${marked.parse(question.question)}</div>
             <div class="options-grid">
                 ${question.options.map((option, index) => {
                     const isSelected = userAnswer === index;
@@ -4470,4 +4769,5 @@ function jumpToQuestion(questionId) {
 init();
     </script>
 </body>
+
 </html>

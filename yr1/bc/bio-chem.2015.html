@@ -1,42 +1,12 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ALIF | Advanced Medical Education</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="/protect.js"></script>
-    // Production-ready service worker registration
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    const swUrl = '/sw.js';
-    
-    navigator.serviceWorker.register(swUrl)
-      .then(function(registration) {
-        console.log('✅ SW registered successfully on scope:', registration.scope);
-        
-        // Check if SW is controlling the page
-        if (navigator.serviceWorker.controller) {
-          console.log('🎯 SW is controlling the page');
-        } else {
-          console.log('⚠️ SW registered but not controlling the page');
-        }
-        
-        // Check cache after registration
-        setTimeout(() => {
-          caches.open('vercel-app-v1').then(cache => {
-            cache.keys().then(requests => {
-              console.log(`📦 Production cache: ${requests.length} files`);
-            });
-          });
-        }, 3000);
-      })
-      .catch(function(error) {
-        console.log('❌ SW registration failed:', error);
-      });
-  });
-}
-</script>
     <style type="text/css">
         /* Import Inter font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -586,6 +556,35 @@ if ('serviceWorker' in navigator) {
             line-height: 1.6;
             margin-bottom: 24px;
             color: var(--text-primary);
+            overflow-x: auto;
+        }
+
+        .question-text table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            text-align: left;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .question-text th, .question-text td {
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .question-text th {
+            background-color: var(--surface);
+            font-weight: bold;
+        }
+
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
         }
 
         .options-grid {
@@ -989,173 +988,172 @@ if ('serviceWorker' in navigator) {
             box-shadow: var(--shadow-lg);
         }
 
-        /* Custom Quiz Modal */
-/* Custom Quiz Modal Styles */
-.custom-quiz-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-}
+        /* Custom Quiz Modal Styles */
+        .custom-quiz-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
 
-.custom-quiz-modal.active {
-    display: flex;
-}
+        .custom-quiz-modal.active {
+            display: flex;
+        }
 
-.custom-quiz-content {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-xl);
-    border: 1px solid var(--border);
-}
+        .custom-quiz-content {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+        }
 
-.custom-quiz-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: var(--text-primary);
-}
+        .custom-quiz-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
 
-.custom-quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 24px;
-}
+        .custom-quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
 
-.custom-quiz-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: var(--transition);
-    background: var(--glass);
-}
+        .custom-quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--glass);
+        }
 
-.custom-quiz-option:hover {
-    border-color: var(--primary-light);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow);
-}
+        .custom-quiz-option:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
 
-.custom-quiz-option.selected {
-    border-color: var(--primary);
-    background: var(--primary-light);
-}
+        .custom-quiz-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
 
-.custom-quiz-option .option-selector {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-    flex-shrink: 0;
-}
+        .custom-quiz-option .option-selector {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
 
-.custom-quiz-option.selected .option-selector {
-    background: var(--primary);
-    border-color: var(--primary);
-}
+        .custom-quiz-option.selected .option-selector {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
 
-.custom-quiz-option.selected .option-selector::after {
-    content: '✓';
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-}
+        .custom-quiz-option.selected .option-selector::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-.custom-quiz-option label {
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--text-primary);
-    flex: 1;
-    margin: 0;
-}
+        .custom-quiz-option label {
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+            margin: 0;
+        }
 
-.quiz-options-section {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-}
+        .quiz-options-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
 
-.quiz-options-section label {
-    display: block;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-    font-weight: 600;
-}
+        .quiz-options-section label {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
 
-.custom-quiz-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 24px;
-}
+        .custom-quiz-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
 
-/* Modern Dropdown for Custom Quiz */
-.custom-quiz-content .modern-dropdown {
-    position: relative;
-    margin-top: 8px;
-}
+        /* Modern Dropdown for Custom Quiz */
+        .custom-quiz-content .modern-dropdown {
+            position: relative;
+            margin-top: 8px;
+        }
 
-.custom-quiz-content .modern-dropdown select {
-    width: 100%;
-    padding: 12px 48px 12px 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    color: var(--text-primary);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 18px;
-}
+        .custom-quiz-content .modern-dropdown select {
+            width: 100%;
+            padding: 12px 48px 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 18px;
+        }
 
-.custom-quiz-content .modern-dropdown select:hover {
-    border-color: var(--primary);
-    background-color: var(--primary-light);
-}
+        .custom-quiz-content .modern-dropdown select:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
 
-.custom-quiz-content .modern-dropdown select:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
+        .custom-quiz-content .modern-dropdown select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-/* Glass effect for modal */
-.custom-quiz-content.glass-effect {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
+        /* Glass effect for modal */
+        .custom-quiz-content.glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-.dark-mode .custom-quiz-content.glass-effect {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+        .dark-mode .custom-quiz-content.glass-effect {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
         /* Mobile Optimizations */
         @media (max-width: 768px) {
@@ -1785,7 +1783,377 @@ if ('serviceWorker' in navigator) {
     background: var(--primary-dark);
     transform: scale(1.1);
 }
+/* Responsive Images */
+.question-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 16px 0;
+    display: block;
+    box-shadow: var(--shadow);
+}
 
+.question-image-container {
+    width: 100%;
+    text-align: center;
+    margin: 16px 0;
+}
+
+/* Ensure images don't overflow their containers */
+.question-image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+/* Responsive Tables */
+.question-text table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+    text-align: left;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.question-text th, .question-text td {
+    padding: 12px;
+    border: 1px solid var(--border);
+    min-width: 120px; /* Prevents columns from becoming too narrow */
+}
+
+.question-text th {
+    background-color: var(--surface);
+    font-weight: bold;
+    position: sticky;
+    left: 0;
+    color: var(--text-primary);
+}
+
+.question-text td {
+    color: var(--text-secondary);
+    background: var(--background);
+}
+
+/* Responsive Question Cards */
+.question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    width: 100%;
+    overflow: hidden;
+}
+
+.question-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    /* Question card mobile optimization */
+    .question-card {
+        padding: 16px;
+        margin-bottom: 12px;
+        border-radius: var(--radius);
+    }
+    
+    .question-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .question-meta {
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .question-actions {
+        align-self: flex-end;
+        margin-top: -40px; /* Position actions at top right */
+        position: relative;
+        z-index: 2;
+    }
+    
+    .question-text {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Image mobile optimization */
+    .question-image {
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+    
+    .question-image-container {
+        margin: 12px 0;
+    }
+    
+    /* Table mobile optimization */
+    .question-text table {
+        font-size: 12px;
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+    
+    .question-text th, .question-text td {
+        padding: 8px 10px;
+        min-width: 100px;
+    }
+    
+    /* Options grid mobile optimization */
+    .options-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .option {
+        padding: 14px;
+        min-height: auto;
+    }
+    
+    .option-letter {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+    }
+    
+    .option-text {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    
+    /* Quiz controls mobile optimization */
+    .quiz-controls {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+        padding-top: 20px;
+    }
+    
+    .quiz-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+    
+    /* Explanation section mobile optimization */
+    .explanation-section {
+        margin-top: 20px;
+        padding: 16px;
+    }
+    
+    .explanation-section summary {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .explanation-content {
+        padding: 12px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+}
+
+/* Extra small devices optimization (phones under 480px) */
+@media (max-width: 480px) {
+    .question-card {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .question-text {
+        font-size: 15px;
+        line-height: 1.4;
+    }
+    
+    /* Image optimization for very small screens */
+    .question-image {
+        margin: 10px 0;
+        border-radius: 4px;
+    }
+    
+    .question-image-container {
+        margin: 10px 0;
+    }
+    
+    /* Table optimization for very small screens */
+    .question-text table {
+        font-size: 11px;
+        margin: 10px 0;
+    }
+    
+    .question-text th, .question-text td {
+        padding: 6px 8px;
+        min-width: 80px;
+    }
+    
+    .question-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    
+    .question-number, .question-category, .question-difficulty {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .option {
+        padding: 12px 10px;
+    }
+    
+    .option-text {
+        font-size: 13px;
+    }
+    
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    /* Ensure proper spacing in exam mode */
+    .exam-mode-layout .question-card {
+        margin-bottom: 16px;
+    }
+}
+
+/* Fix for exam mode layout on mobile */
+.exam-mode-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .exam-mode-layout {
+        gap: 12px;
+    }
+    
+    .exam-header {
+        padding: 16px;
+    }
+    
+    .exam-header > div:first-child {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .exam-mode-toggle {
+        align-self: stretch;
+        display: flex;
+    }
+    
+    .mode-toggle-btn {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        padding: 10px 8px;
+    }
+    
+    .progress-info {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .progress-info .progress-bar {
+        width: 100%;
+    }
+}
+
+/* Fix for learn mode responsiveness */
+@media (max-width: 768px) {
+    .explanation-section {
+        padding: 16px;
+    }
+    
+    .explanation-section summary {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .explanation-content {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .related-questions-list {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .related-question-tag {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .correct-answer, .why-not-section, .related-questions {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+}
+
+/* Prevent horizontal scrolling on the entire page */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+    
+    .quiz-container {
+        padding: 0 16px 16px;
+    }
+    
+    .main-content {
+        width: 100%;
+    }
+}
+
+/* Ensure images in custom questions are also responsive */
+.custom-question-creator img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 10px 0;
+    display: block;
+}
+
+/* Fix for image loading states */
+.question-image {
+    background: var(--surface);
+    min-height: 50px;
+}
+
+.question-image:not([src]) {
+    display: none;
+}
+
+/* Animation for image loading */
+@keyframes imageFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.question-image.loaded {
+    animation: imageFadeIn 0.3s ease-in;
+}
     </style>
 </head>
 <body class="dark-mode">
@@ -1794,7 +2162,7 @@ if ('serviceWorker' in navigator) {
     <!-- Custom Quiz Modal -->
 <div class="custom-quiz-modal" id="customQuizModal">
     <div class="custom-quiz-content glass-effect">
-        <h3 class="custom-quiz-title"> </h3>
+        <h3 class="custom-quiz-title">Create Custom Quiz</h3>
         <div class="custom-quiz-options">
             <div class="custom-quiz-option" data-category="all">
                 <div class="option-selector"></div>
@@ -2100,1134 +2468,1852 @@ document.addEventListener('keydown', function(e) {
 });
 
 // Enhanced quiz data with more questions
-const quizData = [
+const quizData = 
+[
     {
         "id": 1,
-        "question": "Bone marrow cells from an organ donor are cultured in vitro at 37°C in the presence of recombinant erythropoietin. A photomicrograph of a typical “burst-forming unit” is shown in the image. This colony, committed to the erythrocyte pathway of differentiation, represents an example of which of the following physiologic adaptations to transmembrane signaling?",
+        "question": "Which one is the largest particulate of the cytoplasm?",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "Lysosomes",
+            "Mitochondria",
+            "Golgi apparatus",
+            "Endoplasmic reticulum"
         ],
-        "answer": 2,
-        "correctAnswer": "Hyperplasia",
-        "explanation": "Hyperplasia is defined as an increase in the number of cells in an organ or tissue. Like hypertrophy, it is often a response to trophic signals or increased functional demand and is commonly a normal process. Erythroid hyperplasia is typically seen in people living at high altitude. Low oxygen tension evokes the production of erythropoietin, which promotes the survival and proliferation of erythroid precursors in the bone marrow. The cellular and molecular mechanisms that are responsible for hyperplasia clearly relate to the control of cell proliferation (i.e., cell cycle).",
+        "answer": 3,
+        "correctAnswer": "Endoplasmic reticulum",
+        "explanation": "The endoplasmic reticulum (ER) forms an extensive interconnected network of membranous tubules and cisternae that occupies a massive portion of the cytoplasmic volume—often more than any other single organelle. Unlike discrete bounded structures (lysosomes, mitochondria, Golgi), the ER is a continuous system that can span from the nuclear envelope to the cell periphery, making it the largest particulate component by physical extent and volume.",
         "whyNotOtherOptions": {
-            "a": "Atrophy refers to a decrease in cell size or number, often due to reduced demand or disuse.",
-            "b": "Dysplasia involves abnormal cell maturation and organization, often preneoplastic.",
-            "d": "Hypertrophy is an increase in cell size, not number.",
-            "e": "Metaplasia is the replacement of one differentiated cell type with another."
+            "a": "Lysosomes are small (0.1–1.2 μm), spherical vesicles bounded by a single membrane.",
+            "b": "Mitochondria are rod-shaped but individually smaller (0.5–10 μm) and not interconnected into a single massive structure.",
+            "c": "The Golgi apparatus consists of stacked cisternae but occupies far less volume than the ER."
         },
-        "relatedQuestions": ["12", "41"],
-        "category": "Cell Injury",
-        "difficulty": "Easy"
+        "relatedQuestions": [],
+        "category": "intro to biochemistry and cell signaling",
+        "difficulty": "Medium"
     },
     {
         "id": 2,
-        "question": "A 50-year-old chronic alcoholic presents to the emergency room with 12 hours of severe abdominal pain. The pain radiates to the back and is associated with an urge to vomit. Physical examination discloses exquisite abdominal tenderness. Laboratory studies show elevated serum amylase. Which of the following morphologic changes would be expected in the peripancreatic tissue of this patient?",
+        "question": "Mitochondrial DNA is",
         "options": [
-            "(A) Coagulative necrosis",
-            "(B) Caseous necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
+            "Circular double stranded",
+            "Circular single stranded",
+            "Linear double helix",
+            "None of these"
         ],
-        "answer": 2,
-        "correctAnswer": "Fat necrosis",
-        "explanation": "Saponification of fat derived from peripancreatic fat cells exposed to pancreatic enzymes is a typical feature of fat necrosis. Lipase, released from pancreatic acinar cells during an attack of acute pancreatitis, hydrolyzes fat into fatty acids and glycerol. Free fatty acids bind with calcium to form soaps, which is a process known as saponification. Entry of calcium ions into the injured tissue reduces the level of calcium in blood. Hypocalcemia is, therefore, a typical finding in patients who had a recent bout of acute pancreatitis. Patients with acute pancreatitis experience sudden-onset abdominal pain, distention, and vomiting.",
+        "answer": 0,
+        "correctAnswer": "Circular double stranded",
+        "explanation": "Mitochondrial DNA (mtDNA) is a remnant of its α-proteobacterial endosymbiont ancestor. It is a closed circular molecule (~16.6 kb in humans) with two strands (heavy and light), containing 37 genes and replicating independently via D-loop mechanism, without histones.",
         "whyNotOtherOptions": {
-            "a": "Coagulative necrosis preserves cell outlines, seen in ischemic injury.",
-            "b": "Caseous necrosis is cheese-like, typical of tuberculosis.",
-            "d": "Fibrinoid necrosis occurs in vessel walls in vasculitis.",
-            "e": "Liquefactive necrosis involves digestion, seen in brain or abscesses."
+            "b": "No known organelle DNA is single-stranded circular in eukaryotes.",
+            "c": "Linear double-helical DNA is characteristic of nuclear DNA packaged with histones."
         },
-        "relatedQuestions": ["13", "28"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "intro to biochemistry and cell signaling",
         "difficulty": "Medium"
     },
     {
         "id": 3,
-        "question": "A 68-year-old man with a history of gastroesophageal reflux disease suffers a massive stroke and expires. The esophagus at autopsy is shown in the image. Histologic examination of the abnormal tissue shows intestine-like epithelium composed of goblet cells and surface cells similar to those of incompletely intestinalized gastric mucosa. There is no evidence of nuclear atypia. Which of the following terms best describes this morphologic response to persistent injury in the esophagus of this patient?",
+        "question": "Each of the following numbered processes are involved in signal transduction pathways: I. Response II. Amplification III. Transduction IV. Reception Which of the following represents the sequence of events in a typical signal transduction pathway?",
         "options": [
-            "(A) Atypical hyperplasia",
-            "(B) Complex hyperplasia",
-            "(C) Glandular metaplasia",
-            "(D) Simple hyperplasia",
-            "(E) Squamous metaplasia"
+            "IV,II,III,I",
+            "IV,I,III,II",
+            "I,II,III,IV",
+            "IV,III,II,I"
         ],
-        "answer": 2,
-        "correctAnswer": "Glandular metaplasia",
-        "explanation": "The major adaptive responses of cells to sublethal injury are atrophy, hypertrophy, hyperplasia, metaplasia, dysplasia, and intracellular storage. Metaplasia is defined as the conversion of one differentiated cell pathway to another. In this case, the esophageal squamous epithelium is replaced by columnar epithelium as a result of chronic gastroesophageal reflux. The lesion is characterized histologically by intestine-like epithelium composed of goblet cells and cells similar to those of incompletely intestinalized gastric mucosa.",
+        "answer": 3,
+        "correctAnswer": "IV,III,II,I",
+        "explanation": "Classic signal transduction follows: Reception (ligand binds receptor) → Transduction (relay via second messengers/protein cascades) → Amplification (each step activates many downstream molecules) → Response (cellular change). This sequence allows a small stimulus to produce a large effect.",
         "whyNotOtherOptions": {
-            "a": "Atypical hyperplasia involves abnormal cell growth, often in endometrium.",
-            "b": "Complex hyperplasia is a preneoplastic change in endometrium.",
-            "d": "Simple hyperplasia is increased cell number without atypia.",
-            "e": "Squamous metaplasia occurs in bronchial epithelium of smokers."
+            "a": "Amplification occurs after transduction, not before.",
+            "b": "Response is the final step, not early.",
+            "c": "Reception must occur first; response last."
         },
-        "relatedQuestions": ["25", "39"],
-        "category": "Cell Injury",
+        "relatedQuestions": [6],
+        "category": "intro to biochemistry and cell signaling",
         "difficulty": "Medium"
     },
     {
         "id": 4,
-        "question": "A CT scan of a 43-year-old woman with a parathyroid adenoma and hyperparathyroidism reveals extensive calcium deposits in the lungs and kidney parenchyma. These radiologic findings are best explained by which of the following mechanisms of disease?",
+        "question": "In mammalian cells rRNA is produced mainly in the",
         "options": [
-            "(A) DNA",
-            "(B) Glycogen",
-            "(C) Lipid",
-            "(D) mRNA",
-            "(E) Water"
+            "Endoplasmic reticulum",
+            "Ribosome",
+            "Nucleolus",
+            "Nucleus"
         ],
-        "answer": 3,
-        "correctAnswer": "Metastatic calcification",
-        "explanation": "Metastatic calcification is associated with an increased serum calcium concentration (hypercalcemia). Almost any disorder that increases serum calcium levels can lead to calcification in the alveolar septa of the lung, renal tubules, and blood vessels. The patient in this case had a parathyroid adenoma that produced large quantities of parathyroid hormone. Other examples of metastatic calcification include multiple opacities in the cornea of a child given large amounts of vitamin D and partially calcified alveolar septa in the lungs of a patient with breast cancer metastatic to bone.",
+        "answer": 2,
+        "correctAnswer": "Nucleolus",
+        "explanation": "The nucleolus is a non-membrane-bound nuclear substructure where RNA polymerase I transcribes ribosomal DNA (rDNA) into 45S pre-rRNA. This is processed and assembled with ribosomal proteins into pre-ribosomal subunits before export to cytoplasm.",
         "whyNotOtherOptions": {
-            "a": "DNA is not involved in calcification mechanisms.",
-            "b": "Glycogen accumulation is seen in diabetes, not calcification.",
-            "c": "Lipid relates to fat necrosis or atherosclerosis.",
-            "d": "mRNA is involved in protein synthesis, like hypertrophy.",
-            "e": "Water influx causes hydropic swelling."
+            "a": "ER is site of protein synthesis/secretion, not rRNA.",
+            "b": "Ribosomes assemble mature rRNA but do not transcribe it.",
+            "d": "Nucleus contains nucleolus but transcription is nucleolar-specific."
         },
-        "relatedQuestions": ["8", "32"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "intro to biochemistry and cell signaling",
         "difficulty": "Medium"
     },
     {
         "id": 5,
-        "question": "A 75-year-old woman with Alzheimer disease dies of congestive heart failure. The brain at autopsy is shown in the image. This patient’s brain exemplifies which of the following responses to chronic injury?",
+        "question": "The cell's structural unit that serves as microtubules organizing center and facilitates division during mitosis is---",
         "options": [
-            "(A) Anaplasia",
-            "(B) Atrophy",
-            "(C) Dysplasia",
-            "(D) Hyperplasia",
-            "(E) Hypertrophy"
+            "Centriole",
+            "Ribosome",
+            "Endoplasmic Reticulum",
+            "All"
         ],
-        "answer": 1,
-        "correctAnswer": "Atrophy",
-        "explanation": "Clinically, atrophy is recognized as diminution in the size or function of an organ. It is often seen in areas of vascular insufficiency or chronic inflammation and may result from disuse. Atrophy may be thought of as an adaptive response to stress, in which the cell shuts down its differentiated functions. Reduction in the size of an organ may reflect reversible cell atrophy or may be caused by irreversible loss of cells. For example, atrophy of the brain in this patient with Alzheimer disease is secondary to extensive cell death, and the size of the organ cannot be restored. This patient’s brain shows marked atrophy of the frontal lobe. The gyri are thinned, and sulci are widened.",
+        "answer": 0,
+        "correctAnswer": "Centriole",
+        "explanation": "Centrioles (paired in centrosome) are the primary microtubule-organizing centers (MTOCs). They nucleate astral and spindle microtubules during mitosis, ensuring proper chromosome segregation via the mitotic spindle.",
         "whyNotOtherOptions": {
-            "a": "Anaplasia represents lack of differentiated features in a neoplasm.",
-            "c": "Dysplasia is disordered maturation, preneoplastic.",
-            "d": "Hyperplasia increases cell number.",
-            "e": "Hypertrophy increases cell size."
+            "b": "Ribosomes synthesize proteins, no role in microtubule organization.",
+            "c": "ER is involved in lipid/protein synthesis and calcium storage."
         },
-        "relatedQuestions": ["19", "31"],
-        "category": "Cell Injury",
-        "difficulty": "Easy"
+        "relatedQuestions": [71],
+        "category": "intro to biochemistry and cell signaling",
+        "difficulty": "Medium"
     },
     {
         "id": 6,
-        "question": "A 68-year-old woman with a history of heavy smoking and repeated bouts of pneumonia presents with a 2-week history of fever and productive cough. A chest X-ray reveals a right lower lobe infiltrate. A transbronchial biopsy confirms pneumonia and further demonstrates preneoplastic changes within the bronchial mucosa. Which of the following best characterizes the morphology of this bronchial mucosal lesion?",
+        "question": "Which of the following processes involve the combining of a message from one signaling molecule with that of another to either enhance or inhibit a cellular effect?",
         "options": [
-            "(A) Abnormal pattern of cellular maturation",
-            "(B) Increased numbers of otherwise normal cells",
-            "(C) Invasiveness through the basement membrane",
-            "(D) Transformation of one differentiated cell type to another",
-            "(E) Ulceration and necrosis of epithelial cells"
+            "Signal transduction",
+            "Signal integration",
+            "Signal amplification",
+            "Signal reception"
         ],
-        "answer": 0,
-        "correctAnswer": "Abnormal pattern of cellular maturation",
-        "explanation": "Cells that compose an epithelium exhibit uniformity of size and shape, and they undergo maturation in an orderly fashion (e.g., from plump basal cells to flat superficial cells in a squamous epithelium). When we speak of dysplasia, we mean that this regular appearance is disturbed by (1) variations in the size and shape of the cells; (2) enlargement, irregularity, and hyperchromatism of the nuclei; and (3) disorderly arrangement of the cells within the epithelium. Dysplasia of the bronchial epithelium is a reaction of respiratory epithelium to carcinogens in tobacco smoke. It is potentially reversible if the patient stops smoking but is considered preneoplastic and may progress to carcinoma.",
+        "answer": 1,
+        "correctAnswer": "Signal integration",
+        "explanation": "Signal integration occurs when multiple pathways converge at common effectors (e.g., CREB transcription factor integrates cAMP, Ca²⁺, and growth factor signals) to produce a coordinated, context-dependent response.",
         "whyNotOtherOptions": {
-            "b": "Increased numbers describe hyperplasia.",
-            "c": "Invasiveness connotes malignancy.",
-            "d": "Transformation to another cell type is metaplasia.",
-            "e": "Ulceration and necrosis are seen in severe injury."
+            "a": "Transduction is relay within a single pathway.",
+            "c": "Amplification magnifies a single signal.",
+            "d": "Reception is ligand-receptor binding."
         },
-        "relatedQuestions": ["40", "42"],
-        "category": "Cell Injury",
+        "relatedQuestions": [3],
+        "category": "intro to biochemistry and cell signaling",
         "difficulty": "Medium"
     },
     {
         "id": 7,
-        "question": "A 64-year-old man with long-standing angina pectoris and arterial hypertension dies of spontaneous intracerebral hemorrhage. At autopsy, the heart appears globoid. The left ventricle measures 2.8 cm on cross section (shown in the image). This adaptation to chronic injury was mediated primarily by changes in the intracellular concentration of which of the following components?",
+        "question": "Nuclear DNA is present in combination with",
         "options": [
-            "(A) DNA",
-            "(B) Glycogen",
-            "(C) Lipid",
-            "(D) mRNA",
-            "(E) Water"
+            "Histones",
+            "Non-histones",
+            "Both (A) and (B)",
+            "None of these"
         ],
-        "answer": 3,
-        "correctAnswer": "mRNA",
-        "explanation": "Hypertrophic cardiac myocytes have more cytoplasm and larger nuclei than normal cells. Although the elucidation of the cellular and molecular mechanisms underlying the hypertrophic response is still actively pursued, it is clear that the final steps include increases in mRNA, rRNA, and protein. Hypertrophy results from transcriptional regulation.",
+        "answer": 2,
+        "correctAnswer": "Both (A) and (B)",
+        "explanation": "Nuclear DNA forms chromatin with octameric histone cores (H2A, H2B, H3, H4) around which DNA wraps to form nucleosomes, plus non-histone proteins (HMGs, transcription factors, polymerases) that regulate structure and function.",
         "whyNotOtherOptions": {
-            "a": "Aneuploidy (DNA) is not a feature of myofiber hypertrophy.",
-            "b": "Glycogen is stored in some conditions but not primary in hypertrophy.",
-            "c": "Lipid accumulation is seen in fatty change.",
-            "e": "Water influx is typical of hydropic swelling in acute injury."
+            "d": "DNA is never naked in the nucleus."
         },
-        "relatedQuestions": ["17"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [68],
+        "category": "intro to biochemistry and cell signaling",
+        "difficulty": "Medium"
     },
     {
         "id": 8,
-        "question": "A 24-year-old woman contracts toxoplasmosis during her pregnancy and delivers a neonate at 37 weeks of gestation with a severe malformation of the central nervous system. MRI studies of the neonate reveal porencephaly and hydrocephalus. An X-ray film of the head shows irregular densities in the basal ganglia. These X-ray findings are best explained by which of the following mechanisms of disease?",
+        "question": "Extranuclear DNA is present in",
         "options": [
-            "(A) Amniotic fluid embolism",
-            "(B) Dystrophic calcification",
-            "(C) Granulomatous inflammation",
-            "(D) Metastatic calcification",
-            "(E) Organ immaturity"
+            "Ribosomes",
+            "Endoplasmic reticulum",
+            "Lysosomes",
+            "Mitochondria"
         ],
-        "answer": 1,
-        "correctAnswer": "Dystrophic calcification",
-        "explanation": "Dystrophic calcification reflects underlying cell injury. Serum levels of calcium are normal, and the calcium deposits are located in previously damaged tissue. Intrauterine Toxoplasma infection affects approximately 0.1% of all pregnancies. Acute encephalitis in the fetus afflicted with TORCH syndrome may be associated with foci of necrosis that become calcified. Microcephaly, hydrocephalus, and microgyria are frequent complications of these intrauterine infections.",
+        "answer": 3,
+        "correctAnswer": "Mitochondria",
+        "explanation": "Mitochondria (and chloroplasts in plants) contain their own circular DNA encoding 13 proteins, rRNAs, and tRNAs in humans, reflecting endosymbiotic origin.",
         "whyNotOtherOptions": {
-            "a": "Amniotic fluid embolism causes pulmonary issues in mother.",
-            "c": "Granulomatous inflammation is seen in tuberculosis.",
-            "d": "Metastatic calcification reflects hypercalcemia.",
-            "e": "Organ immaturity does not cause calcification."
+            "a": "Ribosomes contain rRNA but no DNA.",
+            "b": "ER has no DNA.",
+            "c": "Lysosomes contain hydrolytic enzymes, no DNA."
         },
-        "relatedQuestions": ["4", "32"],
-        "category": "Cell Injury",
+        "relatedQuestions": [2],
+        "category": "intro to biochemistry and cell signaling",
         "difficulty": "Medium"
     },
     {
         "id": 9,
-        "question": "A 30-year-old man with AIDS-dementia complex develops acute pneumonia and dies of respiratory insufficiency. At autopsy, many central nervous system neurons display hydropic degeneration. This manifestation of sublethal neuronal injury was most likely mediated by impairment of which of the following cellular processes?",
+        "question": "One of the following messenger molecules are derived from arachidonic acid?",
         "options": [
-            "(A) DNA synthesis",
-            "(B) Lipid peroxidation",
-            "(C) Mitotic spindle assembly",
-            "(D) Plasma membrane sodium transport",
-            "(E) Ribosome biosynthesis"
+            "Corticoids",
+            "Eicosanoids",
+            "Steroids",
+            "Terpenoids"
         ],
-        "answer": 3,
-        "correctAnswer": "Plasma membrane sodium transport",
-        "explanation": "Hydropic swelling reflects acute, reversible (sublethal) cell injury. It results from impairment of cellular volume regulation, a process that controls ionic concentrations in the cytoplasm. This regulation, particularly for sodium, involves (1) the plasma membrane, (2) the plasma membrane sodium pump, and (3) the supply of ATP. Injurious agents may interfere with these membrane-regulated processes. Accumulation of sodium in the cell leads to an increase in water content to maintain isosmotic conditions, and the cell then swells.",
+        "answer": 1,
+        "correctAnswer": "Eicosanoids",
+        "explanation": "Eicosanoids (prostaglandins, thromboxanes, leukotrienes, lipoxins) are 20-carbon (eicosa-) signaling molecules synthesized from arachidonic acid released by phospholipase A2, acting locally via GPCR or nuclear receptors.",
         "whyNotOtherOptions": {
-            "a": "DNA synthesis impairment affects replication.",
-            "b": "Lipid peroxidation is often a feature of irreversible injury.",
-            "c": "Mitotic spindle relates to division.",
-            "e": "Ribosome biosynthesis affects protein synthesis."
+            "a": "Corticoids are steroid hormones from cholesterol.",
+            "c": "Steroids have four fused rings derived from cholesterol.",
+            "d": "Terpenoids are isoprene-based, not arachidonic acid-derived."
         },
-        "relatedQuestions": ["34"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [],
+        "category": "intro to biochemistry and cell signaling",
+        "difficulty": "Medium"
     },
     {
         "id": 10,
-        "question": "A 62-year-old man is brought to the emergency room in a disoriented state. Physical examination reveals jaundice, splenomegaly, and ascites. Serum levels of ALT, AST, alkaline phosphatase, and bilirubin are all elevated. A liver biopsy demonstrates alcoholic hepatitis with Mallory bodies. These cytoplasmic structures are composed of interwoven bundles of which of the following proteins?",
+        "question": "Which one of the following is not under the category of cell surface receptors",
         "options": [
-            "(A) α1-Antitrypsin",
-            "(B) β-Amyloid (Aβ)",
-            "(C) Intermediate filaments",
-            "(D) Prion protein (PrP)",
-            "(E) α-Synuclein"
+            "Ligand-gated ion channels",
+            "Enzyme-linked receptors",
+            "G protein Coupled Receptors",
+            "Intracellular Receptors"
         ],
-        "answer": 2,
-        "correctAnswer": "Intermediate filaments",
-        "explanation": "Hyaline is a term that refers to any material that exhibits a reddish, homogeneous appearance when stained with hematoxylin and eosin (H&E). Standard terminology includes hyaline arteriolosclerosis, alcoholic hyaline in the liver, hyaline membranes in the lung, and hyaline droplets in various cells. Alcoholic (Mallory) hyaline is composed of cytoskeletal intermediate filaments (cytokeratins), whereas pulmonary hyaline membranes consist of plasma proteins deposited in alveoli.",
+        "answer": 3,
+        "correctAnswer": "Intracellular Receptors",
+        "explanation": "Cell surface receptors (ion-channel, enzyme-linked, GPCR) are transmembrane proteins. Intracellular receptors (nuclear/steroid receptors) reside in cytoplasm/nucleus and bind lipophilic ligands that cross the membrane.",
         "whyNotOtherOptions": {
-            "a": "Structurally abnormal α1-antitrypsin molecules accumulate in the liver of patients with α1-antitrypsin deficiency.",
-            "b": "β-Amyloid accumulates in Alzheimer disease.",
-            "d": "Prion protein in Creutzfeldt-Jakob disease.",
-            "e": "α-Synuclein accumulates in neurons in Parkinson disease."
+            "a": "Ligand-gated channels (e.g., nAChR) are transmembrane.",
+            "b": "Enzyme-linked (e.g., RTKs) span the membrane.",
+            "c": "GPCRs have seven transmembrane domains."
         },
-        "relatedQuestions": ["47"],
-        "category": "Cell Injury",
+        "relatedQuestions": [11, 12],
+        "category": "intro to biochemistry and cell signaling",
         "difficulty": "Medium"
     },
     {
         "id": 11,
-        "question": "A 65-year-old man suffers a heart attack and expires. Examination of the lungs at autopsy reveals numerous pigmented nodules scattered throughout the parenchyma (shown in the image). What is the appropriate diagnosis?",
+        "question": "______ is type of receptor which is respond to hydrophobic ligand molecules that are able to travel across the plasma membrane.",
         "options": [
-            "(A) Anthracosis",
-            "(B) Asbestosis",
-            "(C) Hemosiderosis",
-            "(D) Sarcoidosis",
-            "(E) Silicosis"
+            "Ligand-Gated Ion Channel",
+            "Enzyme Kinase receptor",
+            "G Protein-Coupled Receptor",
+            "Nuclear receptor"
         ],
-        "answer": 0,
-        "correctAnswer": "Anthracosis",
-        "explanation": "Anthracosis refers to the storage of carbon particles in the lung and regional lymph nodes. These particles accumulate in alveolar macrophages and are also transported to hilar and mediastinal lymph nodes, where the indigestible material is stored indefinitely within tissue macrophages. Although the gross appearance of the lungs of persons with anthracosis may be alarming, the condition is innocuous. Workers who mine hard coal (anthracite) develop pulmonary fibrosis, owing to the presence of toxic/fibrogenic dusts such as silica.",
+        "answer": 3,
+        "correctAnswer": "Nuclear receptor",
+        "explanation": "Nuclear receptors (NRs) are intracellular transcription factors that bind hydrophobic ligands (steroids, thyroid hormone, vitamin D, retinoic acid) which diffuse across the lipid bilayer, inducing conformational change, nuclear translocation, and gene regulation.",
         "whyNotOtherOptions": {
-            "b": "Asbestosis involves asbestos fibers and fibrosis.",
-            "c": "Hemosiderosis represents intracellular storage of iron.",
-            "d": "Sarcoidosis is granulomatous disease.",
-            "e": "Silicosis from silica dust."
+            "a": "Ligand-gated channels bind hydrophilic neurotransmitters extracellularly.",
+            "b": "RTKs bind hydrophilic growth factors extracellularly.",
+            "c": "GPCRs bind diverse ligands but are transmembrane."
         },
-        "relatedQuestions": ["22", "24"],
-        "category": "Cell Injury",
-        "difficulty": "Easy"
+        "relatedQuestions": [12, 16],
+        "category": "intro to biochemistry and cell signaling",
+        "difficulty": "Medium"
     },
     {
         "id": 12,
-        "question": "A 32-year-old woman with poorly controlled diabetes mellitus delivers a healthy boy at 38 weeks of gestation. As a result of maternal hyperglycemia during pregnancy, pancreatic islets in the neonate would be expected to show which of the following morphologic responses to injury?",
+        "question": "One of the following receptor is odd.",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Metaplasia",
-            "(E) Necrosis"
+            "Luteinizing hormone",
+            "Calcitonin",
+            "Calcitriol",
+            "Nor-epinephrine"
         ],
         "answer": 2,
-        "correctAnswer": "Hyperplasia",
-        "explanation": "Infants of diabetic mothers show a 5% to 10% incidence of major developmental abnormalities, including anomalies of the heart and great vessels and neural tube defects. The frequency of these lesions relates to the control of maternal diabetes during early gestation. During fetal development, the islet cells of the pancreas have proliferative capacity and respond to increased demand for insulin by undergoing physiologic hyperplasia. Fetuses exposed to hyperglycemia in utero may develop hyperplasia of the pancreatic β cells, which may secrete insulin autonomously and cause hypoglycemia at birth.",
+        "correctAnswer": "Calcitriol",
+        "explanation": "Calcitriol (1,25-dihydroxyvitamin D) is a secosteroid that binds intracellular nuclear vitamin D receptor (VDR). LH, calcitonin, and norepinephrine bind cell-surface receptors (GPCR for all three).",
         "whyNotOtherOptions": {
-            "a": "Atrophy is decrease in size.",
-            "b": "Dysplasia is abnormal maturation.",
-            "d": "Metaplasia is cell type change.",
-            "e": "Necrosis is cell death."
+            "a": "LH → GPCR (Gs).",
+            "b": "Calcitonin → GPCR (Gs).",
+            "d": "Norepinephrine → adrenergic GPCRs."
         },
-        "relatedQuestions": ["1", "41"],
-        "category": "Cell Injury",
+        "relatedQuestions": [11],
+        "category": "intro to biochemistry and cell signaling",
         "difficulty": "Medium"
     },
     {
         "id": 13,
-        "question": "A 59-year-old female alcoholic is brought to the emergency room with a fever (38.7°C/103°F) and foul-smelling breath. The patient subsequently develops acute bronchopneumonia and dies of respiratory insufficiency. A pulmonary abscess is identified at autopsy (shown in the image). Histologic examination of the wall of this lesion would most likely demonstrate which of the following pathologic changes?",
+        "question": "Ligand binding to G-protein coupled receptors",
         "options": [
-            "(A) Caseous necrosis",
-            "(B) Coagulative necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
+            "activates phospholipase C-γ",
+            "causes dissociation of Ga-GDP from the receptor followed by exchange of GTP for GDP",
+            "stimulates Ga-GDP to exchange GDP for GTP, before dissociating from the receptor",
+            "always causes elevation of intracellular [Ca2+]"
         ],
-        "answer": 4,
-        "correctAnswer": "Liquefactive necrosis",
-        "explanation": "When the rate of dissolution of the necrotic cells is faster than the rate of repair, the resulting morphologic appearance is termed liquefactive necrosis. The polymorphonuclear leukocytes of the acute inflammatory reaction are endowed with potent hydrolases that are capable of digesting dead cells. A sharply localized collection of these acute inflammatory cells in response to a bacterial infection produces rapid death and dissolution of tissue. The result is often an abscess defined as a cavity formed by liquefactive necrosis in a solid tissue.",
+        "answer": 2,
+        "correctAnswer": "stimulates Ga-GDP to exchange GDP for GTP, before dissociating from the receptor",
+        "explanation": "GPCR acts as guanine nucleotide exchange factor (GEF): ligand binding induces conformational change → α-subunit exchanges GDP for GTP → α-GTP dissociates from βγ → both activate effectors. Sequence is critical for amplification.",
         "whyNotOtherOptions": {
-            "a": "Caseous necrosis is seen in necrotizing granulomas.",
-            "b": "Coagulative necrosis retains cell outline.",
-            "c": "Fat necrosis in pancreatitis.",
-            "d": "Fibrinoid necrosis in vasculitis."
+            "a": "PLC-γ is activated by RTKs, not GPCRs (PLC-β by Gq).",
+            "b": "Dissociation occurs after GTP binding.",
+            "d": "Only Gq pathway elevates Ca²⁺; Gs, Gi, Golf have different effects."
         },
-        "relatedQuestions": ["2", "28"],
-        "category": "Cell Injury",
+        "relatedQuestions": [14, 15],
+        "category": "intro to biochemistry and cell signaling",
         "difficulty": "Medium"
     },
     {
         "id": 14,
-        "question": "A 20-year-old man from China is evaluated for persistent cough, night sweats, low-grade fever, and general malaise. A chest X-ray reveals findings “consistent with a Ghon complex.” Sputum cultures grow acid-fast bacilli. Examination of hilar lymph nodes in this patient would most likely demonstrate which of the following pathologic changes?",
+        "question": "The G protein Coupled Receptors bind",
         "options": [
-            "(A) Caseous necrosis",
-            "(B) Coagulative necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
+            "cytosine",
+            "guanine",
+            "Guanosine",
+            "adenine"
         ],
-        "answer": 0,
-        "correctAnswer": "Caseous necrosis",
-        "explanation": "Caseous necrosis is a characteristic of primary tuberculosis, in which the necrotic cells fail to retain their cellular outlines. They do not disappear by lysis, as in liquefactive necrosis, but persist indefinitely as amorphous, coarsely granular, eosinophilic debris. Grossly, this debris resembles clumpy cheese, hence the name caseous necrosis. Primary tuberculosis is often asymptomatic or presents with nonspecific symptoms, such as low-grade fever, loss of appetite, and occasional spells of coughing. The Ghon complex includes parenchymal consolidation and ipsilateral enlargement of hilar lymph nodes and is often accompanied by a pleural effusion.",
+        "answer": 1,
+        "correctAnswer": "guanine",
+        "explanation": "G proteins are heterotrimeric guanine nucleotide-binding regulatory proteins. The α-subunit binds GDP/GTP (guanine nucleotides); the name 'G protein' derives from guanine specificity.",
         "whyNotOtherOptions": {
-            "b": "Coagulative in ischemia.",
-            "c": "Fat in pancreatitis.",
-            "d": "Fibrinoid in vessels.",
-            "e": "Liquefactive in abscesses."
+            "a": "Cytosine nucleotides are not involved.",
+            "c": "Guanosine is the base+nucleoside, not the nucleotide.",
+            "d": "Adenine nucleotides (ATP/cAMP) are second messengers, not bound by Gα."
         },
-        "relatedQuestions": ["13", "28"],
-        "category": "Cell Injury",
+        "relatedQuestions": [13],
+        "category": "intro to biochemistry and cell signaling",
         "difficulty": "Medium"
     },
     {
         "id": 15,
-        "question": "A 31-year-old woman complains of increased vaginal discharge of 1-month duration. A cervical Pap smear is shown in the image. Superficial epithelial cells are identified with arrows. When compared to cells from the deeper intermediate layer (top), the nuclei of these superficial cells exhibit which of the following cytologic features?",
+        "question": "One of the following protein receptor is activated by the binding of a ligand to a transmembrane receptor?",
         "options": [
-            "(A) Karyolysis",
-            "(B) Karyorrhexis",
-            "(C) Pyknosis",
-            "(D) Segmentation",
-            "(E) Viral inclusion bodies"
+            "Tyrosine kinase receptor",
+            "Nuclear receptor",
+            "G protein-coupled receptor",
+            "Ligand-gated ion channel"
         ],
-        "answer": 2,
-        "correctAnswer": "Pyknosis",
-        "explanation": "Coagulative necrosis refers to light microscopic alterations in dying cells. When stained with the usual combination of hematoxylin and eosin, the cytoplasm of a necrotic cell is eosinophilic. The nucleus displays an initial clumping of chromatin followed by its redistribution along the nuclear membrane. In pyknosis, the nucleus becomes smaller and stains deeply basophilic as chromatin clumping continues.",
+        "answer": 0,
+        "correctAnswer": "Tyrosine kinase receptor",
+        "explanation": "Receptor tyrosine kinases (RTKs) are single-pass transmembrane proteins with extracellular ligand-binding domain and intracellular kinase domain. Ligand binding causes dimerization and autophosphorylation on tyrosine residues, initiating cascades (MAPK, PI3K-Akt).",
         "whyNotOtherOptions": {
-            "a": "Karyolysis is dissolution of nucleus.",
-            "b": "Karyorrhexis is fragmentation.",
-            "d": "Segmentation in neutrophils.",
-            "e": "Viral inclusions in infections."
+            "b": "Nuclear receptors are intracellular.",
+            "c": "GPCRs activate separate G proteins, not intrinsic kinase.",
+            "d": "Ligand-gated channels open ion pores, no kinase activity."
         },
-        "relatedQuestions": ["21", "35"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [10, 16],
+        "category": "intro to biochemistry and cell signaling",
+        "difficulty": "Medium"
     },
     {
         "id": 16,
-        "question": "A 30-year-old woman suffers a tonic-clonic seizure and presents with delirium and hydrophobia. The patient states that she was bitten on the hand by a bat about 1 month ago. The patient subsequently dies of respiratory failure. Viral particles are found throughout the brainstem and cerebellum at autopsy. In addition to direct viral cytotoxicity, the necrosis of virally infected neurons in this patient was mediated primarily by which of the following mechanisms?",
+        "question": "Which type of receptor protein is activated by the binding of a ligand to an intracellular receptor",
         "options": [
-            "(A) Histamine release from mast cells",
-            "(B) Humoral and cellular immunity",
-            "(C) Neutrophil-mediated phagocytosis",
-            "(D) Release of oxygen radicals from macrophages",
-            "(E) Vasoconstriction and ischemia"
+            "Tyrosine kinase receptor",
+            "Nuclear receptor",
+            "Ligand-gated ion channel",
+            "G protein-coupled receptor"
         ],
         "answer": 1,
-        "correctAnswer": "Humoral and cellular immunity",
-        "explanation": "Both humoral and cellular arms of the immune system protect against the harmful effects of viral infections. Thus, the presentation of viral proteins to the immune system immunizes the body against the invader and elicits both killer cells and the production of antiviral antibodies. These arms of the immune system eliminate virus-infected cells by either inducing apoptosis or directing complement-mediated cytolysis. In this patient, the rabies virus entered a peripheral nerve and was transported by retrograde axoplasmic flow to the spinal cord and brain. The inflammation is centered in the brainstem and spills into the cerebellum and hypothalamus.",
+        "correctAnswer": "Nuclear receptor",
+        "explanation": "Nuclear receptors (NR superfamily) are ligand-activated transcription factors located in cytoplasm/nucleus. Hydrophobic ligands cross the membrane, bind the ligand-binding domain (LBD), induce conformational change, dissociation from chaperones, dimerization, nuclear translocation (if cytoplasmic), and direct gene transcription.",
         "whyNotOtherOptions": {
-            "a": "Histamine in allergy.",
-            "c": "Neutrophils in bacterial infections.",
-            "d": "Oxygen radicals in reperfusion.",
-            "e": "Vasoconstriction in ischemia."
+            "a": "RTKs are transmembrane.",
+            "c": "Ion channels are transmembrane.",
+            "d": "GPCRs are transmembrane."
         },
-        "relatedQuestions": ["46"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [11, 15],
+        "category": "intro to biochemistry and cell signaling",
+        "difficulty": "Medium"
     },
     {
         "id": 17,
-        "question": "A 52-year-old woman loses her right kidney following an automobile accident. A CT scan of the abdomen 2 years later shows marked enlargement of the left kidney. The renal enlargement is an example of which of the following adaptations?",
+        "question": "In mitochondria cristae act as sites for",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "protein synthesis",
+            "Oxidation-reduction reaction",
+            "phosphorylation of flavoproteins",
+            "breakdown of macromolecules"
         ],
-        "answer": 3,
-        "correctAnswer": "Hypertrophy",
-        "explanation": "Hypertrophy is a response to trophic signals or increased functional demand and is commonly a normal process. For example, if one kidney is rendered inoperative because of vascular occlusion, the contralateral kidney hypertrophies to accommodate increased demand. The molecular basis of hypertrophy reflects increased expression of growth-promoting genes (protooncogenes) such as myc, fos, and ras.",
+        "answer": 1,
+        "correctAnswer": "Oxidation-reduction reaction",
+        "explanation": "Cristae are inner membrane infoldings that massively increase surface area for embedding electron transport chain (ETC) complexes I–IV. Here, redox reactions transfer electrons from NADH/FADH₂ to O₂, establishing proton gradient for ATP synthesis.",
         "whyNotOtherOptions": {
-            "a": "Atrophy is decrease.",
-            "b": "Dysplasia abnormal maturation.",
-            "c": "Hyperplasia may occur but enlargement is hypertrophy.",
-            "e": "Metaplasia cell type change."
+            "a": "Mitochondrial protein synthesis occurs on matrix ribosomes.",
+            "c": "Phosphorylation occurs at complex V (ATP synthase), not flavoproteins.",
+            "d": "Macromolecule breakdown is lysosomal."
         },
-        "relatedQuestions": ["7"],
-        "category": "Cell Injury",
-        "difficulty": "Easy"
+        "relatedQuestions": [2],
+        "category": "intro to biochemistry and cell signaling",
+        "difficulty": "Medium"
     },
     {
         "id": 18,
-        "question": "An 82-year-old man has profound bleeding from a peptic ulcer and dies of hypovolemic shock. The liver at autopsy displays centrilobular necrosis. Compared to viable hepatocytes, the necrotic cells contain higher intracellular concentrations of which of the following?",
+        "question": "Plasma membrane is composed of:",
         "options": [
-            "(A) Calcium",
-            "(B) Cobalt",
-            "(C) Copper",
-            "(D) Iron",
-            "(E) Selenium"
+            "Glycoproteins",
+            "Lipids",
+            "Chromoproteins",
+            "Lipoproteins"
         ],
-        "answer": 0,
-        "correctAnswer": "Calcium",
-        "explanation": "Coagulative necrosis is characterized by a massive influx of calcium into the cell. Under normal circumstances, the plasma membrane maintains a steep gradient of calcium ions, whose concentration in interstitial fluids is 10,000 times higher than that inside the cell. Irreversible cell injury damages the plasma membrane, which then fails to maintain this gradient, allowing the influx of calcium into the cell.",
+        "answer": 3,
+        "correctAnswer": "Lipoproteins",
+        "explanation": "The plasma membrane is a phospholipid bilayer (lipid) with embedded/integral proteins and peripheral proteins, forming a lipoprotein mosaic (fluid mosaic model, Singer-Nicolson 1972). Glycoproteins are subset with carbohydrate chains.",
         "whyNotOtherOptions": {
-            "b": "Cobalt not typically increased.",
-            "c": "Copper in Wilson disease.",
-            "d": "Iron in hemochromatosis.",
-            "e": "Selenium antioxidant."
+            "a": "Glycoproteins are specific subset, not the whole membrane.",
+            "b": "Lipids alone cannot explain protein functions.",
+            "c": "Chromoproteins contain heme, not structural membrane components."
         },
-        "relatedQuestions": ["20", "35"],
-        "category": "Cell Injury",
+        "relatedQuestions": [52],
+        "category": "intro to biochemistry and cell signaling",
         "difficulty": "Medium"
     },
     {
         "id": 19,
-        "question": "A 28-year-old woman is pinned by falling debris during a hurricane. An X-ray film of the leg reveals a compound fracture of the right tibia. The leg is immobilized in a cast for 6 weeks. When the cast is removed, the patient notices that her right leg is weak and visibly smaller in circumference than the left leg. Which of the following terms best describes this change in the patient’s leg muscle?",
+        "question": "Which of the following is a short-lived messenger that acts by stimulating a soluble guanylyl cyclase raising [cGMP] and stimulating PKG?",
         "options": [
-            "(A) Atrophy",
-            "(B) Hyperplasia",
-            "(C) Metaplasia",
-            "(D) Ischemic necrosis",
-            "(E) Irreversible cell injury"
+            "N2O",
+            "NO2",
+            "NO3-",
+            "NO"
         ],
-        "answer": 0,
-        "correctAnswer": "Atrophy",
-        "explanation": "The most common form of atrophy follows reduced functional demand. For example, after immobilization of a limb in a cast as treatment for a bone fracture, muscle cells atrophy, and muscular strength is reduced. The expression of differentiation genes is repressed. On restoration of normal conditions, atrophic cells are fully capable of resuming their differentiated functions; size increases to normal, and specialized functions, such as protein synthesis or contractile force, return to their original levels.",
+        "answer": 3,
+        "correctAnswer": "NO",
+        "explanation": "Nitric oxide (NO•) is a gaseous radical synthesized by NOS enzymes, diffuses freely, activates soluble guanylyl cyclase (sGC) by binding heme, increases cGMP, activates PKG, causing smooth muscle relaxation (vasodilation), platelet inhibition, neurotransmission.",
         "whyNotOtherOptions": {
-            "b": "Hyperplasia increase in number.",
-            "c": "Metaplasia cell type change.",
-            "d": "Ischemic necrosis from vascular issue.",
-            "e": "Irreversible injury unlikely in cast."
+            "a": "N₂O (nitrous oxide) is anesthetic, not physiological messenger.",
+            "b": "NO₂ is toxic pollutant.",
+            "c": "NO₃⁻ is dietary nitrate, not direct messenger."
         },
-        "relatedQuestions": ["5", "31"],
-        "category": "Cell Injury",
-        "difficulty": "Easy"
+        "relatedQuestions": [],
+        "category": "intro to biochemistry and cell signaling",
+        "difficulty": "Medium"
     },
     {
         "id": 20,
-        "question": "A 70-year-old man is hospitalized after suffering a mild stroke. While in the hospital, he suddenly develops crushing substernal chest pain. Analysis of serum proteins and ECG confirm a diagnosis of acute myocardial infarction. The patient subsequently develops an arrhythmia and expires. A cross section of the left ventricle at autopsy is shown in the image. Histologic examination of the affected heart muscle would demonstrate which of the following morphologic changes?",
+        "question": "Anabolism and catabolism are chemically linked in the form of ______",
         "options": [
-            "(A) Caseous necrosis",
-            "(B) Coagulative necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
+            "ATP",
+            "ADP",
+            "GTP",
+            "Phosphodiester linkage"
         ],
-        "answer": 1,
-        "correctAnswer": "Coagulative necrosis",
-        "explanation": "Ischemic necrosis of cardiac myocytes is the leading cause of death in the Western world. In brief, the interruption of blood supply to the heart decreases the delivery of O2 and glucose. Lack of O2 impairs mitochondrial electron transport, thereby decreasing ATP synthesis and facilitating the production of reactive oxygen species. Mitochondrial damage promotes the release of cytochrome c to the cytosol, and the cell dies. The morphologic appearance of the necrotic cell has traditionally been termed coagulative necrosis because of its similarity to the coagulation of proteins that occurs upon heating.",
+        "answer": 0,
+        "correctAnswer": "ATP",
+        "explanation": "ATP is the universal energy currency: catabolic pathways (glycolysis, TCA, β-oxidation) generate ATP via substrate-level and oxidative phosphorylation; anabolic pathways (protein, nucleotide, lipid synthesis) hydrolyze ATP to ADP + Pi, driving thermodynamically unfavorable reactions.",
         "whyNotOtherOptions": {
-            "a": "Caseous in TB.",
-            "c": "Fat in pancreatitis.",
-            "d": "Fibrinoid in vessels.",
-            "e": "Liquefactive in brain."
+            "b": "ADP is low-energy form.",
+            "c": "GTP is used in specific pathways (e.g., TCA) but not universal link.",
+            "d": "Phosphodiester bonds link nucleotides in DNA/RNA."
         },
-        "relatedQuestions": ["13", "18"],
-        "category": "Cell Injury",
-        "difficulty": "Easy"
+        "relatedQuestions": [],
+        "category": "intro to biochemistry and cell signaling",
+        "difficulty": "Medium"
     },
     {
         "id": 21,
-        "question": "Which of the following histologic features would provide definitive evidence of necrosis in the myocardium of the patient described in Question 20?",
+        "question": "Which of the following statement true regarding gene Expression?",
         "options": [
-            "(A) Disaggregation of polyribosomes",
-            "(B) Increased intracellular volume",
-            "(C) Influx of lymphocytes",
-            "(D) Mitochondrial swelling and calcification",
-            "(E) Nuclear fragmentation"
+            "The final product of gene expression is a protein",
+            "Constitutive genes are not obliged to the environmental changes",
+            "Operon is a segment of DNA in eukaryotic cells",
+            "Effectors have the same effect on gene expression"
         ],
-        "answer": 4,
-        "correctAnswer": "Nuclear fragmentation",
-        "explanation": "Nuclear fragmentation (karyorrhexis and karyolysis) is a hallmark of coagulative necrosis.",
+        "answer": 1,
+        "correctAnswer": "Constitutive genes are not obliged to the environmental changes",
+        "explanation": "Constitutive (housekeeping) genes (e.g., actin, GAPDH, RNA polymerase II) are expressed at constant levels in virtually all cells to maintain basic functions, independent of environmental cues. Their promoters lack specific regulatory elements responsive to signals.",
         "whyNotOtherOptions": {
-            "a": "Disaggregation in reversible injury.",
-            "b": "Increased volume in swelling.",
-            "c": "Lymphocytes in chronic inflammation.",
-            "d": "Mitochondrial swelling in reversible."
+            "a": "Many genes produce functional RNAs (rRNA, tRNA, miRNA, lncRNA), not proteins.",
+            "c": "Operons are prokaryotic polycistronic units; eukaryotes use monocistronic mRNAs with complex splicing.",
+            "d": "Effectors can be inducers or repressors with opposite effects."
         },
-        "relatedQuestions": ["15", "35"],
-        "category": "Cell Injury",
+        "relatedQuestions": [22, 23],
+        "category": "genetic controll and regulation",
         "difficulty": "Medium"
     },
     {
         "id": 22,
-        "question": "A 90-year-old woman with mild diabetes and Alzheimer disease dies in her sleep. At autopsy, hepatocytes are noted to contain golden cytoplasmic granules that do not stain with Prussian blue. Which of the following best accounts for pigment accumulation in the liver of this patient?",
+        "question": "Gene Expression Regulation is important for the following changes except",
         "options": [
-            "(A) Advanced age",
-            "(B) Alzheimer disease",
-            "(C) Congestive heart failure",
-            "(D) Diabetic ketoacidosis",
-            "(E) Hereditary hemochromatosis"
+            "Cellular Differentiation",
+            "Adaptation",
+            "Morphogenesis",
+            "Necrosis"
         ],
-        "answer": 0,
-        "correctAnswer": "Advanced age",
-        "explanation": "Substances that cannot be metabolized accumulate in cells. Examples include (1) endogenous substrates that are not processed because a key enzyme is missing (lysosomal storage diseases), (2) insoluble endogenous pigments (lipofuscin and melanin), and (3) exogenous particulates (silica and carbon). Lipofuscin is a “wear and tear” pigment of aging that accumulates in organs such as the brain, heart, and liver.",
+        "answer": 3,
+        "correctAnswer": "Necrosis",
+        "explanation": "Necrosis is accidental cell death caused by acute injury (ischemia, toxins, trauma) leading to ATP depletion, membrane rupture, and inflammation—uncontrolled and not directed by gene regulation. Differentiation, adaptation, and morphogenesis require precise temporal-spatial gene expression control.",
         "whyNotOtherOptions": {
-            "b": "Alzheimer has neurofibrillary tangles.",
-            "c": "Heart failure causes hemosiderin.",
-            "d": "Ketoacidosis not pigment.",
-            "e": "Hemochromatosis stains blue with Prussian."
+            "a": "Differentiation requires lineage-specific transcription factors (MyoD, Pax6).",
+            "b": "Adaptation (e.g., hypoxia → HIF-1α → VEGF).",
+            "c": "Morphogenesis via Hox genes, Wnt, Notch pathways."
         },
-        "relatedQuestions": ["11", "23"],
-        "category": "Cell Injury",
+        "relatedQuestions": [21],
+        "category": "genetic controll and regulation",
         "difficulty": "Medium"
     },
     {
         "id": 23,
-        "question": "Which of the following mechanisms of disease best describes the pathogenesis of pigment accumulation in hepatocytes in the patient described in Question 22?",
+        "question": "A segment of Operon that controls the overall processes of translation is ______. (Note: Phrasing is tricky)",
         "options": [
-            "(A) Degradation of melanin pigments",
-            "(B) Inhibition of glycogen biosynthesis",
-            "(C) Malabsorption and enhanced deposition of iron",
-            "(D) Peroxidation of membrane lipids",
-            "(E) Progressive oxidation of bilirubin"
+            "Structural Gene",
+            "Operator Gene",
+            "Regulatory Gene",
+            "P-Site"
         ],
-        "answer": 3,
-        "correctAnswer": "Peroxidation of membrane lipids",
-        "explanation": "Lipofuscin is found in lysosomes and contains peroxidation products of unsaturated fatty acids. The presence of this pigment is thought to reflect continuing lipid peroxidation of cellular membranes as a result of inadequate defenses against activated oxygen radicals.",
+        "answer": 0,
+        "correctAnswer": "Structural Gene",
+        "explanation": "Structural genes contain the coding sequences that are transcribed into mRNA and translated into proteins—the ultimate products that exert the operon's function. Operator/regulator control transcription; P-site is ribosomal.",
         "whyNotOtherOptions": {
-            "a": "Melanin degradation not involved.",
-            "b": "Glycogen in diabetes.",
-            "c": "Iron in hemochromatosis.",
-            "e": "Bilirubin in jaundice."
+            "b": "Operator controls transcription initiation.",
+            "c": "Regulator produces repressor/activator proteins.",
+            "d": "P-site is on ribosome, not part of operon."
         },
-        "relatedQuestions": ["22", "27"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [24, 25],
+        "category": "genetic controll and regulation",
+        "difficulty": "Medium"
     },
     {
         "id": 24,
-        "question": "A 45-year-old man presents with increasing abdominal girth and yellow discoloration of his skin and sclera. Physical examination reveals hepatomegaly and jaundice. A Prussian blue stain of a liver biopsy is shown in the image. What is the major intracellular iron storage protein in this patient’s hepatocytes?",
+        "question": "The Galactoside permease in Lac-operon is coded by ______.",
         "options": [
-            "(A) Bilirubin",
-            "(B) Haptoglobin",
-            "(C) Hemoglobin",
-            "(D) Hemosiderin",
-            "(E) Transferrin"
+            "The Y gene",
+            "The Z gene",
+            "The A gene",
+            "The Y & Z gene"
         ],
-        "answer": 3,
-        "correctAnswer": "Hemosiderin",
-        "explanation": "Hemosiderin is a partially denatured form of ferritin that aggregates easily and is recognized microscopically as yellow-brown granules in the cytoplasm, which turn blue with the Prussian blue reaction. In hereditary hemochromatosis, a genetic abnormality of iron absorption in the small intestine, excess iron is stored mostly in the form of hemosiderin, primarily in the liver.",
+        "answer": 0,
+        "correctAnswer": "The Y gene",
+        "explanation": "Lac operon: lacZ (β-galactosidase), lacY (galactoside permease—transports lactose), lacA (thiogalactoside transacetylase). Polycistronic mRNA produces all three enzymes.",
         "whyNotOtherOptions": {
-            "a": "Bilirubin product of heme.",
-            "b": "Haptoglobin binds free Hb.",
-            "c": "Hemoglobin is the iron-containing pigment of RBCs.",
-            "e": "Transferrin binds serum iron."
+            "b": "Z codes β-galactosidase (cleaves lactose).",
+            "c": "A codes transacetylase.",
+            "d": "Only Y codes permease."
         },
-        "relatedQuestions": ["11", "22"],
-        "category": "Cell Injury",
-        "difficulty": "Easy"
+        "relatedQuestions": [25, 26],
+        "category": "genetic controll and regulation",
+        "difficulty": "Medium"
     },
     {
         "id": 25,
-        "question": "A 60-year-old man with chronic cystitis complains of urinary frequency and pelvic discomfort. Digital rectal examination is unremarkable. Biopsy of the bladder mucosa reveals foci of glandular epithelium and chronic inflammatory cells. No cytologic signs of atypia or malignancy are observed. Which of the following terms best describes the morphologic response to chronic injury in this patient?",
+        "question": "Lactose is an inducer in lac-Operon; to exert its effect positively, it should bind with ______.",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "Repressor Gene",
+            "Promoter site",
+            "Repressor Protein",
+            "Structural Genes"
         ],
-        "answer": 4,
-        "correctAnswer": "Metaplasia",
-        "explanation": "Metaplasia of transitional epithelium to glandular epithelium is seen in patients with chronic inflammation of the bladder (cystitis glandularis). Metaplasia is considered to be a protective mechanism, but it is not necessarily a harmless process. For example, squamous metaplasia in a bronchus may protect against injury produced by tobacco smoke, but it also impairs the production of mucus and ciliary clearance of debris. Furthermore, neoplastic transformation may occur in metaplastic epithelium.",
+        "answer": 2,
+        "correctAnswer": "Repressor Protein",
+        "explanation": "Allolactose (lactose isomer) binds lac repressor protein (lacI product), causing conformational change that releases repressor from operator, allowing RNA polymerase to transcribe structural genes (derepression).",
         "whyNotOtherOptions": {
-            "a": "Atrophy decrease.",
-            "b": "Dysplasia atypia present.",
-            "c": "Hyperplasia increase number.",
-            "d": "Hypertrophy increase size."
+            "a": "Repressor gene (lacI) produces the protein, not the binding target.",
+            "b": "Promoter is RNA polymerase binding site.",
+            "d": "Structural genes are transcribed, not bound by inducer."
         },
-        "relatedQuestions": ["3", "39"],
-        "category": "Cell Injury",
+        "relatedQuestions": [24, 26],
+        "category": "genetic controll and regulation",
         "difficulty": "Medium"
     },
     {
         "id": 26,
-        "question": " conc A 60-year-old man is rushed to the hospital with acute liver failure. He undergoes successful orthotopic liver transplantation; however, the transplanted liver does not produce much bile for the first 3 days. Poor graft function in this patient is thought to be the result of “reperfusion injury.” Which of the following substances was the most likely cause of reperfusion injury in this patient’s transplanted liver?",
+        "question": "Which of the following compound is required for the attachment of RNA-polymerase to the P-site on lac-Operon?",
         "options": [
-            "(A) Cationic proteins",
-            "(B) Free ferric iron",
-            "(C) Hydrochlorous acid",
-            "(D) Lysosomal acid hydrolases",
-            "(E) Reactive oxygen species"
+            "CAP",
+            "CAP-cAMP",
+            "Operator gene",
+            "I-gene"
         ],
-        "answer": 4,
-        "correctAnswer": "Reactive oxygen species",
-        "explanation": "Ischemia/reperfusion (I/R) injury is a common clinical problem that arises in the setting of occlusive cardiovascular disease, infection, transplantation, shock, and many other circumstances. The genesis of I/R injury relates to the interplay between transient ischemia and the re-establishment of blood flow (reperfusion). Initially, ischemia produces a type of cellular damage that leads to the generation of free radical species. Subsequently, reperfusion provides abundant molecular oxygen (O2) to combine with free radicals to form reactive oxygen species. Oxygen radicals are formed inside cells through the xanthine oxidase pathway and released from activated neutrophils.",
+        "answer": 1,
+        "correctAnswer": "CAP-cAMP",
+        "explanation": "Catabolite activator protein (CAP/CRP) binds cAMP (low glucose signal), forms CAP-cAMP complex that binds CAP site upstream of promoter, recruits RNA polymerase, enhances transcription (positive regulation).",
         "whyNotOtherOptions": {
-            "a": "Cationic in neutrophils.",
-            "b": "Free iron in Fenton reaction but secondary.",
-            "c": "HOCl from neutrophils.",
-            "d": "Hydrolases in autophagy."
+            "a": "CAP alone has low affinity; needs cAMP.",
+            "c": "Operator is repressor binding site.",
+            "d": "I-gene codes repressor."
         },
-        "relatedQuestions": ["27"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [24, 25],
+        "category": "genetic controll and regulation",
+        "difficulty": "Medium"
     },
     {
         "id": 27,
-        "question": "A 68-year-old woman with a history of hyperlipidemia dies of cardiac arrhythmia following a massive heart attack. Peroxidation of which of the following molecules was primarily responsible for causing the loss of membrane integrity in cardiac myocytes in this patient?",
+        "question": "Which of the following statement is not true regarding Iron metabolism regulation?",
         "options": [
-            "(A) Cholesterol",
-            "(B) Glucose transport proteins",
-            "(C) Glycosphingolipids",
-            "(D) Phospholipids",
-            "(E) Sodium-potassium ATPase"
+            "mRNA for TR has Cis-acting iron-responsive elements (IREs) at 3'-end",
+            "IREs bound to trans-acting iron regulatory proteins",
+            "When the concentration of iron in the cell is low, the IRPs bind to IREs",
+            "When intracellular concentration of iron is high, IRPs bind to IREs"
         ],
         "answer": 3,
-        "correctAnswer": "Phospholipids",
-        "explanation": "During lipid peroxidation, hydroxyl radicals remove a hydrogen atom from the unsaturated fatty acids of membrane phospholipids. The lipid radicals so formed react with molecular oxygen and form a lipid peroxide radical. A chain reaction is initiated. Lipid peroxides are unstable and break down into smaller molecules. The destruction of the unsaturated fatty acids of phospholipids results in a loss of membrane integrity.",
+        "correctAnswer": "When intracellular concentration of iron is high, IRPs bind to IREs",
+        "explanation": "Post-transcriptional regulation: Transferrin receptor (TfR) mRNA has IREs at 3'-UTR. Low iron → IRP1/2 bind IREs → stabilize mRNA → more TfR → increased iron uptake. High iron → IRPs lose binding (IRP1 becomes aconitase) → mRNA degraded → less TfR.",
         "whyNotOtherOptions": {
-            "a": "Cholesterol in plaques.",
-            "b": "Glucose proteins in diabetes.",
-            "c": "Glycosphingolipids in storage.",
-            "e": "Na-K ATPase in swelling."
+            "a": "Correct—3'-IREs for stability.",
+            "b": "IRPs are trans-acting factors.",
+            "c": "Low iron promotes binding."
         },
-        "relatedQuestions": ["23", "26"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "genetic controll and regulation",
         "difficulty": "Medium"
     },
     {
         "id": 28,
-        "question": "A 22-year-old construction worker sticks himself with a sharp, rusty nail. Within 24 hours, the wound has enlarged to become a 1-cm sore that drains thick, purulent material. This skin wound illustrates which of the following morphologic types of necrosis?",
+        "question": "Which of the following amino acids would lead to sulfuric acid formation?",
         "options": [
-            "(A) Caseous necrosis",
-            "(B) Coagulative necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
+            "Cysteine and isoleucine",
+            "Cysteine and alanine",
+            "Cysteine and methionine",
+            "Methionine and isoleucine"
         ],
-        "answer": 4,
-        "correctAnswer": "Liquefactive necrosis",
-        "explanation": "Polymorphonuclear leukocytes (segmented neutrophils) rapidly accumulate at sites of injury. They are loaded with acid hydrolases and are capable of digesting dead cells. A localized collection of these inflammatory cells may create an abscess with central liquefaction (pus). Liquefactive necrosis is also commonly seen in the brain.",
+        "answer": 2,
+        "correctAnswer": "Cysteine and methionine",
+        "explanation": "Cysteine and methionine are sulfur-containing amino acids. Catabolism releases sulfur as sulfate (SO₄²⁻), which forms sulfuric acid (H₂SO₄) in urine during excretion.",
         "whyNotOtherOptions": {
-            "a": "Caseous in granulomas.",
-            "b": "Coagulative in ischemia.",
-            "c": "Fat in pancreatitis.",
-            "d": "Fibrinoid in vessels."
+            "a": "Isoleucine has no sulfur.",
+            "b": "Alanine has no sulfur.",
+            "d": "Isoleucine has no sulfur."
         },
-        "relatedQuestions": ["13", "2"],
-        "category": "Cell Injury",
-        "difficulty": "Easy"
+        "relatedQuestions": [29, 30],
+        "category": "chemical composition in the cell protein",
+        "difficulty": "Medium"
     },
     {
         "id": 29,
-        "question": "A 42-year-old man undergoes liver biopsy for evaluation of the grade and stage of his hepatitis C virus infection. The biopsy reveals swollen (ballooned) hepatocytes and moderate lobular inflammatory activity (shown in the image). The arrow identifies an acidophilic (Councilman) body. Which of the following cellular processes best accounts for the presence of scattered acidophilic bodies in this liver biopsy?",
+        "question": "Which of the following groups of amino acids contain side-chain hydroxyl groups and could be a potential substrate for a protein kinase?",
         "options": [
-            "(A) Aggregation of intermediate filament proteins",
-            "(B) Apoptotic cell death",
-            "(C) Coagulative necrosis",
-            "(D) Collagen deposition",
-            "(E) Intracellular viral inclusions"
+            "Aspartate, glutamate, and serine",
+            "Serine, threonine, and tyrosine",
+            "Threonine, phenylalanine, and arginine",
+            "Lysine, arginine, and proline"
         ],
         "answer": 1,
-        "correctAnswer": "Apoptotic cell death",
-        "explanation": "Apoptosis is a programmed pathway of cell death that is triggered by a variety of extracellular and intracellular signals. It is often a self-defense mechanism, destroying cells that have been infected with pathogens or those in which genomic alterations have occurred. After staining with hematoxylin and eosin, apoptotic cells are visible under the light microscope as acidophilic (Councilman) bodies. These deeply eosinophilic structures represent membrane-bound cellular remnants that are extruded into the hepatic sinusoids.",
+        "correctAnswer": "Serine, threonine, and tyrosine",
+        "explanation": "Ser/Thr/Tyr have –OH groups on side chains that accept phosphate from ATP via protein kinases (serine/threonine kinases, tyrosine kinases). Phosphorylation regulates activity, localization, interactions.",
         "whyNotOtherOptions": {
-            "a": "Aggregation in Mallory bodies.",
-            "c": "Coagulative not scattered.",
-            "d": "Collagen in fibrosis.",
-            "e": "Inclusions in viral."
+            "a": "Asp/Glu have carboxylates phosphorylated rarely.",
+            "c": "Phe has aromatic ring; Arg has guanidino group.",
+            "d": "Lys/Arg/Pro lack –OH."
         },
-        "relatedQuestions": ["30", "33"],
-        "category": "Cell Injury",
+        "relatedQuestions": [15],
+        "category": "chemical composition in the cell protein",
         "difficulty": "Medium"
     },
     {
         "id": 30,
-        "question": "Which of the following biochemical changes characterizes the formation of acidophilic bodies in the patient described in Question 29?",
+        "question": "All of the amino acids that are used to synthesize human proteins (with the exception of glycine) have which one of the following in common?",
         "options": [
-            "(A) Fragmentation of DNA",
-            "(B) Loss of tumor suppressor protein p53",
-            "(C) Mitochondrial swelling",
-            "(D) Synthesis of arachidonic acid",
-            "(E) Triglyceride accumulation"
+            "An aromatic group",
+            "A hydroxyl group",
+            "An asymmetric carbon in the D-configuration",
+            "An asymmetric carbon in the L-configuration"
         ],
-        "answer": 0,
-        "correctAnswer": "Fragmentation of DNA",
-        "explanation": "Fragmentation of DNA is a hallmark of cells undergoing both necrosis and apoptosis, but apoptotic cells can be detected by demonstrating nucleosomal “laddering.” This pattern of DNA degradation is characteristic of apoptotic cell death. It results from the cleavage of chromosomal DNA at nucleosomes by endonucleases. Since nucleosomes are regularly spaced along the genome, a pattern of regular bands can be seen when fragments of cellular DNA are separated by electrophoresis.",
+        "answer": 3,
+        "correctAnswer": "An asymmetric carbon in the L-configuration",
+        "explanation": "All 20 standard amino acids (except achiral glycine) have a chiral α-carbon with L-configuration in proteins. This stereochemistry is critical for proper folding and ribosome specificity.",
         "whyNotOtherOptions": {
-            "b": "p53 in apoptosis trigger.",
-            "c": "Mitochondrial in injury.",
-            "d": "Arachidonic in inflammation.",
-            "e": "Triglyceride in steatosis."
+            "a": "Only Phe, Tyr, Trp are aromatic.",
+            "b": "Only Ser, Thr, Tyr have –OH.",
+            "c": "D-amino acids are rare in proteins (bacterial peptidoglycan)."
         },
-        "relatedQuestions": ["29", "49"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [],
+        "category": "chemical composition in the cell protein",
+        "difficulty": "Medium"
     },
     {
         "id": 31,
-        "question": "A 56-year-old woman with a history of hyperlipidemia and hypertension develops progressive, right renal artery stenosis. Over time, this patient’s right kidney is likely to demonstrate which of the following morphologic adaptations to partial ischemia?",
+        "question": "In amyloidosis, α-helices may form alternative β-sheets of amyloid fibrils. The α-helices in these proteins can be characterized by which one of the following?",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Neoplasia"
+            "They all have the same primary structure.",
+            "They are formed principally by hydrogen bonds between a carbonyl oxygen atom in one peptide bond and the amide hydrogen from a different peptide bond.",
+            "They are formed principally by hydrogen bonds between a carbonyl atom in one peptide bond and the hydrogen atoms on the side chain of another amino acid.",
+            "They are formed by hydrogen bonding between two adjacent amino acids in the primary sequence."
         ],
-        "answer": 0,
-        "correctAnswer": "Atrophy",
-        "explanation": "Interference with blood supply to tissues is known as ischemia. Total ischemia results in cell death. Partial ischemia occurs after incomplete occlusion of a blood vessel or in areas of inadequate collateral circulation. This results in a chronically reduced oxygen supply, a condition often compatible with continued cell viability. Under such circumstances, cell atrophy is common. For example, it is frequently seen around the inadequately perfused margins of infarcts in the heart, brain, and kidneys.",
+        "answer": 1,
+        "correctAnswer": "They are formed principally by hydrogen bonds between a carbonyl oxygen atom in one peptide bond and the amide hydrogen from a different peptide bond.",
+        "explanation": "α-helix secondary structure is stabilized by backbone H-bonds between C=O of residue i and N-H of residue i+4 (3.6 residues/turn, 5.4 Å pitch). Amyloidogenic proteins misfold from native α-helices to cross-β fibrils.",
         "whyNotOtherOptions": {
-            "b": "Dysplasia abnormal.",
-            "c": "Hyperplasia increase.",
-            "d": "Hypertrophy in contralateral.",
-            "e": "Neoplasia cancer."
+            "a": "Different proteins (Aβ, prion, transthyretin) form amyloids.",
+            "c": "Side-chain H-bonds are tertiary, not secondary.",
+            "d": "Adjacent residues cannot form helical H-bonds."
         },
-        "relatedQuestions": ["5", "19"],
-        "category": "Cell Injury",
+        "relatedQuestions": [37],
+        "category": "chemical composition in the cell protein",
         "difficulty": "Medium"
     },
     {
         "id": 32,
-        "question": "A 5-year-old boy suffers blunt trauma to the leg in an automobile accident. Six months later, bone trabeculae have formed within the striated skeletal muscle at the site of tissue injury. This pathologic condition is an example of which of the following morphologic adaptations to injury?",
+        "question": "Which out of the following amino acids is a precursor for skin pigment?",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Metaplasia",
-            "(D) Metastatic calcification",
-            "(E) Dystrophic calcification"
+            "Tyrosine",
+            "Histidine",
+            "Phenyl Alanine",
+            "Tryptophan"
         ],
-        "answer": 2,
-        "correctAnswer": "Metaplasia",
-        "explanation": "Myositis ossificans is a disease characterized by formation of bony trabeculae within striated muscle. It represents a form of osseous metaplasia (i.e., replacement of one differentiated tissue with another type of normal differentiated tissue).",
+        "answer": 0,
+        "correctAnswer": "Tyrosine",
+        "explanation": "Tyrosine is oxidized by tyrosinase to dopaquinone → eumelanin (brown-black) or pheomelanin (red-yellow) in melanosomes of melanocytes. Phenylalanine can be converted to tyrosine via PAH.",
         "whyNotOtherOptions": {
-            "a": "Atrophy decrease.",
-            "b": "Dysplasia abnormal.",
-            "d": "Metastatic hypercalcemia.",
-            "e": "Dystrophic in damaged tissue without bone."
+            "b": "Histidine → histamine.",
+            "c": "Phenylalanine is upstream precursor.",
+            "d": "Tryptophan → serotonin, melatonin."
         },
-        "relatedQuestions": ["4", "8"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [],
+        "category": "chemical composition in the cell protein",
+        "difficulty": "Medium"
     },
     {
         "id": 33,
-        "question": "A 43-year-old man presents with a scaly, erythematous lesion on the dorsal surface of his left hand. A skin biopsy reveals atypical keratinocytes filling the entire thickness of the epidermis (shown in the image). The arrows point to apoptotic bodies. Which of the following proteins plays the most important role in mediating programmed cell death in this patient’s skin cancer?",
+        "question": "The following amino acid(s) is (are) glucogenic",
         "options": [
-            "(A) Catalase",
-            "(B) Cytochrome c",
-            "(C) Cytokeratins",
-            "(D) Myeloperoxidase",
-            "(E) Superoxide dismutase"
+            "Leucine",
+            "Lysine",
+            "Alanine",
+            "B and C"
         ],
-        "answer": 1,
-        "correctAnswer": "Cytochrome c",
-        "explanation": "The mitochondrial membrane is a key regulator of apoptosis. When mitochondrial pores open, cytochrome c leaks out and activates Apaf-1, which converts procaspase-9 to caspase-9, resulting in the activation of downstream caspases (cysteine proteases). These effector caspases cleave target proteins, including endonucleases nuclear proteins, and cytoskeletal proteins to mediate the varied morphological and biochemical changes that accompany apoptosis.",
+        "answer": 3,
+        "correctAnswer": "B and C",
+        "explanation": "Glucogenic amino acids feed into gluconeogenesis intermediates. Alanine → pyruvate; lysine → acetyl-CoA but also via glutarate pathway to α-ketoglutarate (controversial, but accepted in many textbooks as both glucogenic/ketogenic). Leucine is purely ketogenic.",
         "whyNotOtherOptions": {
-            "a": "Catalase antioxidant.",
-            "c": "Cytokeratins intermediate filaments.",
-            "d": "Myeloperoxidase in neutrophils.",
-            "e": "Superoxide dismutase antioxidant."
+            "a": "Leucine → acetoacetate + acetyl-CoA only."
         },
-        "relatedQuestions": ["29", "49"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [],
+        "category": "chemical composition in the cell protein",
+        "difficulty": "Medium"
     },
     {
         "id": 34,
-        "question": "A 16-year-old girl with a history of suicidal depression swallows a commercial solvent. A liver biopsy is performed to assess the degree of damage to the hepatic parenchyma. Histologic examination demonstrates severe swelling of the centrilobular hepatocytes (shown in the image). Which of the following mechanisms of disease best accounts for the reversible changes noted in this liver biopsy?",
+        "question": "The protein present in hair is:",
         "options": [
-            "(A) Decreased stores of intracellular ATP",
-            "(B) Increased storage of triglycerides and free fatty acids",
-            "(C) Intracytoplasmic rupture of lysosomes",
-            "(D) Mitochondrial membrane permeability transition",
-            "(E) Protein aggregation due to increased cytosolic pH"
+            "Elastin",
+            "Prolamine",
+            "Gliadin",
+            "Keratin"
         ],
-        "answer": 0,
-        "correctAnswer": "Decreased stores of intracellular ATP",
-        "explanation": "Hydropic swelling may result from many causes, including chemical and biologic toxins, infections, and ischemia. Injurious agents cause hydropic swelling by (1) increasing the permeability of the plasma membrane to sodium; (2) damaging the membrane sodium-potassium ATPase (pump); or (3) interfering with the synthesis of ATP, thereby depriving the pump of its fuel.",
+        "answer": 3,
+        "correctAnswer": "Keratin",
+        "explanation": "Keratin is a family of cysteine-rich, α-helical intermediate filament proteins forming hard structures (hair, nails, horns) via disulfide cross-links, providing mechanical strength.",
         "whyNotOtherOptions": {
-            "b": "Triglycerides in steatosis.",
-            "c": "Lysosome rupture irreversible.",
-            "d": "Mitochondrial transition irreversible.",
-            "e": "pH increase not typical."
+            "a": "Elastin is elastic connective tissue protein.",
+            "b": "Prolamines are plant storage proteins.",
+            "c": "Gliadin is wheat gluten protein."
         },
-        "relatedQuestions": ["9"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "chemical composition in the cell protein",
         "difficulty": "Medium"
     },
     {
         "id": 35,
-        "question": "A 40-year-old man is pulled from the ocean after a boating accident and resuscitated. Six hours later, the patient develops acute renal failure. Kidney biopsy reveals evidence of karyorrhexis and karyolysis in renal tubular epithelial cells. Which of the following biochemical events preceded these pathologic changes?",
+        "question": "Some amino acids are termed non-essential as they:",
         "options": [
-            "(A) Activation of Na+ /K+ ATPase",
-            "(B) Decrease in intracellular calcium",
-            "(C) Decrease in intracellular pH",
-            "(D) Increase in ATP production",
-            "(E) Increase in intracellular pH"
+            "Are not component of tissue proteins",
+            "Have no role in metabolism",
+            "May be synthesized in the body from ‘essential’ amino acids",
+            "May be synthesized in body in prolonged fasting"
         ],
         "answer": 2,
-        "correctAnswer": "Decrease in intracellular pH",
-        "explanation": "During periods of ischemia, anaerobic glycolysis leads to the overproduction of lactate and a decrease in intracellular pH. Lack of O2 during myocardial ischemia blocks the production of ATP. Pyruvate is reduced to lactate in the cytosol and lowers intracellular pH. The acidification of the cytosol initiates a downward spiral of events that propels the cell toward necrosis.",
+        "correctAnswer": "May be synthesized in the body from ‘essential’ amino acids",
+        "explanation": "Non-essential amino acids (Ala, Asp, Asn, Glu, Ser, etc.) are synthesized de novo using carbon skeletons from glucose/TCA intermediates and nitrogen from essential amino acid transamination (e.g., Ala from pyruvate + Glu).",
         "whyNotOtherOptions": {
-            "a": "ATPase inhibited.",
-            "b": "Calcium increases.",
-            "d": "ATP decreases.",
-            "e": "pH decreases."
+            "a": "They are incorporated into proteins.",
+            "b": "They have multiple metabolic roles.",
+            "d": "Synthesis continues even in fasting using gluconeogenesis."
         },
-        "relatedQuestions": ["18", "21"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [],
+        "category": "chemical composition in the cell protein",
+        "difficulty": "Medium"
     },
     {
         "id": 36,
-        "question": "A 58-year-old man presents with symptoms of acute renal failure. His blood pressure is 220/130 mm Hg (malignant hypertension). While in the emergency room, the patient suffers a stroke and expires. Microscopic examination of the kidney at autopsy is shown in the image. Which of the following morphologic changes accounts for the red material in the wall of the artery?",
+        "question": "Which of the following is a dipeptide:",
         "options": [
-            "(A) Apoptosis",
-            "(B) Caseous necrosis",
-            "(C) Fat necrosis",
-            "(D) Fibrinoid necrosis",
-            "(E) Liquefactive necrosis"
+            "Glutathione",
+            "Oxytocin",
+            "Homocysteine",
+            "Aspartame"
         ],
         "answer": 3,
-        "correctAnswer": "Fibrinoid necrosis",
-        "explanation": "Fibrinoid necrosis is an alteration of injured blood vessels, in which the insudation and accumulation of plasma proteins cause the wall to stain intensely with eosin.",
+        "correctAnswer": "Aspartame",
+        "explanation": "Aspartame is aspartyl-phenylalanine methyl ester—a synthetic dipeptide sweetener. Glutathione (γ-Glu-Cys-Gly) is tripeptide; oxytocin is 9-aa cyclic peptide; homocysteine is single aa.",
         "whyNotOtherOptions": {
-            "a": "Apoptosis programmed.",
-            "b": "Caseous in TB.",
-            "c": "Fat in pancreas.",
-            "e": "Liquefactive digestion."
+            "a": "Tripeptide antioxidant.",
+            "b": "Nonapeptide hormone.",
+            "c": "Single sulfur-containing aa."
         },
-        "relatedQuestions": ["2", "13"],
-        "category": "Cell Injury",
+        "relatedQuestions": [],
+        "category": "chemical composition in the cell protein",
         "difficulty": "Medium"
     },
     {
         "id": 37,
-        "question": "A 10-year-old girl presents with advanced features of progeria (patient shown in the image). This child has inherited mutations in the gene that encodes which of the following types of intracellular proteins?",
+        "question": "Which of the following is not true about secondary protein structure?",
         "options": [
-            "(A) Helicase",
-            "(B) Lamin",
-            "(C) Oxidase",
-            "(D) Polymerase",
-            "(E) Topoisomerase"
+            "The hydrophilic/hydrophobic character of amino acid residues is important to secondary structure",
+            "The ability of peptide bonds to form intramolecular hydrogen bonds is important to secondary structure",
+            "The alpha helix, beta pleated sheet and beta turns are examples of protein secondary structure",
+            "The steric influence of amino acid residues is important to secondary structure"
         ],
-        "answer": 1,
-        "correctAnswer": "Lamin",
-        "explanation": "Hutchinson-Gilford progeria is a rare genetic disease characterized by early cataracts, hair loss, atrophy of the skin, osteoporosis, and atherosclerosis. This phenotype gives the impression of premature aging in children. Progeria is one of many diseases caused by mutations in the human lamin A gene (LMNA). Lamins are intermediate filament proteins that form a fibrous meshwork beneath the nuclear envelope. Defective lamin A is thought to make the nucleus unstable, leading to cell injury and death.",
+        "answer": 0,
+        "correctAnswer": "The hydrophilic/hydrophobic character of amino acid residues is important to secondary structure",
+        "explanation": "Secondary structure (α-helix, β-sheet, turns) is local backbone conformation stabilized primarily by H-bonds between peptide groups and steric factors (Ramachandran angles). Hydrophobicity drives tertiary/quaternary folding (core burial).",
         "whyNotOtherOptions": {
-            "a": "Helicase in Werner syndrome.",
-            "c": "Oxidase not.",
-            "d": "Polymerase in replication.",
-            "e": "Topoisomerase in DNA."
+            "b": "Backbone H-bonds define secondary structure.",
+            "c": "Classic examples.",
+            "d": "Proline/glycine disrupt helices due to steric constraints."
         },
-        "relatedQuestions": ["48"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [31],
+        "category": "chemical composition in the cell protein",
+        "difficulty": "Medium"
     },
     {
         "id": 38,
-        "question": "A 32-year-old woman develops an Addisonian crisis (acute adrenal insufficiency) 3 months after suffering massive hemorrhage during the delivery of her baby. A CT scan of the abdomen shows small adrenal glands. Which of the following mechanisms of disease best accounts for adrenal atrophy in this patient?",
+        "question": "In non-competitive enzyme action:",
         "options": [
-            "(A) Chronic inflammation",
-            "(B) Chronic ischemia",
-            "(C) Hemorrhagic necrosis",
-            "(D) Lack of trophic signals",
-            "(E) Tuberculosis"
+            "Vmax is increased",
+            "Apparent Km is increased",
+            "Apparent Km is decreased",
+            "Concentration of active enzyme molecule is reduced"
         ],
         "answer": 3,
-        "correctAnswer": "Lack of trophic signals",
-        "explanation": "Atrophy of an organ may be caused by interruption of key trophic signals. Postpartum infarction of the anterior pituitary in this patient resulted in decreased production of adrenocorticotropic hormone (ACTH, also termed corticotropin). Lack of corticotropin results in atrophy of the adrenal cortex, which leads to adrenal insufficiency. Symptoms of acute adrenal insufficiency (Addisonian crisis) include hypotension and shock, as well as weakness, vomiting, abdominal pain, and lethargy.",
+        "correctAnswer": "Concentration of active enzyme molecule is reduced",
+        "explanation": "Non-competitive inhibitors bind allosteric site, inactivating enzyme regardless of substrate. Effective [E] decreases → Vmax ↓, Km unchanged (Lineweaver-Burk: intersect y-axis higher, same x-intercept).",
         "whyNotOtherOptions": {
-            "a": "Chronic inflammation not postpartum.",
-            "b": "Ischemia not.",
-            "c": "Hemorrhagic in pituitary but atrophy from lack ACTH.",
-            "e": "TB chronic."
+            "a": "Vmax decreases.",
+            "b": "Km unchanged (competitive increases Km).",
+            "c": "Km unchanged."
         },
-        "relatedQuestions": ["5", "19"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [39, 40, 41],
+        "category": "enzymology",
+        "difficulty": "Medium"
     },
     {
         "id": 39,
-        "question": "A 47-year-old man with a history of heavy smoking complains of chronic cough. A “coin lesion” is discovered in his right upper lobe on chest X-ray. Bronchoscopy and biopsy fail to identify a mass, but the bronchial mucosa displays squamous metaplasia. What is the most likely outcome of this morphologic adaptation if the patient stops smoking?",
+        "question": "The type of reaction shown fits into which one of the following classifications? (Kinase reaction – placeholder: typical ATP + substrate → ADP + phospho-substrate)",
         "options": [
-            "(A) Atrophy",
-            "(B) Malignant transformation",
-            "(C) Necrosis and scarring",
-            "(D) Persistence throughout life",
-            "(E) Reversion to normal"
+            "Group transfer",
+            "Isomerization",
+            "Carbon-carbon bond breaking",
+            "Carbon-carbon bond formation"
         ],
-        "answer": 4,
-        "correctAnswer": "Reversion to normal",
-        "explanation": "Metaplasia is almost invariably a response to persistent injury and can be thought of as an adaptive mechanism. Prolonged exposure of the bronchi to tobacco smoke leads to squamous metaplasia of the bronchial epithelium. Unlike malignancy and necrosis with scarring, metaplasia is usually fully reversible. If the source of injury in this patient is removed (the patient stops smoking), then the metaplastic epithelium will eventually return to normal.",
+        "answer": 0,
+        "correctAnswer": "Group transfer",
+        "explanation": "Kinases catalyze transfer of γ-phosphate from ATP to substrate (ser/thr/tyr OH, etc.), classified as group-transfer reactions (phosphoryl transfer).",
         "whyNotOtherOptions": {
-            "a": "Atrophy not.",
-            "b": "Malignant if continues.",
-            "c": "Scarring in advanced.",
-            "d": "Persistence if smoking continues."
+            "b": "Isomerases rearrange within molecule.",
+            "c": "Lyases break C-C without hydrolysis.",
+            "d": "Ligases form C-C with ATP."
         },
-        "relatedQuestions": ["3", "25"],
-        "category": "Cell Injury",
+        "relatedQuestions": [40],
+        "category": "enzymology",
         "difficulty": "Medium"
     },
     {
         "id": 40,
-        "question": "A 60-year-old farmer presents with multiple patches of discoloration on his face. Biopsy of lesional skin reveals actinic keratosis. Which of the following terms best describes this response of the skin to chronic sunlight exposure?",
+        "question": "The type of enzyme that catalyzes this reaction is which one of the following? (Kinase reaction – same placeholder)",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "Kinase",
+            "Dehydrogenase",
+            "Glycosyltransferase",
+            "Isomerase"
         ],
-        "answer": 1,
-        "correctAnswer": "Dysplasia",
-        "explanation": "Actinic keratosis is a form of dysplasia in sun-exposed skin. Histologically, such lesions are composed of atypical squamous cells, which vary in size and shape. They show no signs of regular maturation as the cells move from the basal layer of the epidermis to the surface. Dysplasia is a preneoplastic lesion, in the sense that it is a necessary stage in the multistep evolution to cancer. However, unlike cancer cells, dysplastic cells are not entirely autonomous, and the histologic appearance of the tissue may still revert to normal.",
+        "answer": 0,
+        "correctAnswer": "Kinase",
+        "explanation": "Kinases (EC 2.7.x.x) transfer phosphate from ATP to substrate. Examples: hexokinase, protein kinase A, MAPK.",
         "whyNotOtherOptions": {
-            "a": "Atrophy thin skin.",
-            "c": "Hyperplasia increase.",
-            "d": "Hypertrophy size.",
-            "e": "Metaplasia type change."
+            "b": "Dehydrogenases oxidize/reduce (NAD⁺/FAD).",
+            "c": "Glycosyltransferases transfer sugar moieties.",
+            "d": "Isomerases convert isomers."
         },
-        "relatedQuestions": ["6", "42"],
-        "category": "Cell Injury",
-        "difficulty": "Easy"
+        "relatedQuestions": [39],
+        "category": "enzymology",
+        "difficulty": "Medium"
     },
     {
         "id": 41,
-        "question": "A 59-year-old woman smoker complains of intermittent blood in her urine. Urinalysis confirms 4+ hematuria. A CBC reveals increased red cell mass (hematocrit). A CT scan demonstrates a 3-cm renal mass, and a CT-guided biopsy displays renal cell carcinoma. Which of the following cellular adaptations in the bone marrow best explains the increased hematocrit in this patient?",
+        "question": "Enzymes increase the rates of reaction by",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "Increasing the free energy of activation",
+            "Decreasing the energy of activation",
+            "Changing the equilibrium constant of the reaction",
+            "Increasing the free energy change of the reaction",
+            "Decreasing the free energy change of the reaction"
         ],
-        "answer": 2,
-        "correctAnswer": "Hyperplasia",
-        "explanation": "Renal cell carcinomas often secrete erythropoietin. This hormone stimulates the growth of erythrocyte precursors in the bone marrow by inhibiting programmed cell death. Increased hematocrit in this patient is the result of bone marrow hyperplasia affecting the erythroid lineage.",
+        "answer": 1,
+        "correctAnswer": "Decreasing the energy of activation",
+        "explanation": "Enzymes lower activation energy (Ea) by stabilizing transition state via acid-base catalysis, covalent catalysis, metal ion catalysis, proximity/orientation effects—accelerating rate without altering ΔG or Keq.",
         "whyNotOtherOptions": {
-            "a": "Atrophy decrease.",
-            "b": "Dysplasia abnormal.",
-            "d": "Hypertrophy size.",
-            "e": "Metaplasia type."
+            "a": "Ea is lowered, not raised.",
+            "c": "Keq is thermodynamic, unchanged by catalyst.",
+            "d": "ΔG unchanged.",
+            "e": "ΔG unchanged."
         },
-        "relatedQuestions": ["1", "12"],
-        "category": "Cell Injury",
+        "relatedQuestions": [38],
+        "category": "enzymology",
         "difficulty": "Medium"
     },
     {
         "id": 42,
-        "question": "A 33-year-old woman has an abnormal cervical Pap smear. A cervical biopsy reveals that the epithelium lacks normal polarity (shown in the image). Individual cells display hyperchromatic nuclei, a larger nucleus-to-cytoplasm ratio, and disorderly tissue arrangement. Which of the following adaptations to chronic injury best describes these changes in the patient’s cervical epithelium?",
+        "question": "Which of the following statements is true?",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "The template strand matches the sequence of the RNA transcript",
+            "The two strands of DNA run parallel to each other",
+            "G-C bonds are much more resistant to denaturation than A-T rich regions",
+            "The common form of DNA is left-handed"
         ],
-        "answer": 1,
-        "correctAnswer": "Dysplasia",
-        "explanation": "The distinction between severe dysplasia and early cancer of the cervix is a common diagnostic problem for the pathologist. Both are associated with disordered growth and maturation of the tissue. Similar to the development of cancer, dysplasia is believed to result from mutations in a proliferating cell population. When a particular mutation confers a growth or survival advantage, the progeny of the affected cell will tend to predominate. In turn, their continued proliferation provides the opportunity for further mutations. The accumulation of such mutations progressively distances the cell from normal regulatory constraints and may lead to neoplasia.",
+        "answer": 2,
+        "correctAnswer": "G-C bonds are much more resistant to denaturation than A-T rich regions",
+        "explanation": "G-C pairs have three H-bonds vs two in A-T, conferring higher melting temperature (Tm). A-T rich regions denature first (used in PCR, Southern blotting).",
         "whyNotOtherOptions": {
-            "a": "Atrophy thin.",
-            "c": "Hyperplasia number.",
-            "d": "Hypertrophy size.",
-            "e": "Metaplasia type."
+            "a": "Template is complementary, not identical (except U/T).",
+            "b": "DNA strands are antiparallel.",
+            "d": "B-DNA is right-handed; Z-DNA (left-handed) is rare."
         },
-        "relatedQuestions": ["6", "40"],
-        "category": "Cell Injury",
+        "relatedQuestions": [46, 72],
+        "category": "nucelic acids",
         "difficulty": "Medium"
     },
     {
         "id": 43,
-        "question": "A 24-year-old woman accidentally ingests carbon tetrachloride (CCl4) in the laboratory and develops acute liver failure. Which of the following cellular proteins was directly involved in the development of hepatotoxicity in this patient?",
+        "question": "A patient was diagnosed with a sphingolipidoses, which are congenital diseases involving the inability to degrade sphingolipids. All sphingolipids have in common:",
         "options": [
-            "(A) Acetaldehyde dehydrogenase",
-            "(B) Alcohol dehydrogenase",
-            "(C) Glucose-6-phosphate dehydrogenase",
-            "(D) Mixed function oxygenase",
-            "(E) Superoxide dismutase"
+            "a glycerol backbone",
+            "ceramide",
+            "phosphorylcholine",
+            "N-acetylneuraminic acid"
         ],
-        "answer": 3,
-        "correctAnswer": "Mixed function oxygenase",
-        "explanation": "The metabolism of CCl4 is a model system for toxicologic studies. CCl4 is first metabolized via the mixed function oxygenase system (P450) of the liver to a chloride ion and a highly reactive trichloromethyl free radical. Like the hydroxyl radical, this radical is a potent initiator of lipid peroxidation, which damages the plasma membrane and leads to cell death.",
+        "answer": 1,
+        "correctAnswer": "ceramide",
+        "explanation": "Sphingolipids are built on ceramide (sphingosine + fatty acyl-CoA via amide bond). Includes sphingomyelin, cerebrosides, gangliosides. Deficiencies (e.g., Niemann-Pick, Gaucher) cause accumulation.",
         "whyNotOtherOptions": {
-            "a": "Acetaldehyde in alcohol.",
-            "b": "Alcohol dehydrogenase in ethanol.",
-            "c": "G6PD in hemolysis.",
-            "e": "SOD antioxidant."
+            "a": "Glycerol is in glycerolipids.",
+            "c": "Phosphorylcholine only in sphingomyelin.",
+            "d": "NANA only in gangliosides."
         },
-        "relatedQuestions": ["45"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [49],
+        "category": "chemical composition in the cell lipid",
+        "difficulty": "Medium"
     },
     {
         "id": 44,
-        "question": "A 30-year-old woman presents with a 2-month history of fatigue, mild fever, and an erythematous scaling rash. She also notes joint pain and swelling, primarily involving the small bones of her fingers. Physical examination reveals erythematous plaques with adherent silvery scales that induce punctate bleeding points when removed. Biopsy of lesional skin reveals markedly increased thickness of the epidermis (shown in the image). Which of the following terms best describes this adaptation to chronic injury in this patient with psoriasis?",
+        "question": "A patient was diagnosed with a hypertriglyceridemia. This condition is named for the high blood levels of lipids composed of:",
         "options": [
-            "(A) Atrophy",
-            "(B) Dysplasia",
-            "(C) Hyperplasia",
-            "(D) Hypertrophy",
-            "(E) Metaplasia"
+            "3 fatty acyl groups attached to a glycerol backbone",
+            "A glycerol lipid containing a phosphorylcholine group",
+            "A sphingolipid containing three fatty acyl groups",
+            "Three glycerol moieties attached to a fatty acid"
         ],
-        "answer": 2,
-        "correctAnswer": "Hyperplasia",
-        "explanation": "Psoriasis is a disease of the dermis and epidermis that is characterized by persistent epidermal hyperplasia. It is a chronic, frequently familial disorder that features large, erythematous, scaly plaques, commonly on the dorsal extensor cutaneous surfaces. There is evidence to suggest that deregulation of epidermal proliferation and an abnormality in the microcirculation of the dermis are responsible for the development of psoriatic lesions. Abnormal proliferation of keratinocytes is thought to be related to defective epidermal cell surface receptors and altered intracellular signaling.",
+        "answer": 0,
+        "correctAnswer": "3 fatty acyl groups attached to a glycerol backbone",
+        "explanation": "Triacylglycerols (triglycerides) = glycerol + 3 fatty acids via ester bonds. Major energy storage form; elevated in metabolic syndrome, familial hypertriglyceridemia.",
         "whyNotOtherOptions": {
-            "a": "Atrophy thin.",
-            "b": "Dysplasia atypia.",
-            "d": "Hypertrophy size.",
-            "e": "Metaplasia type."
+            "b": "That is phosphatidylcholine (lecithin).",
+            "c": "Sphingolipids have one fatty acid in ceramide.",
+            "d": "Reverse of triglyceride structure."
         },
-        "relatedQuestions": ["1", "12"],
-        "category": "Cell Injury",
-        "difficulty": "Easy"
+        "relatedQuestions": [51],
+        "category": "chemical composition in the cell lipid",
+        "difficulty": "Medium"
     },
     {
         "id": 45,
-        "question": "A 24-year-old woman with chronic depression ingests a bottle of acetaminophen tablets. Two days later, she is jaundiced (elevated serum bilirubin) and displays symptoms of encephalopathy, including impairment in spatial perception. In the liver, toxic metabolites of acetaminophen are generated by which of the following organelles?",
+        "question": "A patient was diagnosed with a deficiency of the lysosomal enzyme glycosidase. The name of the deficient enzyme suggests that it hydrolyzes a glycosidic bond, which is a bond formed:",
         "options": [
-            "(A) Golgi apparatus",
-            "(B) Mitochondria",
-            "(C) Nucleus",
-            "(D) Peroxisomes",
-            "(E) Smooth endoplasmic reticulum"
+            "Through multiple hydrogen bonds between two sugar molecules",
+            "Between the anomeric carbon of a sugar and an O-H (or N) of another molecule",
+            "Between two anomeric carbons in polysaccharides",
+            "Between the carbon containing the aldol or keto group and the n-carbon"
         ],
-        "answer": 4,
-        "correctAnswer": "Smooth endoplasmic reticulum",
-        "explanation": "Carbon tetrachloride and acetaminophen are well-studied hepatotoxins. Each is metabolized by cytochrome P450 of the mixed-function oxidase system, located in the smooth endoplasmic reticulum. These hepatotoxins are metabolized differently, and it is possible to relate the subsequent evolution of lethal cell injury to the specific features of this metabolism. Acetaminophen, an important constituent of many analgesics, is innocuous in recommended doses, but when consumed to excess it is highly toxic to the liver. The metabolism of acetaminophen to yield highly reactive quinones is accelerated by alcohol consumption, an effect mediated by an ethanol-induced increase in cytochrome P450.",
+        "answer": 1,
+        "correctAnswer": "Between the anomeric carbon of a sugar and an O-H (or N) of another molecule",
+        "explanation": "Glycosidic bond = covalent link between anomeric C (C1/C2) of one monosaccharide and –OH (O-glycosidic) or –NH (N-glycosidic) of another. Hydrolyzed by glycosidases in lysosomes (e.g., in Pompe, Hurler diseases).",
         "whyNotOtherOptions": {
-            "a": "Golgi packaging.",
-            "b": "Mitochondria energy.",
-            "c": "Nucleus DNA.",
-            "d": "Peroxisomes oxidation."
+            "a": "H-bonds are non-covalent (in base pairing).",
+            "c": "Rare (trehalose α-1,1).",
+            "d": "Describes hemiacetal formation."
         },
-        "relatedQuestions": ["43"],
-        "category": "Cell Injury",
+        "relatedQuestions": [53],
+        "category": "chemical composition in the cell carbohydrate",
         "difficulty": "Medium"
     },
     {
         "id": 46,
-        "question": "A 45-year-old woman presents with a 2-month history of fatigue and recurrent fever. She also complains of tenderness below the right costal margin and dark urine. Physical examination reveals jaundice and mild hepatomegaly. The serum is positive for hepatitis B virus antigen. Which of the following best describes the mechanism of indirect virus-mediated hepatocyte cell death in this patient?",
+        "question": "If the DNA strand shown below serves as a template for the synthesis of RNA, which of the following choices gives the sequence and direction of the RNA?\n5'—GCTATGCATCGTCGTGATCCAGTTGCGT—3'",
         "options": [
-            "(A) Accumulation of abnormal cytoplasmic proteins",
-            "(B) Immune recognition of viral antigens on the cell surface",
-            "(C) Generation of cytoplasmic free radicals",
-            "(D) Impaired plasma membrane Na+ /K+ ATPase activity",
-            "(E) Interference with cellular energy generation"
+            "3' — CGAUACGUAGCACUAGCUUAAGGCA—5'",
+            "5'— UGCGUIAAAGCUGUGUAGGUAUCG—3'",
+            "5'— ACGCAAUUCGAUCAGCAUGCAUAGC—3'",
+            "5'— CGAUACGUAGCACUAGGUUCAACGCA—3'"
         ],
-        "answer": 1,
-        "correctAnswer": "Immune recognition of viral antigens on the cell surface",
-        "explanation": "Viral cytotoxicity is either direct or indirect (immunologically mediated). Viruses may injure cells directly by subverting cellular enzymes and depleting the cell’s nutrients, thereby disrupting the normal homeostatic mechanisms. Some viruses also encode proteins that induce apoptosis once daughter virions are mature. Viruses may also injure cells indirectly through activation of the immune system. Both humoral and cellular arms of the immune system protect against the harmful effects of viral infections by eliminating infected cells. In brief, the presentation of viral proteins to the immune system in the context of a self major histocompatibility complex on the cell surface immunizes the body against the invader and elicits both killer cells and antiviral antibodies. These arms of the immune system eliminate virus-infected cells by inducing apoptosis or by lysing the virally infected target cell with complement.",
+        "answer": 3,
+        "correctAnswer": "5'— CGAUACGUAGCACUAGGUUCAACGCA—3'",
+        "explanation": "RNA polymerase synthesizes 5'→3', reading template 3'→5'. Base pairing: A-U, T-A, G-C, C-G. Template 5'-GCT...-3' → RNA 5'-CGA...-3' (complementary, antiparallel, T→U).",
         "whyNotOtherOptions": {
-            "a": "Abnormal proteins in storage.",
-            "c": "Free radicals in reperfusion.",
-            "d": "ATPase in swelling.",
-            "e": "Energy in ischemia evolving."
+            "a": "Wrong direction and sequence.",
+            "b": "Typos and incorrect pairing.",
+            "c": "Complementary to coding strand, not template."
         },
-        "relatedQuestions": ["16"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [77],
+        "category": "into to molecular genetics replication transcription translation",
+        "difficulty": "Medium"
     },
     {
         "id": 47,
-        "question": "You are asked to present a grand rounds seminar on the role of abnormal proteins in disease. In this connection, intracellular accumulation of an abnormally folded protein plays a role in the pathogenesis of which of the following diseases?",
+        "question": "Which of the following phospholipids act as surfactants in human lung:",
         "options": [
-            "(A) AA amyloidosis",
-            "(B) AL amyloidosis",
-            "(C) α1-Antitrypsin deficiency",
-            "(D) Gaucher disease",
-            "(E) Tay-Sachs disease"
+            "Dipalmitoyl lecithin",
+            "Cardiolipin",
+            "Phosphatidyl inositol",
+            "Phosphatidyl serine"
         ],
-        "answer": 2,
-        "correctAnswer": "α1-Antitrypsin deficiency",
-        "explanation": "Several acquired and inherited diseases are characterized by intracellular accumulation of abnormal proteins. The deviant tertiary structure of the protein may result from an inherited mutation that alters the normal primary amino acid sequence, or may reflect an acquired defect in protein folding. α1-Antitrypsin deficiency is a heritable disorder in which mutations in the gene for α1-antitrypsin yield an insoluble protein. The mutant protein is not easily exported. It accumulates in liver cells, causing cell injury and cirrhosis. Pulmonary emphysema is another complication of α1-antitrypsin deficiency.",
+        "answer": 0,
+        "correctAnswer": "Dipalmitoyl lecithin",
+        "explanation": "Dipalmitoylphosphatidylcholine (DPPC) is the primary component (>50%) of pulmonary surfactant, reducing surface tension at air-liquid interface, preventing alveolar collapse (respiratory distress syndrome in preemies).",
         "whyNotOtherOptions": {
-            "a": "AA amyloid extracellular.",
-            "b": "AL amyloid extracellular.",
-            "d": "Gaucher lysosomal storage.",
-            "e": "Tay-Sachs lysosomal."
+            "b": "Cardiolipin in inner mitochondrial membrane.",
+            "c": "PI in signaling (PIP₂).",
+            "d": "PS in apoptosis signaling."
         },
-        "relatedQuestions": ["10"],
-        "category": "Cell Injury",
+        "relatedQuestions": [48],
+        "category": "chemical composition in the cell lipid",
         "difficulty": "Medium"
     },
     {
         "id": 48,
-        "question": "A 38-year-old woman shows evidence of early cataracts, hair loss, atrophy of skin, osteoporosis, and accelerated atherosclerosis. This patient has most likely inherited mutations in both alleles of a gene that encodes which of the following types of intracellular proteins?",
+        "question": "Which of the following glycerophospholipid play important role in cell signaling?",
         "options": [
-            "(A) Deaminase",
-            "(B) Helicase",
-            "(C) Oxidase",
-            "(D) Polymerase",
-            "(E) Topoisomerase"
+            "Cardiolipin",
+            "Phosphatidic acid",
+            "Phosphatidyl Choline",
+            "Phosphatidylinositol"
         ],
-        "answer": 1,
-        "correctAnswer": "Helicase",
-        "explanation": "Werner syndrome is a rare autosomal recessive disease characterized by early cataracts, hair loss, atrophy of the skin, osteoporosis, and accelerated atherosclerosis. Affected persons are also at risk for development of a variety of cancers. Unlike Hutchinson-Gilford progeria, patients with Werner syndrome typically die in the fifth decade from either cancer or cardiovascular disease. Werner syndrome is caused by mutations in the WRN gene, which encodes a protein with multiple DNA-dependent enzymatic functions, including proteins with ATPase, helicase, and exonuclease activity.",
+        "answer": 3,
+        "correctAnswer": "Phosphatidylinositol",
+        "explanation": "Phosphatidylinositol 4,5-bisphosphate (PIP₂) in plasma membrane is hydrolyzed by PLC (activated by Gq or RTK) → IP₃ (Ca²⁺ release) + DAG (PKC activation)—key second messengers.",
         "whyNotOtherOptions": {
-            "a": "Deaminase not.",
-            "c": "Oxidase not.",
-            "d": "Polymerase replication.",
-            "e": "Topoisomerase DNA."
+            "a": "Cardiolipin mitochondrial.",
+            "b": "PA minor signaling role.",
+            "c": "PC major structural, minor signaling."
         },
-        "relatedQuestions": ["37"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [47],
+        "category": "chemical composition in the cell lipid",
+        "difficulty": "Medium"
     },
     {
         "id": 49,
-        "question": "A 28-year-old man with a history of radiation/bone marrow transplantation for leukemia presents with severe diarrhea. He subsequently develops septic shock and expires. Microscopic examination of the colon epithelium at autopsy reveals numerous acidophilic bodies and small cells with pyknotic nuclei. Which of the following proteins most likely played a key role in triggering radiation-induced cell death in this patient’s colonic mucosa?",
+        "question": "Which of the following is not a component of glycosphingolipids?",
         "options": [
-            "(A) Cytochrome P450",
-            "(B) β-Catenin",
-            "(C) E-Cadherin",
-            "(D) P-Selectin",
-            "(E) p53"
+            "Carbohydrate",
+            "Sphingosine",
+            "Glycerol",
+            "Fatty acids"
+        ],
+        "answer": 2,
+        "correctAnswer": "Glycerol",
+        "explanation": "Glycosphingolipids = ceramide (sphingosine + fatty acid) + carbohydrate head (glucose/galactose or oligosaccharides). No glycerol (glycerolipids have glycerol).",
+        "whyNotOtherOptions": {
+            "a": "Define the 'glyco' part.",
+            "b": "Sphingosine backbone.",
+            "d": "Fatty acid in ceramide."
+        },
+        "relatedQuestions": [43],
+        "category": "chemical composition in the cell lipid",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 50,
+        "question": "Which of the following is not essential fatty acid?",
+        "options": [
+            "Oleic acid",
+            "Linolenic acid",
+            "Linoleic acid",
+            "Arachidonic acid"
+        ],
+        "answer": 0,
+        "correctAnswer": "Oleic acid",
+        "explanation": "Essential fatty acids (cannot be synthesized): linoleic (ω-6), α-linolenic (ω-3). Arachidonic derived from linoleic. Oleic (ω-9) synthesized from stearic acid.",
+        "whyNotOtherOptions": {
+            "b": "α-Linolenic essential ω-3.",
+            "c": "Linoleic essential ω-6.",
+            "d": "Conditionally essential."
+        },
+        "relatedQuestions": [],
+        "category": "chemical composition in the cell lipid",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 51,
+        "question": "Which of the following lipid is used for energy storage?",
+        "options": [
+            "Glycolipid",
+            "Glycerophospholipid",
+            "Sphingolipids",
+            "Triacylglycerol"
+        ],
+        "answer": 3,
+        "correctAnswer": "Triacylglycerol",
+        "explanation": "Triacylglycerols (neutral fats) stored in adipocytes provide 9 kcal/g—twice carbohydrate/protein. Mobilized via lipolysis during fasting/exercise.",
+        "whyNotOtherOptions": {
+            "a": "Glycolipids in membranes, signaling.",
+            "b": "Phospholipids structural.",
+            "c": "Sphingolipids membrane/rafts."
+        },
+        "relatedQuestions": [44],
+        "category": "chemical composition in the cell lipid",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 52,
+        "question": "Phospholipids are important cell membrane components because:",
+        "options": [
+            "They have both polar and nonpolar portions",
+            "They have glycerol",
+            "They can form bilayers in water",
+            "They combine covalently with proteins"
+        ],
+        "answer": 0,
+        "correctAnswer": "They have both polar and nonpolar portions",
+        "explanation": "Amphipathic nature (hydrophilic phosphate head, hydrophobic fatty acyl tails) drives spontaneous bilayer formation in aqueous environment—fundamental to all biological membranes.",
+        "whyNotOtherOptions": {
+            "b": "Sphingolipids lack glycerol but form membranes.",
+            "c": "Consequence of amphipathicity.",
+            "d": "Proteins are non-covalently associated (except GPI anchors)."
+        },
+        "relatedQuestions": [18],
+        "category": "chemical composition in the cell lipid",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 53,
+        "question": "The repeating unit in hyaluronic acid is:",
+        "options": [
+            "Glucuronic acid and galactosamine",
+            "Glucuronic acid and N-acetyl galactosamine",
+            "Glucuronic acid and glucosamine",
+            "Glucuronic acid and N-acetyl glucosamine"
+        ],
+        "answer": 3,
+        "correctAnswer": "Glucuronic acid and N-acetyl glucosamine",
+        "explanation": "Hyaluronan (GAG) repeating disaccharide: β-1,3-D-glucuronic acid – β-1,4-N-acetyl-D-glucosamine. Viscous lubricant in synovial fluid, vitreous, ECM.",
+        "whyNotOtherOptions": {
+            "a": "Galactosamine in chondroitin/dermatan.",
+            "b": "N-acetyl galactosamine in chondroitin.",
+            "c": "Glucosamine without N-acetyl."
+        },
+        "relatedQuestions": [45],
+        "category": "chemical composition in the cell carbohydrate",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 54,
+        "question": "Glucose and galactose are epimers and they differ structurally in orientation of H and OH on:",
+        "options": [
+            "C4",
+            "C3",
+            "C2",
+            "C5"
+        ],
+        "answer": 0,
+        "correctAnswer": "C4",
+        "explanation": "Epimers differ at one chiral carbon. Glucose and galactose are C-4 epimers: OH equatorial in glucose, axial in galactose (both β-D).",
+        "whyNotOtherOptions": {
+            "b": "C-3 epimers: glucose/allose.",
+            "c": "C-2 epimers: glucose/mannose.",
+            "d": "C-5 determines D/L series."
+        },
+        "relatedQuestions": [],
+        "category": "chemical composition in the cell carbohydrate",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 55,
+        "question": "The reducing ability of a carbohydrate is due to the presence/or formation of:",
+        "options": [
+            "A free carboxyl group",
+            "A free hydroxyl groups",
+            "Presence of a 1-4 linkage",
+            "Formation of ring structure"
+        ],
+        "answer": 3,
+        "correctAnswer": "Formation of ring structure",
+        "explanation": "Reducing sugars have free anomeric carbon in hemiacetal form that can open to aldehyde/ketone, reducing Cu²⁺ (Fehling) or Ag⁺ (Tollens). Ring opening exposes reducing end.",
+        "whyNotOtherOptions": {
+            "a": "Carboxyl in uronic acids, not reducing.",
+            "b": "Hydroxyls are present but not sufficient without free anomeric.",
+            "c": "1,4 linkages in polysaccharides; reducing end still needed."
+        },
+        "relatedQuestions": [],
+        "category": "chemical composition in the cell carbohydrate",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 56,
+        "question": "Phosphatidic acid on hydrolysis yields:",
+        "options": [
+            "Glycerol, fatty acids, phosphoric acid, choline",
+            "Glycerol, fatty acids, phosphoric acid",
+            "Glycerol, fatty acids, phosphoric acid, glucose",
+            "Sphingol, fatty acids, phosphoric acid"
+        ],
+        "answer": 1,
+        "correctAnswer": "Glycerol, fatty acids, phosphoric acid",
+        "explanation": "Phosphatidic acid (phosphatidate) = glycerol + 2 fatty acids + phosphate at sn-3. Simplest glycerophospholipid, precursor for others.",
+        "whyNotOtherOptions": {
+            "a": "Choline added to make PC.",
+            "c": "Glucose not present.",
+            "d": "Sphingosine backbone in sphingolipids."
+        },
+        "relatedQuestions": [48],
+        "category": "chemical composition in the cell lipid",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 57,
+        "question": "______ is all DNA sequences required for synthesis of particular RNA transcript.",
+        "options": [
+            "Chromosome",
+            "Gene",
+            "Alleles",
+            "Locus"
+        ],
+        "answer": 1,
+        "correctAnswer": "Gene",
+        "explanation": "A gene is the functional unit of heredity: includes core promoter, proximal elements, enhancers, coding exons, introns, 5'/3' UTRs—everything required for accurate transcription and processing into mature RNA.",
+        "whyNotOtherOptions": {
+            "a": "Chromosome contains many genes.",
+            "c": "Alleles are variant forms of a gene.",
+            "d": "Locus is chromosomal position."
+        },
+        "relatedQuestions": [21],
+        "category": "intro to genetic and pediatrics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 58,
+        "question": "Which, if any of the following is incorrect about the genetic diseases?",
+        "options": [
+            "Genetic disease is any of the diseases and disorders that are caused by mutations in one or more genes.",
+            "There are about 6000 known genetic disorders; all are fatal or cause severe problems.",
+            "Monogenic disorders are inherited disorder due to defect on single gene that produce large effect",
+            "Mitochondrial genetic inheritance disorder is one example of non-classic mendelian inheritance patterns in monogenic disorders",
+            "All are correct"
+        ],
+        "answer": 1,
+        "correctAnswer": "There are about 6000 known genetic disorders; all are fatal or cause severe problems.",
+        "explanation": "Over 7000 Mendelian disorders known, but many are mild, treatable, or asymptomatic (e.g., Gilbert syndrome, some carrier states). Spectrum ranges from lethal (Tay-Sachs) to benign.",
+        "whyNotOtherOptions": {
+            "a": "Correct definition.",
+            "c": "Monogenic = large effect, high penetrance.",
+            "d": "Mitochondrial = maternal inheritance, non-Mendelian."
+        },
+        "relatedQuestions": [59],
+        "category": "intro to genetic and pediatrics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 59,
+        "question": "A large, three generation family in whom multiple members are affected with a rare, undiagnosed disease is being studied. Affected males never produce affected children, but affected females do produce affected children of both sexes when they mate with unaffected males. What is the most likely mode of inheritance?",
+        "options": [
+            "Autosomal dominant, with expression limited to females",
+            "Y-linked",
+            "Mitochondrial genetic inheritance disorders",
+            "X-linked dominant",
+            "X-linked recessive"
+        ],
+        "answer": 3,
+        "correctAnswer": "X-linked dominant",
+        "explanation": "Classic XLD: affected males (hemizygous) transmit to all daughters, no sons; affected females transmit to 50% offspring both sexes. No male-to-male transmission.",
+        "whyNotOtherOptions": {
+            "a": "Autosomal would show male-to-male.",
+            "b": "Y-linked only male-to-male.",
+            "c": "Mitochondrial maternal to all children.",
+            "e": "XLR affected males transmit to all daughters (carriers), no sons affected."
+        },
+        "relatedQuestions": [63],
+        "category": "intro to genetic and pediatrics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 60,
+        "question": "The severe form of alpha-1 antitrypsin deficiency is the result of a single nucleotide substitution that produces a single amino acid substitution. This is best described as a:",
+        "options": [
+            "Frame-shift mutation",
+            "Large segment deletion mutation",
+            "Missense mutation",
+            "Nonsense mutation",
+            "Silent mutation"
+        ],
+        "answer": 2,
+        "correctAnswer": "Missense mutation",
+        "explanation": "PiZ allele (Glu342Lys) single base change → misfolding, retention in ER, reduced serum AAT → emphysema, cirrhosis.",
+        "whyNotOtherOptions": {
+            "a": "Frameshift from indels.",
+            "b": "Large deletions (e.g., DMD).",
+            "d": "Nonsense creates stop codon.",
+            "e": "Silent no aa change."
+        },
+        "relatedQuestions": [61],
+        "category": "into to molecular genetics mutation",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 61,
+        "question": "Among the following chromosomal abnormalities which one is unusual type of translocation that seen in acrocentric chromosomes where short arm of two chromosomes is lost and long arms are fuse together.",
+        "options": [
+            "Large segment deletion mutation",
+            "Simple translocation",
+            "Reciprocal translocation",
+            "Robetisonian translocation",
+            "Frame shift mutation"
+        ],
+        "answer": 3,
+        "correctAnswer": "Robetisonian translocation",
+        "explanation": "Robertsonian translocation: fusion of long arms of two acrocentric chromosomes (13,14,15,21,22) with loss of short arms. Carrier 45 chromosomes; risk of trisomy/monosomy in offspring (e.g., t(14;21) → Down syndrome).",
+        "whyNotOtherOptions": {
+            "a": "Deletion removes segment.",
+            "b": "Simple = single break transfer.",
+            "c": "Reciprocal = balanced exchange.",
+            "e": "Frameshift = small indel."
+        },
+        "relatedQuestions": [64],
+        "category": "into to molecular genetics mutation",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 62,
+        "question": "Of the following genetic diseases, ______ is autosomal dominant disorder in which genes for low density lipoprotein (LDL) receptor protein at chromosome 15 of one homologous pair is mutant.",
+        "options": [
+            "Familial hypercholesterolemia",
+            "Marfan Syndrome",
+            "Hypophosphatemic ticket",
+            "Follicular Lymphoma",
+            "Burkett's Lymphoma"
+        ],
+        "answer": 0,
+        "correctAnswer": "Familial hypercholesterolemia",
+        "explanation": "FH (AD): >2000 mutations in LDLR gene (actually chromosome 19p13.2) → defective hepatic LDL uptake → severe hypercholesterolemia, xanthomas, early MI. (Note: question has chromosome error, but description matches FH).",
+        "whyNotOtherOptions": {
+            "b": "Marfan = FBN1 chr15.",
+            "c": "X-linked hypophosphatemic rickets.",
+            "d": "t(14;18) BCL2.",
+            "e": "t(8;14) MYC."
+        },
+        "relatedQuestions": [],
+        "category": "intro to genetic and pediatrics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 63,
+        "question": "Which of one of the following is true regarding to X-linked disorders:",
+        "options": [
+            "If heterozygous female met normal male; 100 % of female off-springs suffers from disorders in X-linked dominant disorders",
+            "If hemizygous male met normal female; 100 % of male off-springs suffers from disorders",
+            "If hemizygous male met heterozygous female; 50% of male off-springs have normal genotype and phenotype",
+            "If heterozygous female met normal male; 100 % of female off-springs suffer from disorder in X-linked recessive disorders",
+            "None"
         ],
         "answer": 4,
-        "correctAnswer": "p53",
-        "explanation": "Apoptosis detects and destroys cells that harbor dangerous mutations, thereby maintaining genetic consistency and preventing the development of cancer. There are several means, the most important of which is probably p53, by which the cell recognizes genomic abnormalities and “assesses” whether they can be repaired. If the damage to DNA is so severe that it cannot be repaired, the cascade of events leading to apoptosis is activated, and the cell dies. This process protects an organism from the consequences of a non-functional cell or one that cannot control its own proliferation (e.g., a cancer cell). After it binds to areas of DNA damage, p53 activates proteins that arrest the cell in G1 of the cell cycle, allowing time for DNA repair to proceed. It also directs DNA repair enzymes to the site of injury. If the DNA damage cannot be repaired, p53 activates mechanisms that terminate in apoptosis.",
+        "correctAnswer": "None",
+        "explanation": "All statements incorrect. XLD: het female × normal male → 50% affected daughters, 50% affected sons. XLR: affected male × normal female → all daughters carriers, no affected sons. Correct patterns require understanding Lyonization, hemizygosity.",
         "whyNotOtherOptions": {
-            "a": "P450 metabolism.",
-            "b": "β-Catenin Wnt.",
-            "c": "E-Cadherin adhesion.",
-            "d": "P-Selectin inflammation."
+            "a": "Only 50% daughters affected in XLD.",
+            "b": "No male-to-male transmission.",
+            "c": "50% sons affected if mother carrier.",
+            "d": "Daughters are carriers, not affected."
         },
-        "relatedQuestions": ["30", "33"],
-        "category": "Cell Injury",
-        "difficulty": "Hard"
+        "relatedQuestions": [59],
+        "category": "intro to genetic and pediatrics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 64,
+        "question": "Sex chromosomal Monosomy:",
+        "options": [
+            "Edward syndrome",
+            "Patau syndrome",
+            "Downs syndrome",
+            "Turner Syndrome",
+            "Cri-du-chat syndrome"
+        ],
+        "answer": 3,
+        "correctAnswer": "Turner Syndrome",
+        "explanation": "Turner (45,X) only viable monosomy: short stature, webbed neck, streak gonads, coarctation. Autosomal monosomies lethal.",
+        "whyNotOtherOptions": {
+            "a": "Trisomy 18.",
+            "b": "Trisomy 13.",
+            "c": "Trisomy 21.",
+            "e": "5p deletion."
+        },
+        "relatedQuestions": [61],
+        "category": "intro to genetic and pediatrics",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 65,
+        "question": "Which of the following vitamins or enzymes is unable to protect against free radical damage?",
+        "options": [
+            "β-Carotene",
+            "Glutathione peroxidase",
+            "Vitamin E",
+            "Vitamin B6",
+            "Vitamin C"
+        ],
+        "answer": 3,
+        "correctAnswer": "Vitamin B6",
+        "explanation": "B6 (pyridoxal phosphate) cofactor for transamination, decarboxylation, glycogen phosphorylase—no direct antioxidant role. Others: β-carotene traps singlet O₂; GPx reduces H₂O₂ using GSH; Vit E breaks lipid peroxidation chain; Vit C regenerates Vit E, reduces radicals.",
+        "whyNotOtherOptions": {
+            "a": "Singlet oxygen quencher.",
+            "b": "Selenium enzyme, reduces peroxides.",
+            "c": "Lipid-soluble chain-breaking antioxidant.",
+            "e": "Water-soluble reductant."
+        },
+        "relatedQuestions": [66, 67, 68],
+        "category": "free radical and their role in disease",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 66,
+        "question": "Superoxide dismutase catalyzes which of the following reactions?",
+        "options": [
+            "O₂ + e⁻ + 2H⁺ → H₂O₂",
+            "2O₂⁻ + 2H⁺ → H₂O₂ + O₂",
+            "O₂⁻ + HO⁻ + H⁺ → CO₂ + H₂O",
+            "H₂O₂ + O₂ → 4H₂O",
+            "O₂⁻ + H₂O₂ + H⁺ → 2H₂O + O₂"
+        ],
+        "answer": 1,
+        "correctAnswer": "2O₂⁻ + 2H⁺ → H₂O₂ + O₂",
+        "explanation": "SOD (Cu/Zn or Mn) dismutates superoxide radical to hydrogen peroxide and oxygen—first line defense against ROS produced by ETC leakage.",
+        "whyNotOtherOptions": {
+            "a": "Superoxide reductase (rare).",
+            "c": "Incorrect stoichiometry.",
+            "d": "Catalase reaction.",
+            "e": "Hypothetical."
+        },
+        "relatedQuestions": [65],
+        "category": "free radical and their role in disease",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 67,
+        "question": "The mechanism of vitamin E as an antioxidant is best described by which of the following?",
+        "options": [
+            "Vitamin E binds to free radicals and sequesters them from the contents of the cell.",
+            "Vitamin E participates in the oxidation of the radicals.",
+            "Vitamin E participates in the reduction of the radicals.",
+            "Vitamin E forms a covalent bond with the radicals, thereby stabilizing the radical state."
+        ],
+        "answer": 2,
+        "correctAnswer": "Vitamin E participates in the reduction of the radicals.",
+        "explanation": "α-Tocopherol (Vit E) donates phenolic H• to lipid peroxyl radical (LOO•) → stable lipid hydroperoxide + tocopheroxyl radical (regenerated by Vit C). Chain-terminating antioxidant in membranes.",
+        "whyNotOtherOptions": {
+            "a": "No sequestration.",
+            "b": "Vit E is oxidized, radicals reduced.",
+            "d": "No covalent bond; H-atom transfer."
+        },
+        "relatedQuestions": [65],
+        "category": "free radical and their role in disease",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 68,
+        "question": "The level of oxidative damage to mitochondrial DNA is 10 times greater than that to nuclear DNA. This could be due, in part, to which of the following?",
+        "options": [
+            "Superoxide dismutase is present in the mitochondria.",
+            "The nucleus lacks glutathione.",
+            "The nuclear membrane presents a barrier to reactive oxygen species.",
+            "The mitochondrial membrane is permeable to reactive oxygen species.",
+            "Mitochondrial DNA lacks histones."
+        ],
+        "answer": 4,
+        "correctAnswer": "Mitochondrial DNA lacks histones.",
+        "explanation": "mtDNA is naked circular DNA attached to inner membrane near ETC (high ROS site), without protective histones or robust repair (no NER). Nuclear DNA wrapped in histones, has full repair machinery.",
+        "whyNotOtherOptions": {
+            "a": "SOD is present but insufficient.",
+            "b": "Nucleus has GSH.",
+            "c": "Nuclear envelope not relevant to ROS from mitochondria.",
+            "d": "Membrane permeable, but not the main reason."
+        },
+        "relatedQuestions": [65, 7],
+        "category": "free radical and their role in disease",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 69,
+        "question": "When p53 increases in response to DNA damage, which of the following events occurs?",
+        "options": [
+            "p53 induces transcription of cdk4.",
+            "p53 induces transcription of cyclin D.",
+            "p53 binds E2F to activate transcription.",
+            "p53 induces transcription of p21.",
+            "p53 directly phosphorylates the transcription factor jun."
+        ],
+        "answer": 3,
+        "correctAnswer": "p53 induces transcription of p21.",
+        "explanation": "p53 (guardian of genome) activates p21CIP1/WAF1 transcription → p21 inhibits cyclin-CDK complexes → G1/S and G2/M arrest for repair. Also activates pro-apoptotic genes (Bax, Puma).",
+        "whyNotOtherOptions": {
+            "a": "cdk4 repressed in stress.",
+            "b": "Cyclin D repressed.",
+            "c": "E2F repressed by Rb.",
+            "e": "p53 is transcription factor, not kinase."
+        },
+        "relatedQuestions": [70, 71],
+        "category": "cell cycle and it's regulation",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 70,
+        "question": "Mutations in the p53 gene are the most common aberrations in spontaneous human cancers. The normal p53 protein affects the cell cycle by:",
+        "options": [
+            "Inducing cell cycle arrest and apoptosis in response to DNA damage",
+            "Inducing the phosphorylation of Rb in response to mitogens",
+            "Directly inhibiting Cdk inhibitors in response to cell-cell contact and other growth-inhibiting stimuli",
+            "Increasing the activity of cyclin-dependent protein kinases by inducing their phosphorylation",
+            "Binding and thereby reactivating the products of many proapoptotic genes"
+        ],
+        "answer": 0,
+        "correctAnswer": "Inducing cell cycle arrest and apoptosis in response to DNA damage",
+        "explanation": "Wild-type p53 is tumor suppressor: senses DNA damage (via ATM/ATR), halts proliferation (p21-mediated CDK inhibition), or triggers apoptosis if irreparable—preventing mutation propagation.",
+        "whyNotOtherOptions": {
+            "b": "Rb phosphorylation by CDK releases E2F (proliferation).",
+            "c": "Opposite—p53 induces CDK inhibitors.",
+            "d": "p53 inhibits CDKs.",
+            "e": "p53 activates proapoptotic genes transcriptionally."
+        },
+        "relatedQuestions": [69],
+        "category": "cell cycle and it's regulation",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 71,
+        "question": "Which one the following is not true about M-check-point:",
+        "options": [
+            "Anaphase promoting complex/ Cyclosome is key regulator",
+            "Triggered mainly by activation of specific cyclin-Cdk complexes via phosphorylation or dephosphorylation",
+            "Progression of metaphase-to-anaphase transition triggered by cyclical proteolysis",
+            "Checks whether alignment of every chromosome on spindle",
+            "All are true"
+        ],
+        "answer": 4,
+        "correctAnswer": "All are true",
+        "explanation": "Spindle assembly checkpoint (SAC/M-checkpoint): Mad2, BubR1 inhibit APC/C until all kinetochores attached and under tension. Satisfied → APC/C ubiquitylates securin/cyclin B → separase activation → cohesin cleavage → anaphase.",
+        "whyNotOtherOptions": {
+            "a": "APC/C central.",
+            "b": "CDK1-cyclin B phosphorylation state critical.",
+            "c": "Proteolysis of securin/cyclin B.",
+            "d": "Ensures proper biorientation."
+        },
+        "relatedQuestions": [69, 5],
+        "category": "cell cycle and it's regulation",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 72,
+        "question": "Which one the following incorrect about nucleotides?",
+        "options": [
+            "They are composed of bases, pentose sugar and phosphate group",
+            "Phosphate group forms ester bond with nucleosides at the 5th or 3rd hydroxyl group of the pentose sugar",
+            "The atoms in bases ring are denoted by prime number",
+            "The atoms in pentose sugar are denoted by prime number"
+        ],
+        "answer": 2,
+        "correctAnswer": "The atoms in bases ring are denoted by prime number",
+        "explanation": "Standard nomenclature: base atoms unprimed (N1, C2, N7, C8 in purines); sugar carbons primed (C1', C2', C3', C4', C5'). Phosphate attaches 5' or 3'.",
+        "whyNotOtherOptions": {
+            "a": "Correct composition.",
+            "b": "Phosphodiester bonds at 5'/3'.",
+            "d": "Sugar atoms primed."
+        },
+        "relatedQuestions": [42],
+        "category": "nucelic acids",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 73,
+        "question": "Which of the following is true about DNA polymerase?",
+        "options": [
+            "It can synthesize DNA in the 5' to 3' direction",
+            "It can synthesize DNA in the 3' to 5' direction",
+            "It can synthesize mRNA in the 3' to 5' direction",
+            "It can synthesize mRNA in the 5' to 3' direction"
+        ],
+        "answer": 0,
+        "correctAnswer": "It can synthesize DNA in the 5' to 3' direction",
+        "explanation": "All known DNA polymerases add dNTPs to 3'-OH, extending 5'→3'. No 3'→5' synthesis. RNA polymerases synthesize RNA 5'→3'.",
+        "whyNotOtherOptions": {
+            "b": "No known polymerase.",
+            "c": "DNA pol does not synthesize RNA.",
+            "d": "Wrong direction and polymer."
+        },
+        "relatedQuestions": [74, 75],
+        "category": "into to molecular genetics replication",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 74,
+        "question": "Which of the following reactions is required for proofreading during DNA replication by DNA ?",
+        "options": [
+            "3' to 5' exonuclease activity",
+            "5' to 3' exonuclease activity",
+            "3' to 5' endonuclease activity",
+            "5' to 3' endonuclease activity"
+        ],
+        "answer": 0,
+        "correctAnswer": "3' to 5' exonuclease activity",
+        "explanation": "Proofreading: Pol I/III have 3'→5' exo that removes mispaired nucleotide from 3' end, allowing correct insertion. Increases fidelity ~10²-10³.",
+        "whyNotOtherOptions": {
+            "b": "5'→3' exo in Pol I removes RNA primers.",
+            "c": "Endonucleases cut internal.",
+            "d": "No such activity."
+        },
+        "relatedQuestions": [73],
+        "category": "into to molecular genetics replication",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 75,
+        "question": "Which of the following enzymes remove supercoiling in replicating DNA ahead of the replication fork?",
+        "options": [
+            "DNA polymerases",
+            "Helicases",
+            "Primases",
+            "Topoisomerases"
+        ],
+        "answer": 3,
+        "correctAnswer": "Topoisomerases",
+        "explanation": "Topo I relaxes supercoils; Topo II (gyrase in prokaryotes) introduces negative supercoils ahead of fork to relieve torsional stress from helicase unwinding.",
+        "whyNotOtherOptions": {
+            "a": "Polymerases synthesize.",
+            "b": "Helicases unwind, create supercoils.",
+            "c": "Primase makes RNA primers."
+        },
+        "relatedQuestions": [76],
+        "category": "into to molecular genetics replication",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 76,
+        "question": "DNA unwinding is done by ______",
+        "options": [
+            "Ligase",
+            "Helicase",
+            "Topoisomerase",
+            "Exonuclease"
+        ],
+        "answer": 1,
+        "correctAnswer": "Helicase",
+        "explanation": "Helicase (DnaB in E. coli, MCM in eukaryotes) uses ATP to separate strands, moving 5'→3' on lagging template, creating replication fork.",
+        "whyNotOtherOptions": {
+            "a": "Ligase seals nicks.",
+            "c": "Topoisomerase relieves supercoils.",
+            "d": "Exonuclease removes nucleotides."
+        },
+        "relatedQuestions": [75],
+        "category": "into to molecular genetics replication",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 77,
+        "question": "Transcription is catalyzed by ______",
+        "options": [
+            "DNA-dependent RNA polymerases",
+            "Reverse transcriptase",
+            "RNA-dependent DNA polymerases",
+            "DNA ligases"
+        ],
+        "answer": 0,
+        "correctAnswer": "DNA-dependent RNA polymerases",
+        "explanation": "RNA pol I (rRNA), II (mRNA), III (tRNA/5S) synthesize RNA 5'→3' using DNA template. Pol II most complex, CTD phosphorylation regulates.",
+        "whyNotOtherOptions": {
+            "b": "RT = RNA-dependent DNA pol (retroviruses).",
+            "c": "Same as RT.",
+            "d": "Ligase joins DNA."
+        },
+        "relatedQuestions": [46],
+        "category": "into to molecular genetics transcription translation",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 78,
+        "question": "RNA primer is removed from the Okazaki fragment by ______",
+        "options": [
+            "DNA polymerase I",
+            "DNA polymerase II",
+            "DNA polymerase III",
+            "RNA polymerase"
+        ],
+        "answer": 0,
+        "correctAnswer": "DNA polymerase I",
+        "explanation": "In prokaryotes, Pol I 5'→3' exo removes RNA primer and fills gap with DNA (nick translation). Pol III is main replicative polymerase.",
+        "whyNotOtherOptions": {
+            "b": "Pol II repair.",
+            "c": "Pol III lacks 5'→3' exo.",
+            "d": "RNA pol synthesizes primer."
+        },
+        "relatedQuestions": [82],
+        "category": "into to molecular genetics replication",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 79,
+        "question": "Which of the following solves the problem of shortening of chromosomes in each cell cycle?",
+        "options": [
+            "DNA ligase",
+            "Endonuclease",
+            "Telomerase",
+            "RNA polymerase"
+        ],
+        "answer": 2,
+        "correctAnswer": "Telomerase",
+        "explanation": "Telomerase (reverse transcriptase) adds TTAGGG repeats to 3' overhang using RNA template, counteracting end-replication problem and erosion.",
+        "whyNotOtherOptions": {
+            "a": "Ligase seals.",
+            "b": "Endonuclease cuts.",
+            "d": "RNA pol transcribes."
+        },
+        "relatedQuestions": [],
+        "category": "into to molecular genetics replication",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 80,
+        "question": "Which of the following enzyme is not required for the synthesis of lagging strand?",
+        "options": [
+            "Primase",
+            "Gyrase",
+            "Helicase",
+            "Exonuclease"
+        ],
+        "answer": 3,
+        "correctAnswer": "Exonuclease",
+        "explanation": "Lagging strand: discontinuous Okazaki fragments require primase (RNA primer), helicase (unwinding), gyrase (topo, supercoil relief). Exonuclease (proofreading/primer removal) is accessory, not strictly required for synthesis itself.",
+        "whyNotOtherOptions": {
+            "a": "Multiple primers needed.",
+            "b": "Relieves supercoiling.",
+            "c": "Unwinds continuously."
+        },
+        "relatedQuestions": [78],
+        "category": "into to molecular genetics replication",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 81,
+        "question": "Which of the following is an incorrect statement about m-RNA?",
+        "options": [
+            "Cap is added to the 5' end",
+            "Exons are removed and introns are joined together",
+            "Introns are removed and exons are joined together",
+            "Poly-A tail is added to the 3' end"
+        ],
+        "answer": 1,
+        "correctAnswer": "Exons are removed and introns are joined together",
+        "explanation": "Eukaryotic mRNA processing: 5' 7-methylguanosine cap, splicing (introns removed, exons ligated by spliceosome), 3' poly-A tail (200–250 A’s by PAP, stabilized by PABP).",
+        "whyNotOtherOptions": {
+            "a": "Cap protects, aids initiation.",
+            "c": "Correct splicing.",
+            "d": "Poly-A stabilizes, export signal."
+        },
+        "relatedQuestions": [77],
+        "category": "into to molecular genetics transcription translation",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 82,
+        "question": "Which one serves as a starter sequence for DNA polymerase III?",
+        "options": [
+            "Promoter",
+            "RNA primer",
+            "Starting codon",
+            "All of the above"
+        ],
+        "answer": 1,
+        "correctAnswer": "RNA primer",
+        "explanation": "DNA pol III requires 3'-OH to add dNTPs. Primase synthesizes short RNA primer (~10 nt) providing free 3'-OH on both strands (leading once, lagging multiple).",
+        "whyNotOtherOptions": {
+            "a": "Promoter for transcription.",
+            "c": "AUG for translation."
+        },
+        "relatedQuestions": [78],
+        "category": "into to molecular genetics replication",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 83,
+        "question": "Unwound DNA prevented from degradation and re-annealing by ______",
+        "options": [
+            "Double strand binding protein",
+            "Helicase",
+            "Single strand binding protein",
+            "All of the above"
+        ],
+        "answer": 2,
+        "correctAnswer": "Single strand binding protein",
+        "explanation": "SSB (RPA in eukaryotes, SSB in prokaryotes) coat ssDNA cooperatively, prevent nuclease attack and hairpin formation, stabilize fork.",
+        "whyNotOtherOptions": {
+            "a": "No such protein for dsDNA at fork.",
+            "b": "Helicase unwinds."
+        },
+        "relatedQuestions": [],
+        "category": "into to molecular genetics replication",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 84,
+        "question": "The 20 different amino acids in the protein are normally coded by:",
+        "options": [
+            "60 codons",
+            "61 codons",
+            "63 codons",
+            "64 codons"
+        ],
+        "answer": 1,
+        "correctAnswer": "61 codons",
+        "explanation": "Universal genetic code: 64 codons (4³), 61 sense codons for 20 aa (degenerate), 3 stop (UAA, UAG, UGA). AUG (Met) also initiation.",
+        "whyNotOtherOptions": {
+            "a": "Excludes stops.",
+            "c": "Incorrect.",
+            "d": "Total codons including stops."
+        },
+        "relatedQuestions": [85, 86],
+        "category": "into to molecular genetics transcription translation",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 85,
+        "question": "Codon and anti-codon are located in:",
+        "options": [
+            "tRNA and mRNA respectively",
+            "mRNA and tRNA respectively",
+            "rRNA and mRNA respectively",
+            "rRNA and tRNA respectively"
+        ],
+        "answer": 1,
+        "correctAnswer": "mRNA and tRNA respectively",
+        "explanation": "Codon = triplet in mRNA; anticodon = complementary triplet in tRNA loop. Wobble base pairing allows degeneracy.",
+        "whyNotOtherOptions": {
+            "a": "Reversed.",
+            "c": "rRNA in ribosome.",
+            "d": "No codons in rRNA."
+        },
+        "relatedQuestions": [84],
+        "category": "into to molecular genetics transcription translation",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 86,
+        "question": "In the translation process, ribosomes on mRNA moves from one codon to another one codon and the peptidyl-tRNA is moved from the A-site to the P-site by:",
+        "options": [
+            "Translocase",
+            "Peptidyl transferase",
+            "50S ribose subunit",
+            "30S ribose subunit"
+        ],
+        "answer": 0,
+        "correctAnswer": "Translocase",
+        "explanation": "Elongation factor G (EF-G/translocase) GTP hydrolysis drives translocation: ribosome shifts one codon, moving peptidyl-tRNA from A to P site, emptying A for next aa-tRNA.",
+        "whyNotOtherOptions": {
+            "b": "Peptidyl transferase forms peptide bond.",
+            "c": "50S has peptidyl transferase.",
+            "d": "30S decodes mRNA."
+        },
+        "relatedQuestions": [87],
+        "category": "into to molecular genetics transcription translation",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 87,
+        "question": "In the translation process, the first incoming of fmet-tRNA molecules bind to ______",
+        "options": [
+            "A-site",
+            "P-site",
+            "E-site",
+            "All of the above"
+        ],
+        "answer": 1,
+        "correctAnswer": "P-site",
+        "explanation": "Initiation: initiator fMet-tRNA (prokaryotes) or Met-tRNAi (eukaryotes) binds directly to P-site (peptidyl site) with IF2-GTP, facilitated by 30S + mRNA (Shine-Dalgarno/AUG). A-site receives next aa-tRNA.",
+        "whyNotOtherOptions": {
+            "a": "A-site for incoming aa-tRNA during elongation.",
+            "c": "E-site for deacylated tRNA exit."
+        },
+        "relatedQuestions": [86],
+        "category": "into to molecular genetics transcription translation",
+        "difficulty": "Medium"
     }
 ];
 
@@ -3751,7 +4837,7 @@ function showCustomQuestionCreator() {
     modal.className = 'custom-quiz-modal active';
     modal.innerHTML = `
         <div class="custom-quiz-content glass-effect" style="max-width: 600px; border-radius: 24px;">
-            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                 <h3 style="font-size: 24px; font-weight: 700; color: var(--text-primary);">Create Custom Question</h3>
                 <button class="action-btn" onclick="closeCustomQuestionModal()" style="background: rgba(239, 68, 68, 0.1); color: var(--error);">
                     <i class="fas fa-times"></i>
@@ -3761,8 +4847,13 @@ function showCustomQuestionCreator() {
             <div class="custom-question-creator">
                 <div style="display: grid; gap: 20px;">
                     <div>
-                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Question Text</label>
-                        <textarea id="customQuestionText" placeholder="Enter your question here..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 80px;"></textarea>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Question Text (Markdown supported for tables)</label>
+                        <textarea id="customQuestionText" placeholder="Enter your question here... Use Markdown for tables, e.g., | Col1 | Col2 |" style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 100px;"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Image URL (optional)</label>
+                        <input type="url" id="customImageUrl" placeholder="https://example.com/image.jpg" style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px;">
                     </div>
                     
                     <div>
@@ -3807,7 +4898,7 @@ function showCustomQuestionCreator() {
                     
                     <div>
                         <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Explanation</label>
-                        <textarea id="customExplanation" placeholder="Explain why the correct answer is right..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 60px;"></textarea>
+                        <textarea id="customExplanation" placeholder="Explain why the correct answer is right..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 80px;"></textarea>
                     </div>
                 </div>
                 
@@ -3844,6 +4935,7 @@ function closeCustomQuestionModal() {
 
 function saveCustomQuestion() {
     const questionText = document.getElementById('customQuestionText').value;
+    const imageUrl = document.getElementById('customImageUrl').value || '';
     const category = document.getElementById('customQuestionCategory').value;
     const difficulty = document.querySelector('.difficulty-btn.active').dataset.difficulty;
     const explanation = document.getElementById('customExplanation').value;
@@ -3889,7 +4981,8 @@ function saveCustomQuestion() {
         relatedQuestions: [],
         category: category,
         difficulty: difficulty,
-        custom: true
+        custom: true,
+        image: imageUrl
     };
     
     customQuestions.push(newQuestion);
@@ -3938,6 +5031,7 @@ function startCourse(courseName) {
     pageTitle.textContent = `Quiz Mode - ${courseName}`;
     
     hideAllSections();
+    quizContainer.classList.remove('hidden');
     renderQuizLayout();
 }
 
@@ -4208,7 +5302,7 @@ function highlightSearchTerms(query) {
     const categoryElements = document.querySelectorAll('.question-category');
     
     const highlightText = (element) => {
-        const originalText = element.textContent;
+        const originalText = element.innerHTML;  // Use innerHTML to preserve Markdown
         const regex = new RegExp(`(${query})`, 'gi');
         const highlighted = originalText.replace(regex, '<mark class="search-highlight">$1</mark>');
         element.innerHTML = highlighted;
@@ -4407,6 +5501,7 @@ function createCustomQuiz(options) {
     }
     
     hideAllSections();
+    quizContainer.classList.remove('hidden');
     renderQuizLayout();
     customQuizModal.classList.remove('active');
     showNotification(`Custom quiz created with ${questions.length} questions`, 'success');
@@ -4420,6 +5515,7 @@ function shuffleArray(array) {
     }
     return shuffled;
 }
+
 
 function generateStudyReport() {
     const allQuestions = [...quizData, ...customQuestions];
@@ -4806,7 +5902,7 @@ function renderExamLayout() {
                             <div class="question-meta">
                                 <div class="question-number">Q${question.id}</div>
                                 <div class="question-category">${question.category}</div>
-                                <div class="question-difficulty" style="padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: ${getDifficultyColor(question.difficulty)}; color: white;">
+                                <div class="question-difficulty" style="background: ${getDifficultyColor(question.difficulty)};">
                                     ${question.difficulty}
                                 </div>
                                 ${userAnswer !== undefined ? `
@@ -4821,7 +5917,10 @@ function renderExamLayout() {
                                 </button>
                             </div>
                         </div>
-                        <div class="question-text">${question.question}</div>
+                        <div class="question-image-container">
+                            ${question.image ? `<img src="${question.image}" alt="Question image" class="question-image">` : ''}
+                        </div>
+                        <div class="question-text">${marked.parse(question.question)}</div>
                         <div class="options-grid">
                             ${question.options.map((option, optIndex) => {
                                 const isSelected = userAnswer === optIndex;
@@ -4931,7 +6030,10 @@ function renderSingleQuestionLayout() {
                     </button>
                 </div>
             </div>
-            <div class="question-text">${question.question}</div>
+            <div class="question-image-container">
+                ${question.image ? `<img src="${question.image}" alt="Question image" class="question-image">` : ''}
+            </div>
+            <div class="question-text">${marked.parse(question.question)}</div>
             <div class="options-grid">
                 ${question.options.map((option, index) => {
                     const isSelected = userAnswer === index;

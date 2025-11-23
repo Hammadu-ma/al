@@ -1,10 +1,11 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ALIF | Advanced Medical Education</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="/protect.js"></script>
     <style type="text/css">
         /* Import Inter font */
@@ -555,6 +556,35 @@
             line-height: 1.6;
             margin-bottom: 24px;
             color: var(--text-primary);
+            overflow-x: auto;
+        }
+
+        .question-text table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            text-align: left;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .question-text th, .question-text td {
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .question-text th {
+            background-color: var(--surface);
+            font-weight: bold;
+        }
+
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
         }
 
         .options-grid {
@@ -958,173 +988,172 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* Custom Quiz Modal */
-/* Custom Quiz Modal Styles */
-.custom-quiz-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-}
+        /* Custom Quiz Modal Styles */
+        .custom-quiz-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
 
-.custom-quiz-modal.active {
-    display: flex;
-}
+        .custom-quiz-modal.active {
+            display: flex;
+        }
 
-.custom-quiz-content {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-xl);
-    border: 1px solid var(--border);
-}
+        .custom-quiz-content {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+        }
 
-.custom-quiz-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: var(--text-primary);
-}
+        .custom-quiz-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
 
-.custom-quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 24px;
-}
+        .custom-quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
 
-.custom-quiz-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: var(--transition);
-    background: var(--glass);
-}
+        .custom-quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--glass);
+        }
 
-.custom-quiz-option:hover {
-    border-color: var(--primary-light);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow);
-}
+        .custom-quiz-option:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
 
-.custom-quiz-option.selected {
-    border-color: var(--primary);
-    background: var(--primary-light);
-}
+        .custom-quiz-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
 
-.custom-quiz-option .option-selector {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-    flex-shrink: 0;
-}
+        .custom-quiz-option .option-selector {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
 
-.custom-quiz-option.selected .option-selector {
-    background: var(--primary);
-    border-color: var(--primary);
-}
+        .custom-quiz-option.selected .option-selector {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
 
-.custom-quiz-option.selected .option-selector::after {
-    content: '✓';
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-}
+        .custom-quiz-option.selected .option-selector::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-.custom-quiz-option label {
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--text-primary);
-    flex: 1;
-    margin: 0;
-}
+        .custom-quiz-option label {
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+            margin: 0;
+        }
 
-.quiz-options-section {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-}
+        .quiz-options-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
 
-.quiz-options-section label {
-    display: block;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-    font-weight: 600;
-}
+        .quiz-options-section label {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
 
-.custom-quiz-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 24px;
-}
+        .custom-quiz-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
 
-/* Modern Dropdown for Custom Quiz */
-.custom-quiz-content .modern-dropdown {
-    position: relative;
-    margin-top: 8px;
-}
+        /* Modern Dropdown for Custom Quiz */
+        .custom-quiz-content .modern-dropdown {
+            position: relative;
+            margin-top: 8px;
+        }
 
-.custom-quiz-content .modern-dropdown select {
-    width: 100%;
-    padding: 12px 48px 12px 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    color: var(--text-primary);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 18px;
-}
+        .custom-quiz-content .modern-dropdown select {
+            width: 100%;
+            padding: 12px 48px 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 18px;
+        }
 
-.custom-quiz-content .modern-dropdown select:hover {
-    border-color: var(--primary);
-    background-color: var(--primary-light);
-}
+        .custom-quiz-content .modern-dropdown select:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
 
-.custom-quiz-content .modern-dropdown select:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
+        .custom-quiz-content .modern-dropdown select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-/* Glass effect for modal */
-.custom-quiz-content.glass-effect {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
+        /* Glass effect for modal */
+        .custom-quiz-content.glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-.dark-mode .custom-quiz-content.glass-effect {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+        .dark-mode .custom-quiz-content.glass-effect {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
         /* Mobile Optimizations */
         @media (max-width: 768px) {
@@ -1754,7 +1783,377 @@
     background: var(--primary-dark);
     transform: scale(1.1);
 }
+/* Responsive Images */
+.question-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 16px 0;
+    display: block;
+    box-shadow: var(--shadow);
+}
 
+.question-image-container {
+    width: 100%;
+    text-align: center;
+    margin: 16px 0;
+}
+
+/* Ensure images don't overflow their containers */
+.question-image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+/* Responsive Tables */
+.question-text table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+    text-align: left;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.question-text th, .question-text td {
+    padding: 12px;
+    border: 1px solid var(--border);
+    min-width: 120px; /* Prevents columns from becoming too narrow */
+}
+
+.question-text th {
+    background-color: var(--surface);
+    font-weight: bold;
+    position: sticky;
+    left: 0;
+    color: var(--text-primary);
+}
+
+.question-text td {
+    color: var(--text-secondary);
+    background: var(--background);
+}
+
+/* Responsive Question Cards */
+.question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    width: 100%;
+    overflow: hidden;
+}
+
+.question-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    /* Question card mobile optimization */
+    .question-card {
+        padding: 16px;
+        margin-bottom: 12px;
+        border-radius: var(--radius);
+    }
+    
+    .question-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .question-meta {
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .question-actions {
+        align-self: flex-end;
+        margin-top: -40px; /* Position actions at top right */
+        position: relative;
+        z-index: 2;
+    }
+    
+    .question-text {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Image mobile optimization */
+    .question-image {
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+    
+    .question-image-container {
+        margin: 12px 0;
+    }
+    
+    /* Table mobile optimization */
+    .question-text table {
+        font-size: 12px;
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+    
+    .question-text th, .question-text td {
+        padding: 8px 10px;
+        min-width: 100px;
+    }
+    
+    /* Options grid mobile optimization */
+    .options-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .option {
+        padding: 14px;
+        min-height: auto;
+    }
+    
+    .option-letter {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+    }
+    
+    .option-text {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    
+    /* Quiz controls mobile optimization */
+    .quiz-controls {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+        padding-top: 20px;
+    }
+    
+    .quiz-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+    
+    /* Explanation section mobile optimization */
+    .explanation-section {
+        margin-top: 20px;
+        padding: 16px;
+    }
+    
+    .explanation-section summary {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .explanation-content {
+        padding: 12px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+}
+
+/* Extra small devices optimization (phones under 480px) */
+@media (max-width: 480px) {
+    .question-card {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .question-text {
+        font-size: 15px;
+        line-height: 1.4;
+    }
+    
+    /* Image optimization for very small screens */
+    .question-image {
+        margin: 10px 0;
+        border-radius: 4px;
+    }
+    
+    .question-image-container {
+        margin: 10px 0;
+    }
+    
+    /* Table optimization for very small screens */
+    .question-text table {
+        font-size: 11px;
+        margin: 10px 0;
+    }
+    
+    .question-text th, .question-text td {
+        padding: 6px 8px;
+        min-width: 80px;
+    }
+    
+    .question-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    
+    .question-number, .question-category, .question-difficulty {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .option {
+        padding: 12px 10px;
+    }
+    
+    .option-text {
+        font-size: 13px;
+    }
+    
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    /* Ensure proper spacing in exam mode */
+    .exam-mode-layout .question-card {
+        margin-bottom: 16px;
+    }
+}
+
+/* Fix for exam mode layout on mobile */
+.exam-mode-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .exam-mode-layout {
+        gap: 12px;
+    }
+    
+    .exam-header {
+        padding: 16px;
+    }
+    
+    .exam-header > div:first-child {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .exam-mode-toggle {
+        align-self: stretch;
+        display: flex;
+    }
+    
+    .mode-toggle-btn {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        padding: 10px 8px;
+    }
+    
+    .progress-info {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .progress-info .progress-bar {
+        width: 100%;
+    }
+}
+
+/* Fix for learn mode responsiveness */
+@media (max-width: 768px) {
+    .explanation-section {
+        padding: 16px;
+    }
+    
+    .explanation-section summary {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .explanation-content {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .related-questions-list {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .related-question-tag {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .correct-answer, .why-not-section, .related-questions {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+}
+
+/* Prevent horizontal scrolling on the entire page */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+    
+    .quiz-container {
+        padding: 0 16px 16px;
+    }
+    
+    .main-content {
+        width: 100%;
+    }
+}
+
+/* Ensure images in custom questions are also responsive */
+.custom-question-creator img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 10px 0;
+    display: block;
+}
+
+/* Fix for image loading states */
+.question-image {
+    background: var(--surface);
+    min-height: 50px;
+}
+
+.question-image:not([src]) {
+    display: none;
+}
+
+/* Animation for image loading */
+@keyframes imageFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.question-image.loaded {
+    animation: imageFadeIn 0.3s ease-in;
+}
     </style>
 </head>
 <body class="dark-mode">
@@ -1763,7 +2162,7 @@
     <!-- Custom Quiz Modal -->
 <div class="custom-quiz-modal" id="customQuizModal">
     <div class="custom-quiz-content glass-effect">
-        <h3 class="custom-quiz-title"> </h3>
+        <h3 class="custom-quiz-title">Create Custom Quiz</h3>
         <div class="custom-quiz-options">
             <div class="custom-quiz-option" data-category="all">
                 <div class="option-selector"></div>
@@ -2069,216 +2468,415 @@ document.addEventListener('keydown', function(e) {
 });
 
 // Enhanced quiz data with more questions
-const quizData =[
+const quizData = [
     {
         "id": 1,
-        "question": "The type of immunity that follows the injection of an immunogen into an individual or?",
+        "question": "Active immunity refers to:",
         "options": [
-            "Artificial active",
-            "Natural active",
-            "Artificial passive",
-            "Natural passive"
+            "Adaptive immunity that is induced by natural exposure to a pathogen",
+            "Adaptive immunity that is induced by vaccinations",
+            "Innate immunity induced by PAMPs/DAMPs",
+            "A & B are answers"
         ],
-        "answer": 0,
-        "correctAnswer": "Artificial active",
-        "explanation": "Artificial active immunity is induced by deliberate injection of an immunogen (antigen) into an individual, stimulating their own immune response. This contrasts with natural active immunity from natural exposure, and passive immunities involve transfer of pre-formed antibodies. Reference: Robbins Basic Pathology, 10th ed., Chapter 5; Abbas Cellular and Molecular Immunology, 10th ed., Chapter 1.",
+        "answer": 3,
+        "correctAnswer": "A & B are answers",
+        "explanation": "According to Robbins Basic Pathology (Chapter 3: Immunity), active immunity is a form of adaptive/acquired immunity in which the individual's own immune system is stimulated to produce antibodies and memory cells. This can occur naturally following infection or artificially through vaccination. Both lead to long-lasting, antigen-specific protection with immunological memory.",
         "whyNotOtherOptions": {
-            "b": "Natural active immunity arises from natural infection or exposure, not injection.",
-            "c": "Artificial passive immunity involves injection of antibodies, not immunogens.",
-            "d": "Natural passive immunity occurs via maternal antibody transfer to fetus or infant."
+            "a": "Correct but incomplete alone",
+            "b": "Correct but incomplete alone",
+            "c": "Describes innate immunity, not active immunity"
         },
-        "relatedQuestions": [],
-        "category": "Immunology",
-        "difficulty": "Medium"
+        "relatedQuestions": ["2", "11"],
+        "category": "Immunity",
+        "difficulty": "Easy"
     },
     {
         "id": 2,
-        "question": "The type of immunity that follows the injection of antibodies synthesized by another individual or?",
+        "question": "What is artificially acquired passive immunity?",
         "options": [
-            "Artificial active",
-            "Natural active",
-            "Artificial passive",
-            "Natural passive"
+            "Introduction or inoculation of the person with preformed antibody molecules",
+            "An immunity developed by injecting the person with vaccine antigens",
+            "Immunizing the immunocompromised person with the immune cells",
+            "A & C are answers"
         ],
-        "answer": 2,
-        "correctAnswer": "Artificial passive",
-        "explanation": "Artificial passive immunity is conferred by injecting antibodies produced by another individual or animal, providing immediate but temporary protection. This differs from active immunities that induce endogenous antibody production. Reference: Abbas Cellular and Molecular Immunology, 10th ed., Chapter 11.",
+        "answer": 0,
+        "correctAnswer": "Introduction or inoculation of the person with preformed antibody molecules",
+        "explanation": "Artificially acquired passive immunity involves direct transfer of preformed antibodies (e.g., antisera, immunoglobulin preparations, monoclonal antibodies such as palivizumab or anti-rabies immunoglobulin). It provides immediate but short-lived protection without inducing memory (Robbins Basic Pathology, Chapter 3).",
         "whyNotOtherOptions": {
-            "a": "Artificial active involves injection of antigen to stimulate own response.",
-            "b": "Natural active results from natural exposure to antigen.",
-            "d": "Natural passive involves maternal transfer of antibodies across placenta or in milk."
+            "b": "Describes artificially acquired active immunity (vaccination)",
+            "c": "Refers to adoptive cell transfer (experimental/not standard passive immunity)",
+            "d": "Incorrect combination"
         },
-        "relatedQuestions": [],
-        "category": "Immunology",
-        "difficulty": "Medium"
+        "relatedQuestions": ["1", "11"],
+        "category": "Immunity",
+        "difficulty": "Easy"
     },
     {
         "id": 3,
-        "question": "Which of the following is not true when comparing innate to adaptive immunity?",
+        "question": "Which of the following immune cells are not phagocytic?",
         "options": [
-            "Innate responds quickly and adaptive slowly",
-            "Innate has few PRR (non-self) and adaptive mechanisms",
-            "Innate has immunologic memory and adaptive very specific",
-            "Innate response is non-specific molecule"
+            "Neutrophils",
+            "Basophils",
+            "Eosinophils",
+            "Lymphocytes"
         ],
-        "answer": 2,
-        "correctAnswer": "Innate has immunologic memory and adaptive very specific",
-        "explanation": "Innate immunity lacks immunologic memory, responding similarly to each exposure, while adaptive immunity develops memory for faster, stronger responses. Innate is rapid and non-specific; adaptive is slower but highly specific. Reference: Janeway's Immunobiology, 9th ed., Chapter 1.",
+        "answer": 3,
+        "correctAnswer": "Lymphocytes",
+        "explanation": "Lymphocytes (B and T cells) are not phagocytic; they mediate adaptive immunity through antigen-specific receptors. Professional phagocytes are neutrophils, macrophages, and dendritic cells. Eosinophils have limited phagocytic ability, and basophils rarely phagocytose (Robbins Basic Pathology, Chapter 3).",
         "whyNotOtherOptions": {
-            "a": "Correct: Innate is immediate; adaptive takes days to develop.",
-            "b": "Correct: Innate uses pattern recognition receptors (PRRs) for broad detection.",
-            "d": "Correct: Innate is non-specific, targeting general pathogen patterns."
+            "a": "Neutrophils are the most abundant professional phagocytes",
+            "b": "Basophils primarily release histamine; minimal phagocytosis",
+            "c": "Eosinophils can phagocytose but mainly kill parasites via degranulation"
         },
-        "relatedQuestions": [],
-        "category": "Immunology",
-        "difficulty": "Medium"
+        "relatedQuestions": ["4", "5", "6"],
+        "category": "Innate Immunity",
+        "difficulty": "Easy"
     },
     {
         "id": 4,
-        "question": "A hapten is?",
+        "question": "The most potent antigen presenting cells (APCs) include",
         "options": [
-            "Half of an immunoglobuline for an antigen that is not antigen alone",
-            "A carrier molecule functional only in the presence of one which haves a",
-            "An determinant capable of stimulating an immune response non-self response",
-            "Carrier has immunologic pathogen and adaptive does non-self"
+            "Dendritic cells (DCs)",
+            "B-cells",
+            "Macrophages",
+            "Neutrophils"
         ],
-        "answer": 1,
-        "correctAnswer": "A carrier molecule functional only in the presence of one which haves a",
-        "explanation": "A hapten is a small molecule that is not immunogenic alone but becomes antigenic when attached to a carrier protein. The carrier provides the necessary epitopes for immune recognition. Reference: Abbas Cellular and Molecular Immunology, 10th ed., Chapter 2.",
+        "answer": 0,
+        "correctAnswer": "Dendritic cells (DCs)",
+        "explanation": "Dendritic cells are the most effective professional APCs because they express high levels of MHC II and co-stimulatory molecules (CD80/CD86), efficiently capture antigens in tissues, migrate to lymph nodes, and prime naive T-cells, initiating primary adaptive responses (Robbins Basic Pathology, Chapter 3).",
         "whyNotOtherOptions": {
-            "a": "Incorrect: Haptens are incomplete antigens, not half of immunoglobulins.",
-            "c": "Incorrect: Haptens do not stimulate responses alone; they need carriers.",
-            "d": "Incorrect: This confuses hapten with broader innate/adaptive concepts."
+            "b": "B-cells present antigen mainly to helper T-cells during humoral response",
+            "c": "Macrophages are good APCs but less potent than DCs at priming naive T-cells",
+            "d": "Neutrophils are poor APCs"
         },
-        "relatedQuestions": [],
-        "category": "Immunology",
+        "relatedQuestions": ["3", "6"],
+        "category": "Adaptive Immunity",
         "difficulty": "Medium"
     },
     {
         "id": 5,
-        "question": "Which of the following refers to primary lymphoid organs?",
+        "question": "Which of the following peripheral blood cells plays a key role in killing of parasites?",
         "options": [
-            "Bone marrow and lymph nodes",
-            "Lymph nodes and thymus",
-            "Spleen and lymph nodes",
-            "Bone marrow and thymus"
+            "Lymphocytes",
+            "Neutrophils",
+            "Eosinophils",
+            "Monocytes"
         ],
-        "answer": 3,
-        "correctAnswer": "Bone marrow and thymus",
-        "explanation": "Primary lymphoid organs are sites of lymphocyte development: bone marrow for B cells and thymus for T cells. Secondary organs like lymph nodes and spleen are for activation. Reference: Janeway's Immunobiology, 9th ed., Chapter 8.",
+        "answer": 2,
+        "correctAnswer": "Eosinophils",
+        "explanation": "Eosinophils are specialized for defense against multicellular parasites (helminths). They release major basic protein, eosinophil cationic protein, and peroxidases from granules that damage parasite surfaces. This is the basis of type II hypersensitivity in parasitic infections (Robbins Basic Pathology, Chapter 3).",
         "whyNotOtherOptions": {
-            "a": "Lymph nodes are secondary.",
-            "b": "Lymph nodes are secondary.",
-            "c": "Spleen and lymph nodes are secondary."
+            "a": "Lymphocytes coordinate response but do not directly kill large parasites",
+            "b": "Neutrophils target bacteria/fungi",
+            "d": "Monocytes/macrophages phagocytose but ineffective against large parasites"
         },
-        "relatedQuestions": [],
-        "category": "Immunology",
+        "relatedQuestions": ["3", "17"],
+        "category": "Innate Immunity",
         "difficulty": "Easy"
     },
     {
         "id": 6,
-        "question": "A cytokine is not?",
+        "question": "______ and ______ cells are the central players in the adaptive immune system and have the ability to generate highly specific cell surface receptors",
         "options": [
-            "A soluble mediator produced by granulocytes and affecting lymphocytes",
-            "A soluble mediator produced by lymphocytes",
-            "A soluble mediator produced by plasma cells",
-            "A soluble mediator produced by plasma cells"
+            "Natural killer cells, T-cells",
+            "B-cells, T-cells",
+            "T-cells, neutrophils",
+            "Macrophages, B-cells"
         ],
-        "answer": 0,
-        "correctAnswer": "A soluble mediator produced by granulocytes and affecting lymphocytes",
-        "explanation": "Cytokines are small proteins produced mainly by immune cells like lymphocytes and monocytes/macrophages, acting as signaling molecules. Granulocytes (e.g., neutrophils) produce fewer cytokines and are not primary sources. Reference: Abbas Cellular and Molecular Immunology, 10th ed., Chapter 4.",
+        "answer": 1,
+        "correctAnswer": "B-cells, T-cells",
+        "explanation": "B- and T-lymphocytes are the only cells of the adaptive immune system. They undergo V(D)J recombination to generate diverse, highly specific antigen receptors: BCR on B-cells and TCR on T-cells (Robbins Basic Pathology, Chapter 3).",
         "whyNotOtherOptions": {
-            "b": "Correct: Many cytokines (e.g., interleukins) are produced by lymphocytes.",
-            "c": "Correct: Plasma cells produce antibodies, but cytokines come from various cells including B cells.",
-            "d": "This seems duplicate; plasma cells are differentiated B cells that can produce cytokines indirectly."
+            "a": "NK cells belong to innate immunity",
+            "c": "Neutrophils are innate",
+            "d": "Macrophages are innate APCs"
         },
-        "relatedQuestions": [],
-        "category": "Immunology",
-        "difficulty": "Medium"
+        "relatedQuestions": ["3", "4", "8"],
+        "category": "Adaptive Immunity",
+        "difficulty": "Easy"
     },
     {
         "id": 7,
-        "question": "The mononuclear phagocyte system with lymphocytes for their function. What portion heavily relies on monocytes/macrophages for an antibody molecule must have a receptor on?",
+        "question": "______ cells have the ability to kill cells that express abnormal MHC receptor profiles",
         "options": [
-            "The phagocytic cell in order for an antibody-coated antigen to be phagocytized?",
-            "Fab region",
-            "Fc region",
-            "Hinge region",
-            "Variable region"
+            "Neutrophils",
+            "Monocytes",
+            "Cytotoxic T-cells",
+            "Natural killer cells"
         ],
-        "answer": 1,
-        "correctAnswer": "Fc region",
-        "explanation": "The Fc region of antibodies binds to Fc receptors on phagocytes like macrophages, facilitating phagocytosis of opsonized (antibody-coated) antigens. Fab binds antigen. Reference: Janeway's Immunobiology, 9th ed., Chapter 5.",
+        "answer": 3,
+        "correctAnswer": "Natural killer cells",
+        "explanation": "NK cells (innate lymphoid cells) detect and kill cells with downregulated or missing MHC class I ('missing-self' hypothesis) via perforin/granzyme or death receptor pathways. This is crucial against virus-infected and tumor cells that evade cytotoxic T-cells (Robbins Basic Pathology, Chapter 3).",
         "whyNotOtherOptions": {
-            "a": "Phagocytic cell is not a region of the antibody.",
-            "c": "Hinge region provides flexibility, not receptor binding for phagocytosis.",
-            "d": "Variable region binds antigen specificity, not phagocyte receptors."
+            "c": "Cytotoxic T-cells require antigen presentation on MHC I to kill"
         },
-        "relatedQuestions": [],
-        "category": "Immunology",
+        "relatedQuestions": ["3", "6"],
+        "category": "Innate Immunity",
         "difficulty": "Medium"
     },
     {
         "id": 8,
-        "question": "Cell-mediated immunity is primarily mediated by?",
+        "question": "A single plasma cell secretes:",
         "options": [
-            "B cells",
-            "T helper cells",
-            "Plasma cells",
-            "Plasma cells"
+            "Antibody of a single specificity related to that on the surface of the parent B-cell",
+            "Antibody of two antigen specificities",
+            "The antigen it recognizes",
+            "Many different types of antibody"
         ],
-        "answer": 1,
-        "correctAnswer": "T helper cells",
-        "explanation": "Cell-mediated immunity involves T lymphocytes, particularly CD4+ T helper cells coordinating responses and CD8+ cytotoxic T cells directly killing infected cells. Humoral (antibody) immunity is B/plasma cell-mediated. Reference: Abbas Cellular and Molecular Immunology, 10th ed., Chapter 9.",
+        "answer": 0,
+        "correctAnswer": "Antibody of a single specificity related to that on the surface of the parent B-cell",
+        "explanation": "Due to clonal selection and allelic exclusion, each plasma cell is derived from one B-cell clone and secretes antibodies of identical specificity (same variable region) as the original BCR. One cell → one specificity (Robbins Basic Pathology, Chapter 3).",
         "whyNotOtherOptions": {
-            "a": "B cells mediate humoral immunity via antibodies.",
-            "c": "Plasma cells produce antibodies for humoral immunity.",
-            "d": "Duplicate of c."
+            "b": "Impossible; each B-cell expresses only one specificity",
+            "c": "Plasma cells secrete antibodies, not antigens",
+            "d": "Polyclonal activation produces multiple specificities from different clones"
         },
-        "relatedQuestions": [],
-        "category": "Immunology",
-        "difficulty": "Easy"
-    },
-    {
-        "id": 9,
-        "question": "Dendritic cells full-term gestation? What dominant type of antibody found in the serum of neonates born after?",
-        "options": [
-            "Infant IgA",
-            "Infant IgG",
-            "Infant IgM",
-            "Maternal IgG"
-        ],
-        "answer": 3,
-        "correctAnswer": "Maternal IgG",
-        "explanation": "Neonates receive passive immunity via transplacental transfer of maternal IgG, providing protection until their own adaptive immunity develops. IgM is first produced by fetus but not transferred; IgA is secretory. Reference: Janeway's Immunobiology, 9th ed., Chapter 11.",
-        "whyNotOtherOptions": {
-            "a": "IgA is not transferred transplacentally; it's in breast milk.",
-            "b": "Infant IgG levels are low at birth.",
-            "c": "IgM is produced by fetus but large and not transferred across placenta."
-        },
-        "relatedQuestions": [],
-        "category": "Immunology",
+        "relatedQuestions": ["6"],
+        "category": "Adaptive Immunity",
         "difficulty": "Medium"
     },
     {
-        "id": 10,
-        "question": "Which of the following immune cells are not phagocytic?",
+        "id": 9,
+        "question": "Which of the following statements is the best example of a primary lymphoid organ?",
         "options": [
-            "Lymphocytes",
-            "Neutrophils",
-            "Monocytes",
-            "Macrophages"
+            "Lymph nodes",
+            "Spleen",
+            "Tonsil",
+            "Thymus"
+        ],
+        "answer": 3,
+        "correctAnswer": "Thymus",
+        "explanation": "Primary lymphoid organs are sites of lymphocyte maturation: bone marrow (B-cells) and thymus (T-cells). Secondary lymphoid organs (lymph nodes, spleen, tonsils, Peyer patches) are sites where mature lymphocytes encounter antigen and initiate responses (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a,b,c": "All are secondary lymphoid organs"
+        },
+        "relatedQuestions": ["6"],
+        "category": "Immune System Organization",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 10,
+        "question": "Which of the following is not true when comparing innate to adaptive immunity?",
+        "options": [
+            "Innate responds quickly and adaptive responds slowly",
+            "Innate has few pathogen (non-self) recognition mechanisms and adaptive has many",
+            "Innate has immunologic memory and adaptive does not",
+            "Innate response is non-specific and adaptive is very specific"
+        ],
+        "answer": 2,
+        "correctAnswer": "Innate has immunologic memory and adaptive does not",
+        "explanation": "The adaptive immune system possesses immunologic memory (memory B- and T-cells) leading to faster, stronger secondary responses — this is its hallmark and the principle behind vaccination. Innate immunity lacks true memory (though trained immunity exists in some cells, it is not equivalent) (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "Correct: innate immediate, adaptive has lag phase",
+            "b": "Correct: innate uses limited PRRs, adaptive has ~10¹⁵ possible receptors",
+            "d": "Correct: innate pattern-based, adaptive antigen-specific"
+        },
+        "relatedQuestions": ["11", "12"],
+        "category": "Immunity",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 11,
+        "question": "What is the characteristic that best defines the acquired immune response?",
+        "options": [
+            "It exhibits immunological memory",
+            "It involves leukocytes",
+            "It involves cell proliferation",
+            "The cells involved recognize pathogens"
         ],
         "answer": 0,
-        "correctAnswer": "Lymphocytes",
-        "explanation": "Lymphocytes (B and T cells) are not phagocytic; they mediate adaptive immunity via antibodies or cytotoxicity. Neutrophils, monocytes, and macrophages are professional phagocytes of innate immunity. Reference: Abbas Cellular and Molecular Immunology, 10th ed., Chapter 3.",
+        "correctAnswer": "It exhibits immunological memory",
+        "explanation": "The defining hallmark of adaptive/acquired immunity is antigen-specific immunological memory, allowing rapid and enhanced response upon re-exposure — basis of vaccination (Robbins Basic Pathology, Chapter 3).",
         "whyNotOtherOptions": {
-            "b": "Neutrophils are highly phagocytic, engulfing bacteria.",
-            "c": "Monocytes differentiate into macrophages and are phagocytic.",
-            "d": "Macrophages are key phagocytes in tissues."
+            "b,c,d": "All true but also apply to innate immunity to varying degrees"
         },
-        "relatedQuestions": [],
-        "category": "Immunology",
+        "relatedQuestions": ["10", "12"],
+        "category": "Adaptive Immunity",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 12,
+        "question": "Which of the following is not a major cardinal feature of the adaptive immune system?",
+        "options": [
+            "Diversity",
+            "Memory",
+            "Faster during primary response",
+            "Specificity"
+        ],
+        "answer": 2,
+        "correctAnswer": "Faster during primary response",
+        "explanation": "The primary adaptive response is slower (lag phase of 4–7 days) due to clonal expansion and differentiation. The secondary response is faster and stronger because of memory cells. Cardinal features: specificity, diversity, memory, self/non-self discrimination, and specialization (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "Receptor diversity via gene rearrangement",
+            "b": "Memory cells",
+            "d": "Antigen-specific receptors"
+        },
+        "relatedQuestions": ["10", "11"],
+        "category": "Adaptive Immunity",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 13,
+        "question": "What are the structures that trigger activation of the innate immune system?",
+        "options": [
+            "Pattern recognition receptors (PRRs)",
+            "Damaged associated molecular patterns (DAMPs)",
+            "Pathogen associated molecular patterns (PAMPs)",
+            "B & C are answers"
+        ],
+        "answer": 3,
+        "correctAnswer": "B & C are answers",
+        "explanation": "Innate immunity is triggered when PRRs (e.g., TLRs, NLRs, RLRs) on immune cells recognize conserved PAMPs from microbes or DAMPs from injured host cells. This initiates inflammation, phagocytosis, and cytokine release (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "PRRs are the sensors, not the triggers themselves"
+        },
+        "relatedQuestions": ["10"],
+        "category": "Innate Immunity",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 14,
+        "question": "Complement component C3 is cleaved by:",
+        "options": [
+            "C3b",
+            "C3bBb",
+            "Factor B",
+            "Factor D"
+        ],
+        "answer": 1,
+        "correctAnswer": "C3bBb",
+        "explanation": "C3bBb is the C3 convertase of the alternative pathway (stabilized by properdin). It cleaves C3 into C3a (anaphylatoxin) and C3b (opsonin and continues amplification loop). In classical/lectin pathways, the C3 convertase is C4b2a (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "C3b is a cleavage product, not the enzyme",
+            "c": "Factor B binds C3b but requires cleavage by Factor D",
+            "d": "Factor D cleaves Factor B when bound to C3b"
+        },
+        "relatedQuestions": ["18"],
+        "category": "Complement System",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 15,
+        "question": "The immune system becomes confused between what is self and nonself and mounts sustained responses against its own tissues is called ______. ",
+        "options": [
+            "Autoimmunity",
+            "Hypersensitivity",
+            "Allergy",
+            "Anaphylactic shock"
+        ],
+        "answer": 0,
+        "correctAnswer": "Autoimmunity",
+        "explanation": "Autoimmunity results from failure of self-tolerance mechanisms, leading to adaptive immune responses (autoantibodies or autoreactive T-cells) against self-antigens, causing organ-specific (e.g., Hashimoto) or systemic (e.g., SLE) diseases (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "b": "Hypersensitivity is exaggerated response; can be to self or foreign",
+            "c": "Allergy is type I hypersensitivity to environmental antigens",
+            "d": "Severe systemic type I reaction"
+        },
+        "relatedQuestions": ["16", "17", "18"],
+        "category": "Immunopathology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 16,
+        "question": "Primary immunodeficiency producing susceptibility to infection by viruses and fungus is caused by",
+        "options": [
+            "B-cell deficiency",
+            "T-cell deficiency",
+            "Phagocyte deficiency",
+            "Complement deficiency"
+        ],
+        "answer": 1,
+        "correctAnswer": "T-cell deficiency",
+        "explanation": "T-cell defects (e.g., SCID, DiGeorge syndrome, HIV) severely impair cell-mediated immunity, leading to susceptibility to intracellular pathogens: viruses, fungi (Candida, Pneumocystis), mycobacteria, and protozoa (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "B-cell defects → bacterial infections (pyogenic)",
+            "c": "Phagocyte defects (CGD, LAD) → bacterial and fungal abscesses",
+            "d": "Early complement defects → encapsulated bacteria (Neisseria)"
+        },
+        "relatedQuestions": ["15"],
+        "category": "Immunodeficiency",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 17,
+        "question": "The major effector molecules involved in type IV hypersensitivity reactions include",
+        "options": [
+            "Antibodies",
+            "Complement components",
+            "Cytokines",
+            "Histamines"
+        ],
+        "answer": 2,
+        "correctAnswer": "Cytokines",
+        "explanation": "Type IV (delayed-type) hypersensitivity is T-cell mediated. Activated Th1/Th17/CD8 T-cells release cytokines (IFN-γ, TNF, IL-17) that recruit and activate macrophages or directly kill target cells (e.g., tuberculin reaction, contact dermatitis, graft rejection) (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "Types II and III",
+            "b": "Type III mainly",
+            "d": "Type I"
+        },
+        "relatedQuestions": ["5", "18"],
+        "category": "Hypersensitivity",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 18,
+        "question": "The single best description of type III hypersensitivity is that it involves:",
+        "options": [
+            "Antibodies",
+            "Complement",
+            "Immune complexes",
+            "Macrophages"
+        ],
+        "answer": 2,
+        "correctAnswer": "Immune complexes",
+        "explanation": "Type III hypersensitivity is caused by deposition of antigen-antibody-complement immune complexes in vessels/tissues, activating complement and attracting neutrophils, leading to tissue damage (e.g., serum sickness, Arthus reaction, SLE nephritis) (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a,b,d": "Involved but not the defining feature"
+        },
+        "relatedQuestions": ["14", "17"],
+        "category": "Hypersensitivity",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 19,
+        "question": "Which of the following is incorrectly paired?",
+        "options": [
+            "Subunit vaccine: vaccine against Hepatitis B virus",
+            "Attenuated vaccines: Polio, measles and mumps",
+            "Killed vaccines: not require a booster shot",
+            "Toxoid vaccines: modified toxins are the inoculums"
+        ],
+        "answer": 2,
+        "correctAnswer": "Killed vaccines: not require a booster shot",
+        "explanation": "Killed/inactivated vaccines (e.g., Salk polio, rabies, hepatitis A) generally induce weaker and shorter-lived immunity (mostly humoral, poor cell-mediated and memory) and usually require multiple booster doses. Live attenuated vaccines often give lifelong immunity after 1–2 doses (Robbins Basic Pathology, Chapter 3).",
+        "whyNotOtherOptions": {
+            "a": "Hep B vaccine is recombinant subunit (HBsAg)",
+            "b": "MMR, oral polio, rotavirus are live attenuated",
+            "d": "Diphtheria, tetanus toxoids are inactivated toxins"
+        },
+        "relatedQuestions": ["1"],
+        "category": "Vaccines",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 20,
+        "question": "What is a graft between different members of the same species termed?",
+        "options": [
+            "Autograft",
+            "Isograft",
+            "Xenograft",
+            "Allograft"
+        ],
+        "answer": 3,
+        "correctAnswer": "Allograft",
+        "explanation": "Allograft: transplant between genetically different individuals of the same species (most common clinical transplant). Autograft: same individual; Isograft/syngeneic: identical twins; Xenograft: different species (Robbins Basic Pathology, Chapter 3 - Transplantation Immunology).",
+        "whyNotOtherOptions": {
+            "a": "From self",
+            "b": "Between genetically identical individuals",
+            "c": "Between different species"
+        },
+        "relatedQuestions": ["17"],
+        "category": "Transplantation",
         "difficulty": "Easy"
     }
 ];
@@ -2803,7 +3401,7 @@ function showCustomQuestionCreator() {
     modal.className = 'custom-quiz-modal active';
     modal.innerHTML = `
         <div class="custom-quiz-content glass-effect" style="max-width: 600px; border-radius: 24px;">
-            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                 <h3 style="font-size: 24px; font-weight: 700; color: var(--text-primary);">Create Custom Question</h3>
                 <button class="action-btn" onclick="closeCustomQuestionModal()" style="background: rgba(239, 68, 68, 0.1); color: var(--error);">
                     <i class="fas fa-times"></i>
@@ -2813,8 +3411,13 @@ function showCustomQuestionCreator() {
             <div class="custom-question-creator">
                 <div style="display: grid; gap: 20px;">
                     <div>
-                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Question Text</label>
-                        <textarea id="customQuestionText" placeholder="Enter your question here..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 80px;"></textarea>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Question Text (Markdown supported for tables)</label>
+                        <textarea id="customQuestionText" placeholder="Enter your question here... Use Markdown for tables, e.g., | Col1 | Col2 |" style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 100px;"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Image URL (optional)</label>
+                        <input type="url" id="customImageUrl" placeholder="https://example.com/image.jpg" style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px;">
                     </div>
                     
                     <div>
@@ -2859,7 +3462,7 @@ function showCustomQuestionCreator() {
                     
                     <div>
                         <label style="display: block; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">Explanation</label>
-                        <textarea id="customExplanation" placeholder="Explain why the correct answer is right..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 60px;"></textarea>
+                        <textarea id="customExplanation" placeholder="Explain why the correct answer is right..." style="width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-primary); font-size: 14px; resize: vertical; min-height: 80px;"></textarea>
                     </div>
                 </div>
                 
@@ -2896,6 +3499,7 @@ function closeCustomQuestionModal() {
 
 function saveCustomQuestion() {
     const questionText = document.getElementById('customQuestionText').value;
+    const imageUrl = document.getElementById('customImageUrl').value || '';
     const category = document.getElementById('customQuestionCategory').value;
     const difficulty = document.querySelector('.difficulty-btn.active').dataset.difficulty;
     const explanation = document.getElementById('customExplanation').value;
@@ -2941,7 +3545,8 @@ function saveCustomQuestion() {
         relatedQuestions: [],
         category: category,
         difficulty: difficulty,
-        custom: true
+        custom: true,
+        image: imageUrl
     };
     
     customQuestions.push(newQuestion);
@@ -2990,6 +3595,7 @@ function startCourse(courseName) {
     pageTitle.textContent = `Quiz Mode - ${courseName}`;
     
     hideAllSections();
+    quizContainer.classList.remove('hidden');
     renderQuizLayout();
 }
 
@@ -3260,7 +3866,7 @@ function highlightSearchTerms(query) {
     const categoryElements = document.querySelectorAll('.question-category');
     
     const highlightText = (element) => {
-        const originalText = element.textContent;
+        const originalText = element.innerHTML;  // Use innerHTML to preserve Markdown
         const regex = new RegExp(`(${query})`, 'gi');
         const highlighted = originalText.replace(regex, '<mark class="search-highlight">$1</mark>');
         element.innerHTML = highlighted;
@@ -3459,6 +4065,7 @@ function createCustomQuiz(options) {
     }
     
     hideAllSections();
+    quizContainer.classList.remove('hidden');
     renderQuizLayout();
     customQuizModal.classList.remove('active');
     showNotification(`Custom quiz created with ${questions.length} questions`, 'success');
@@ -3472,6 +4079,7 @@ function shuffleArray(array) {
     }
     return shuffled;
 }
+
 
 function generateStudyReport() {
     const allQuestions = [...quizData, ...customQuestions];
@@ -3858,7 +4466,7 @@ function renderExamLayout() {
                             <div class="question-meta">
                                 <div class="question-number">Q${question.id}</div>
                                 <div class="question-category">${question.category}</div>
-                                <div class="question-difficulty" style="padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: ${getDifficultyColor(question.difficulty)}; color: white;">
+                                <div class="question-difficulty" style="background: ${getDifficultyColor(question.difficulty)};">
                                     ${question.difficulty}
                                 </div>
                                 ${userAnswer !== undefined ? `
@@ -3873,7 +4481,10 @@ function renderExamLayout() {
                                 </button>
                             </div>
                         </div>
-                        <div class="question-text">${question.question}</div>
+                        <div class="question-image-container">
+                            ${question.image ? `<img src="${question.image}" alt="Question image" class="question-image">` : ''}
+                        </div>
+                        <div class="question-text">${marked.parse(question.question)}</div>
                         <div class="options-grid">
                             ${question.options.map((option, optIndex) => {
                                 const isSelected = userAnswer === optIndex;
@@ -3983,7 +4594,10 @@ function renderSingleQuestionLayout() {
                     </button>
                 </div>
             </div>
-            <div class="question-text">${question.question}</div>
+            <div class="question-image-container">
+                ${question.image ? `<img src="${question.image}" alt="Question image" class="question-image">` : ''}
+            </div>
+            <div class="question-text">${marked.parse(question.question)}</div>
             <div class="options-grid">
                 ${question.options.map((option, index) => {
                     const isSelected = userAnswer === index;
@@ -4354,4 +4968,5 @@ function jumpToQuestion(questionId) {
 init();
     </script>
 </body>
+
 </html>

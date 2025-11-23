@@ -7,6 +7,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="/protect.js"></script>
+    // Production-ready service worker registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    const swUrl = '/sw.js';
+    
+    navigator.serviceWorker.register(swUrl)
+      .then(function(registration) {
+        console.log('✅ SW registered successfully on scope:', registration.scope);
+        
+        // Check if SW is controlling the page
+        if (navigator.serviceWorker.controller) {
+          console.log('🎯 SW is controlling the page');
+        } else {
+          console.log('⚠️ SW registered but not controlling the page');
+        }
+        
+        // Check cache after registration
+        setTimeout(() => {
+          caches.open('vercel-app-v1').then(cache => {
+            cache.keys().then(requests => {
+              console.log(`📦 Production cache: ${requests.length} files`);
+            });
+          });
+        }, 3000);
+      })
+      .catch(function(error) {
+        console.log('❌ SW registration failed:', error);
+      });
+  });
+}
+</script>
     <style type="text/css">
         /* Import Inter font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -2469,527 +2500,720 @@ document.addEventListener('keydown', function(e) {
 
 // Enhanced quiz data with more questions
 const quizData = [
-{
-"id": 1,
-"question": "The type of immunity that follows the injection of an immunogen is termed",
-"options": [
-"Artificial active",
-"Natural active",
-"Artificial passive",
-"Natural passive"
-],
-"answer": 0,
-"correctAnswer": "Artificial active",
-"explanation": "An immunogen is any substance capable of eliciting an adaptive immune response. Injection of an immunogen (e.g., a vaccine) deliberately introduces the antigen into the body, making it artificial. The body actively produces its own antibodies and memory cells, resulting in long-lasting active immunity. This is distinct from natural active (post-infection), artificial passive (e.g., antiserum injection), and natural passive (e.g., maternal antibodies via placenta).",
-"whyNotOtherOptions": {
-"b": "Natural active immunity occurs after natural exposure to infection, not deliberate injection.",
-"c": "Artificial passive involves transfer of pre-formed antibodies (e.g., anti-tetanus serum), not stimulation of the recipient's immune system.",
-"d": "Natural passive is seen in transfer of maternal IgG across the placenta or IgA in breast milk."
-},
-"relatedQuestions": ["12"],
-"category": "Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 2,
-"question": "A hapten is",
-"options": [
-"Half of an immunoglobulin molecule",
-"A carrier molecule for an antigen that is not antigenic alone",
-"An immunoglobulin functional only in the presence of complement",
-"A determinant capable of stimulating an immune response only when bound to a carrier"
-],
-"answer": 3,
-"correctAnswer": "A determinant capable of stimulating an immune response only when bound to a carrier",
-"explanation": "A hapten is a small molecule (e.g., penicillin, nickel) that can bind to antibodies (antigenic) but cannot by itself activate T-cells or induce an immune response (not immunogenic). When covalently linked to a larger carrier protein, it becomes immunogenic, triggering T-dependent B-cell activation and antibody production. This explains contact dermatitis and drug allergies.",
-"whyNotOtherOptions": {
-"a": "Haptens are not part of immunoglobulin structure.",
-"b": "This describes the carrier, not the hapten itself.",
-"c": "Haptens are not immunoglobulins."
-},
-"relatedQuestions": ["16"],
-"category": "Antigens and Antibodies",
-"difficulty": "Medium"
-},
-{
-"id": 3,
-"question": "The first line of defense in protecting the body from infection includes all of the following components except:",
-"options": [
-"Unbroken skin",
-"Normal microbial flora",
-"Phagocytic leukocytes",
-"Secretions such as mucus"
-],
-"answer": 2,
-"correctAnswer": "Phagocytic leukocytes",
-"explanation": "The first line of defense consists of physical and chemical barriers that prevent pathogen entry: intact skin, mucous membranes, mucus, cilia, lysozyme, normal flora (competitive inhibition), and acidic pH. Phagocytic leukocytes (neutrophils, macrophages) belong to the second line of defense (innate immunity), activated only after pathogens breach the first line.",
-"whyNotOtherOptions": {
-"a": "Skin acts as a mechanical barrier.",
-"b": "Normal flora competes with pathogens for nutrients and space.",
-"d": "Mucus traps pathogens; cilia move them out."
-},
-"relatedQuestions": ["7", "10"],
-"category": "Innate Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 4,
-"question": "Which of the following components of the adaptive immune system causes lysis of virally infected cells and the release of cytokines",
-"options": [
-"Activated B cells(plasma cells)",
-"CD4+ activated T cells",
-"CD8+ cytotoxic T cells(CTL)",
-"Resting lymphocytes(B cells, CD4+T cells, CD8+T cells)"
-],
-"answer": 2,
-"correctAnswer": "CD8+ cytotoxic T cells(CTL)",
-"explanation": "CD8+ cytotoxic T lymphocytes directly recognize viral peptides on MHC class I of infected cells, then induce apoptosis via perforin/granzyme or Fas-FasL pathways (lysis). They also secrete cytokines (IFN-γ, TNF) to amplify antiviral responses and activate macrophages.",
-"whyNotOtherOptions": {
-"a": "Plasma cells secrete antibodies, not cause cell lysis.",
-"b": "CD4+ T cells help coordinate immunity but do not directly lyse cells.",
-"d": "Resting lymphocytes are not activated and lack effector functions."
-},
-"relatedQuestions": ["17"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 5,
-"question": "A single plasma cell secretes:",
-"options": [
-"Antibody of a single specificity related to that on the surface of the parent B-cell",
-"Antibody of two antigen specificities",
-"The antigen it recognizes",
-"Many different types of antibody"
-],
-"answer": 0,
-"correctAnswer": "Antibody of a single specificity related to that on the surface of the parent B-cell",
-"explanation": "Plasma cells arise from clonal expansion of a single activated B-cell. Due to clonal selection, each plasma cell produces antibodies with identical variable regions (same specificity/epitope recognition) as the surface Ig on the original B-cell. One plasma cell secretes thousands of identical antibodies per second.",
-"whyNotOtherOptions": {
-"b": "Allelic exclusion ensures only one specificity.",
-"c": "Plasma cells secrete antibodies, not antigens.",
-"d": "Polyclonal activation would produce many types, but a single cell is monoclonal."
-},
-"relatedQuestions": ["12", "13"],
-"category": "Antibodies",
-"difficulty": "Easy"
-},
-{
-"id": 6,
-"question": "Which of the following is a glycoprotein expressed on the surface of T helper cells, regulatory T cells, monocytes, macrophages and dendritic cells",
-"options": [
-"Cluster of differentiation 4 (CD4+)",
-"Cluster of differentiation 8 (CD8+)",
-"Plasma cells (activated B cells)",
-"Cluster of differentiation 56 (CD56)"
-],
-"answer": 0,
-"correctAnswer": "Cluster of differentiation 4 (CD4+)",
-"explanation": "CD4 is a co-receptor that binds MHC class II. It is expressed on T-helper cells (Th1, Th2, Th17), regulatory T cells (Tregs), and antigen-presenting cells (monocytes, macrophages, dendritic cells). It is the primary receptor for HIV.",
-"whyNotOtherOptions": {
-"b": "CD8 is on cytotoxic T cells and binds MHC I.",
-"c": "Plasma cells do not express CD4.",
-"d": "CD56 is a marker for NK cells."
-},
-"relatedQuestions": ["4", "21"],
-"category": "Immunology Markers",
-"difficulty": "Easy"
-},
-{
-"id": 7,
-"question": "Acute inflammation can be initiated by:",
-"options": [
-"Mast cell activation",
-"Influx of neutrophils",
-"An increase in vascular permeability",
-"C3"
-],
-"answer": 0,
-"correctAnswer": "Mast cell activation",
-"explanation": "Mast cell degranulation (triggered by trauma, IgE, or complement) releases histamine, leukotrienes, and prostaglandins, initiating acute inflammation by causing immediate vasodilation and increased vascular permeability. Neutrophil influx and permeability changes are downstream consequences.",
-"whyNotOtherOptions": {
-"b": "Neutrophil influx occurs after chemotactic signals.",
-"c": "Increased permeability is a result, not the initiator.",
-"d": "C3 activation occurs later in the complement cascade."
-},
-"relatedQuestions": ["3", "10"],
-"category": "Inflammation",
-"difficulty": "Medium"
-},
-{
-"id": 8,
-"question": "In the classical pathway of complement activation",
-"options": [
-"C3 is activated by binding C-reactive protein",
-"The sequence of activation is C1, C2, C3, C4",
-"C1q is activated by the presence of a single Fab region",
-"Activation by antibody requires one IgM or two IgG molecules"
-],
-"answer": 3,
-"correctAnswer": "Activation by antibody requires one IgM or two IgG molecules",
-"explanation": "Classical pathway starts when C1q binds to Fc regions of antibody-antigen complexes. One pentameric IgM provides multiple Fc sites, while two closely spaced IgG molecules are needed for C1q binding and activation. Sequence is C1qrs → C4 → C2 → C3.",
-"whyNotOtherOptions": {
-"a": "CRP activates the classical pathway indirectly, not by binding C3.",
-"b": "Correct sequence: C1, C4, C2, C3.",
-"c": "C1q requires at least two Fc regions, not Fab."
-},
-"relatedQuestions": ["9", "10"],
-"category": "Complement System",
-"difficulty": "Medium"
-},
-{
-"id": 9,
-"question": "The alternative complement pathway",
-"options": [
-"Can be activated by bacterial capsule polysaccharides",
-"Uses C5b as a C3 convertase"
-],
-"answer": 0,
-"correctAnswer": "Can be activated by bacterial capsule polysaccharides",
-"explanation": "The alternative pathway is antibody-independent and part of innate immunity. It is spontaneously activated on microbial surfaces (e.g., bacterial LPS, fungal cell walls, capsule polysaccharides) when factor B, D, and properdin stabilize C3b. C3 convertase is C3bBb.",
-"whyNotOtherOptions": {
-"b": "C5 convertase is C3bBb3b; C5b initiates the membrane attack complex."
-},
-"relatedQuestions": ["8", "10"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 10,
-"question": "After activation of the complement system, leukocytes and macrophages are attracted to the site of complement activation by",
-"options": [
-"C1",
-"C5a",
-"C5bC6C7C8C9",
-"C3b"
-],
-"answer": 1,
-"correctAnswer": "C5a",
-"explanation": "C5a is the most potent anaphylatoxin and chemotactic factor in the complement cascade. It strongly attracts neutrophils, eosinophils, monocytes, and macrophages to the site of activation, enhancing phagocytosis and inflammation.",
-"whyNotOtherOptions": {
-"a": "C1 initiates the cascade but has no chemotactic role.",
-"c": "C5b-9 is the membrane attack complex (MAC) that lyses cells.",
-"d": "C3b opsonizes pathogens for phagocytosis but is not chemotactic."
-},
-"relatedQuestions": ["7", "8", "9"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 11,
-"question": "What is the predominant type of antibody found in the serum of neonates born after full-term gestation?",
-"options": [
-"Infant IgA",
-"Infant IgG",
-"Infant IgM",
-"Maternal IgG"
-],
-"answer": 3,
-"correctAnswer": "Maternal IgG",
-"explanation": "During the third trimester, maternal IgG is selectively transported across the placenta via FcRn receptor, providing passive immunity to the newborn for the first 6–12 months. Neonatal IgG synthesis is low at birth. IgM and IgA are not transferred across the placenta.",
-"whyNotOtherOptions": {
-"a": "IgA is obtained postnatally via breast milk.",
-"b": "Infant begins producing own IgG later.",
-"c": "Elevated IgM at birth suggests intrauterine infection."
-},
-"relatedQuestions": ["1", "12"],
-"category": "Passive Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 12,
-"question": "How does the secondary humoral immune response differ from the primary response?",
-"options": [
-"The lag phase is longer in the secondary immune response",
-"IgM is the predominant antibody class produced in the secondary immune response",
-"The antibody levels produced are higher in the secondary immune response",
-"Cytotoxic T lymphocytes play an important role in the secondary response"
-],
-"answer": 2,
-"correctAnswer": "The antibody levels produced are higher in the secondary immune response",
-"explanation": "Memory B cells formed during the primary response enable a faster (lag 1–3 days vs. 7–10 days), stronger (10–100-fold higher antibody titer), longer-lasting, and predominantly IgG (due to class switching) secondary response upon re-exposure to the same antigen.",
-"whyNotOtherOptions": {
-"a": "Lag phase is shorter in secondary response.",
-"b": "IgG predominates in secondary response.",
-"d": "Cytotoxic T cells are part of cell-mediated, not humoral, immunity."
-},
-"relatedQuestions": ["1", "5", "11"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 13,
-"question": "Which of the following statements about immunoglobulin light chains is true?",
-"options": [
-"Each immunoglobulin monomer has either one kappa or one lambda chain",
-"There are two types: kappa and lambda",
-"They consist of constant regions only",
-"They form part of the Fc fragment"
-],
-"answer": 1,
-"correctAnswer": "There are two types: kappa and lambda",
-"explanation": "Light chains have two isotypes: kappa (κ) and lambda (λ). Each antibody monomer contains two identical light chains (either both κ or both λ) paired with two heavy chains. Light chains have one variable (VL) and one constant (CL) domain.",
-"whyNotOtherOptions": {
-"a": "Each monomer has two identical light chains, not one.",
-"c": "Light chains have both variable and constant regions.",
-"d": "Fc fragment consists of heavy-chain constant regions only."
-},
-"relatedQuestions": ["5", "14"],
-"category": "Antibody Structure",
-"difficulty": "Medium"
-},
-{
-"id": 14,
-"question": "Which of the following statements applies to the Fc fragment of an immunoglobulin molecule?",
-"options": [
-"It consists of the entire heavy chain",
-"It contains the variable region of the heavy chain",
-"It contains the antigen binding sites of the molecule",
-"It is the region of the molecule that binds to receptors on various white blood cells"
-],
-"answer": 3,
-"correctAnswer": "It is the region of the molecule that binds to receptors on various white blood cells",
-"explanation": "The Fc region comprises the constant domains of the heavy chains (CH2 and CH3). It mediates effector functions by binding Fc receptors on phagocytes (opsonization), NK cells (ADCC), mast cells (degranulation), and complement (C1q).",
-"whyNotOtherOptions": {
-"a": "Fc is only the C-terminal half of heavy chains.",
-"b": "Variable region is in Fab.",
-"c": "Antigen binding occurs in Fab regions."
-},
-"relatedQuestions": ["13", "8"],
-"category": "Antibody Structure",
-"difficulty": "Medium"
-},
-{
-"id": 15,
-"question": "The activity of natural killer (NK) cells",
-"options": [
-"Does not require previous exposure to an antigen",
-"Involves phagocytosis and killing of bacteria",
-"Requires interaction with cytotoxic T cells",
-"Requires interaction with B cells"
-],
-"answer": 0,
-"correctAnswer": "Does not require previous exposure to an antigen",
-"explanation": "NK cells are innate lymphocytes that kill virus-infected and tumor cells without prior sensitization or MHC restriction. They detect 'missing self' (low MHC I) and use perforin/granzyme or death ligands. No immunological memory is involved.",
-"whyNotOtherOptions": {
-"b": "Phagocytosis is performed by macrophages/neutrophils.",
-"c": "NK cells act independently.",
-"d": "No interaction with B cells."
-},
-"relatedQuestions": ["4", "17"],
-"category": "Innate Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 16,
-"question": "Interaction between B and T helper cells involves",
-"options": [
-"MHC II molecule on B cell binding to MHC I molecule on the T cell",
-"MHC II molecule on B cell binding to CD3 on the T cell",
-"Foreign antigen on B cell binding to T cell receptor",
-"CD3 molecule on B cell binding to T cell receptor"
-],
-"answer": 2,
-"correctAnswer": "Foreign antigen on B cell binding to T cell receptor",
-"explanation": "For T-dependent antigens, B cells internalize antigen via surface Ig, process it, and present peptides on MHC II. The CD4+ T-helper cell’s TCR recognizes the peptide-MHC II complex. Co-stimulatory signals (CD40-CD40L, cytokines) then activate the B cell for proliferation and differentiation.",
-"whyNotOtherOptions": {
-"a": "MHC II on B cell binds TCR+CD4, not MHC I.",
-"b": "CD3 is part of TCR complex on T cell.",
-"d": "B cells do not express CD3."
-},
-"relatedQuestions": ["2", "17", "22"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 17,
-"question": "A target cell is typically killed when",
-"options": [
-"A CD4+ T cell recognizes a peptide bound to MHC class I on the target cell",
-"A CD4+ T cell recognizes a peptide bound to MHC class II on the target cell",
-"A CD8+ T cell produces IL-4 in close proximity to the target cell",
-"A CD8+ T cell recognizes a peptide bound to MHC class I on the target cell"
-],
-"answer": 3,
-"correctAnswer": "A CD8+ T cell recognizes a peptide bound to MHC class I on the target cell",
-"explanation": "CD8+ cytotoxic T cells recognize viral or tumor peptides presented on MHC class I (present on all nucleated cells). Recognition triggers release of perforin/granzyme or FasL, inducing apoptosis in the target cell.",
-"whyNotOtherOptions": {
-"a": "CD4+ cells recognize MHC II (on APCs), not MHC I.",
-"b": "CD4+ cells do not kill targets directly.",
-"c": "IL-4 is produced by Th2 cells; CD8+ cells produce IFN-γ."
-},
-"relatedQuestions": ["4", "15", "22"],
-"category": "Cell-Mediated Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 18,
-"question": "Primary immunodeficiency producing susceptibility to infection by viruses and fungus is caused by:",
-"options": [
-"B-cell deficiency",
-"T-cell deficiency",
-"Phagocyte deficiency",
-"Complement deficiency"
-],
-"answer": 1,
-"correctAnswer": "T-cell deficiency",
-"explanation": "T-cells (especially CD4+ Th1) coordinate antiviral and antifungal responses by activating macrophages and cytotoxic T cells. Pure T-cell defects (e.g., DiGeorge syndrome, SCID with T-cell involvement) lead to severe viral (HSV, CMV) and fungal (Candida, Pneumocystis) infections.",
-"whyNotOtherOptions": {
-"a": "B-cell defects cause bacterial infections.",
-"c": "Phagocyte defects (e.g., CGD) cause bacterial and fungal abscesses.",
-"d": "Complement defects cause encapsulated bacterial infections."
-},
-"relatedQuestions": ["21", "23"],
-"category": "Immunodeficiency",
-"difficulty": "Medium"
-},
-{
-"id": 19,
-"question": "Incompatible blood transfusions are examples of",
-"options": [
-"Type I hypersensitivity reactions",
-"Type II hypersensitivity reactions",
-"Type III hypersensitivity reactions",
-"Type IV hypersensitivity reactions"
-],
-"answer": 1,
-"correctAnswer": "Type II hypersensitivity reactions",
-"explanation": "Type II (cytotoxic) hypersensitivity involves IgM/IgG antibodies binding cell-surface antigens, leading to complement activation and cell lysis. In ABO incompatibility, anti-A/B IgM binds donor RBCs, activates complement, and causes acute hemolytic transfusion reaction.",
-"whyNotOtherOptions": {
-"a": "Type I is immediate (IgE, anaphylaxis).",
-"c": "Type III is immune complex (e.g., serum sickness).",
-"d": "Type IV is delayed (T-cell mediated)."
-},
-"relatedQuestions": ["8"],
-"category": "Hypersensitivity",
-"difficulty": "Easy"
-},
-{
-"id": 20,
-"question": "The single best chance of a tissue graft being accepted in a human recipient is if it is:",
-"options": [
-"An isograft",
-"An allograft given under the cover of potent immunosuppression",
-"A xenograft from a pig",
-"From a living sibling donor"
-],
-"answer": 0,
-"correctAnswer": "An isograft",
-"explanation": "An isograft (syngeneic graft) is between genetically identical individuals (identical twins). There is complete MHC matching, so no alloantigens are recognized, and no rejection occurs without immunosuppression.",
-"whyNotOtherOptions": {
-"b": "Allografts still carry risk of rejection despite immunosuppression.",
-"c": "Xenografts have major antigenic differences and hyperacute rejection.",
-"d": "Sibling donors may share only some HLA; still an allograft."
-},
-"relatedQuestions": ["none"],
-"category": "Transplantation",
-"difficulty": "Easy"
-},
-{
-"id": 21,
-"question": "In patients with human immunodeficiency virus infection, immune status can be monitored by measuring the ratio of",
-"options": [
-"CD3+ cells to CD8+ cells",
-"CD4+ cells to CD8+ cells",
-"Lymphocytes to monocytes",
-"T cells to B cells"
-],
-"answer": 1,
-"correctAnswer": "CD4+ cells to CD8+ cells",
-"explanation": "HIV infects CD4+ cells via gp120-CD4 binding. Progressive loss of CD4+ T-helper cells leads to inversion of the normal CD4:CD8 ratio (normally ~2:1). CD4 count <200/μL defines AIDS; ratio is a key prognostic marker.",
-"whyNotOtherOptions": {
-"a": "CD3 marks all T cells; not specific.",
-"c": "Not used in HIV monitoring.",
-"d": "HIV primarily affects T-helper cells, not B cells."
-},
-"relatedQuestions": ["6", "18"],
-"category": "HIV/AIDS",
-"difficulty": "Easy"
-},
-{
-"id": 22,
-"question": "What is the structure recognized by the αβ T-cell receptor on the cell surface of an antigen–presenting cell?",
-"options": [
-"Soluble native protein antigen plus MHC molecule",
-"Processed (peptide) antigen plus MHC",
-"Processed peptide antigen",
-"Cell surface native antigen"
-],
-"answer": 1,
-"correctAnswer": "Processed (peptide) antigen plus MHC",
-"explanation": "The αβ TCR recognizes only linear peptide fragments (8–20 amino acids) bound in the groove of MHC molecules. Native proteins are processed intracellularly into peptides before presentation. This is the basis of MHC restriction.",
-"whyNotOtherOptions": {
-"a": "TCR does not recognize soluble native antigen.",
-"c": "Peptide alone is not recognized without MHC.",
-"d": "Native antigen on surface is recognized by B-cell receptor, not TCR."
-},
-"relatedQuestions": ["16", "17"],
-"category": "Antigen Presentation",
-"difficulty": "Medium"
-},
-{
-"id": 23,
-"question": "Your patient is a child who has no detectable T or B cells. This is most probably the result of a defect in",
-"options": [
-"The thymus",
-"The bursal equivalent",
-"T cell-B cell interaction",
-"Stem cells originating in the bone marrow"
-],
-"answer": 3,
-"correctAnswer": "Stem cells originating in the bone marrow",
-"explanation": "Severe Combined Immunodeficiency (SCID) with absent T and B cells results from defects in common lymphoid progenitor cells in the bone marrow (e.g., ADA deficiency, RAG mutations). Both T-cell (thymus-dependent) and B-cell lineages fail to develop.",
-"whyNotOtherOptions": {
-"a": "Thymus defect (DiGeorge) affects only T cells.",
-"b": "B-cell maturation occurs in bone marrow in humans.",
-"c": "Interaction defect would not abolish both cell types."
-},
-"relatedQuestions": ["18"],
-"category": "Immunodeficiency",
-"difficulty": "Medium"
-},
-{
-"id": 24,
-"question": "A patient is admitted with multiple bacterial infections and is found to have a complete absence of Complement. Which complement-mediated function would remain intact in such a patient?",
-"options": [
-"Lysis of bacteria",
-"Opsonization of bacteria",
-"Generation of anaphylatoxins",
-"None"
-],
-"answer": 3,
-"correctAnswer": "None",
-"explanation": "All major functions of complement require intact complement proteins: lysis (MAC: C5b-9), opsonization (C3b), chemotaxis/anaphylaxis (C3a, C5a). Complete absence (e.g., hereditary C3 deficiency) abolishes all these effector mechanisms, leading to severe bacterial infections.",
-"whyNotOtherOptions": {
-"a": "Lysis requires MAC.",
-"b": "Opsonization requires C3b.",
-"c": "Anaphylatoxins are C3a and C5a."
-},
-"relatedQuestions": ["8", "9", "10"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 25,
-"question": "For vaccination against mycobacterial diseases such as tuberculosis, what is the most important facet of the immune response to be stimulated?",
-"options": [
-"A high titer of antibody",
-"Macrophage-activating cell-mediated immunity",
-"Cytotoxic T-cells",
-"Antibody in the gut lumen"
-],
-"answer": 1,
-"correctAnswer": "Macrophage-activating cell-mediated immunity",
-"explanation": "Mycobacterium tuberculosis is an intracellular pathogen surviving inside macrophages. Effective immunity requires Th1-mediated cell-mediated immunity: IFN-γ from CD4+ T cells activates macrophages to form granulomas and kill intracellular bacteria. BCG vaccine aims to induce this response. Antibodies are ineffective against intracellular pathogens.",
-"whyNotOtherOptions": {
-"a": "Antibodies cannot access intracellular mycobacteria.",
-"c": "Cytotoxic T cells help but are secondary to macrophage activation.",
-"d": "Gut IgA is irrelevant for pulmonary TB."
-},
-"relatedQuestions": ["4", "17"],
-"category": "Vaccination",
-"difficulty": "Medium"
-}
+    {
+        "id": 1,
+        "question": "______ are single-celled prokaryotic organisms, without nuclear membrane, and no membrane-bounded organelles.",
+        "options": [
+            "Viruses",
+            "Fungi",
+            "Bacteria",
+            "Prions"
+        ],
+        "answer": 2,
+        "correctAnswer": "Bacteria",
+        "explanation": "Prokaryotic organisms are characterized by the absence of a true nucleus (nuclear membrane) and membrane-bound organelles such as mitochondria or endoplasmic reticulum. Bacteria fit this description perfectly as they are unicellular prokaryotes with a simple internal structure, including a nucleoid region for DNA, ribosomes, and a cell wall. This distinguishes them from eukaryotes and non-cellular entities. Viruses lack cellular structure entirely, fungi are eukaryotic with complex organelles, and prions are mere infectious protein particles without any cellular organization.",
+        "whyNotOtherOptions": {
+            "a": "Viruses are acellular entities, not considered living organisms, and do not have a cellular structure like prokaryotes.",
+            "b": "Fungi are eukaryotic organisms with a true nucleus and membrane-bound organelles.",
+            "d": "Prions are infectious proteins without any cellular components or genetic material in the form of nucleic acids."
+        },
+        "relatedQuestions": [],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 2,
+        "question": "Bacteria and fungi have a cell wall which is made up of ______ & ______ respectively.",
+        "options": [
+            "Unicellular & multicellular",
+            "Chitin and peptidoglycan",
+            "Peptidoglycan and chitin",
+            "Flagellin and pilin"
+        ],
+        "answer": 2,
+        "correctAnswer": "Peptidoglycan and chitin",
+        "explanation": "The cell wall provides structural support and protection to microbial cells. In bacteria, the primary component is peptidoglycan, a polymer consisting of sugars (N-acetylglucosamine and N-acetylmuramic acid) cross-linked by peptide chains, which gives rigidity and determines Gram staining properties. In contrast, fungal cell walls are primarily composed of chitin, a long-chain polymer of N-acetylglucosamine, providing strength and flexibility. This difference is crucial for taxonomic classification and is targeted by certain antibiotics and antifungals that disrupt cell wall synthesis.",
+        "whyNotOtherOptions": {
+            "a": "Unicellular and multicellular refer to organism organization, not cell wall composition.",
+            "b": "This reverses the correct components; chitin is for fungi, peptidoglycan for bacteria.",
+            "d": "Flagellin and pilin are proteins involved in flagella and pili structures, not cell walls."
+        },
+        "relatedQuestions": ["9", "10"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 3,
+        "question": "Viruses are obligate intracellular parasite with the following general characteristic EXCEPT:",
+        "options": [
+            "Replicate by binary fission",
+            "Consists of either DNA/RNA but not both",
+            "Nuclear material is enclosed in a protein coat with/without lipid membrane coat.",
+            "They are very small can't be seen with light microscope"
+        ],
+        "answer": 0,
+        "correctAnswer": "Replicate by binary fission",
+        "explanation": "Viruses are acellular parasites that require a host cell for replication. They do not divide by binary fission, which is a cellular process involving chromosome duplication and cell splitting seen in bacteria. Instead, viruses replicate by infecting a host, hijacking its machinery to produce viral components, and assembling new virions. They possess either DNA or RNA as genetic material (never both), enclosed in a protein capsid that may or may not have a lipid envelope. Their small size (typically 20-300 nm) requires electron microscopy for visualization, beyond the resolution of light microscopes.",
+        "whyNotOtherOptions": {
+            "b": "Viruses indeed have only one type of nucleic acid, either DNA or RNA, as their genome.",
+            "c": "The genetic material is always protected by a protein capsid, and some viruses have an additional lipid envelope.",
+            "d": "Viruses are submicroscopic, requiring electron microscopes for observation due to their nanoscale size."
+        },
+        "relatedQuestions": ["25", "28"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 4,
+        "question": "What is the temperature, time and pressure level in moist heat sterilization (Autoclaving) to achieve sterile environment?",
+        "options": [
+            "121°C, 21 minutes and 15 lb/inch²",
+            "131°C, 15 minutes and 21 lb/inch²",
+            "121°C, 15 minutes and 15 lb/inch²",
+            "141°C, 21 minutes and 15 lb/inch²"
+        ],
+        "answer": 2,
+        "correctAnswer": "121°C, 15 minutes and 15 lb/inch²",
+        "explanation": "Autoclaving uses saturated steam under pressure to achieve sterilization, killing all microorganisms including bacterial endospores. The standard parameters are 121°C at 15 psi (pounds per square inch) for 15 minutes, as this combination ensures penetration of heat and moisture into materials, denaturing proteins and disrupting cellular structures. Higher pressures raise the boiling point of water, allowing steam to reach lethal temperatures. These conditions are widely used in medical and laboratory settings to sterilize equipment, media, and waste, ensuring a sterile environment.",
+        "whyNotOtherOptions": {
+            "a": "21 minutes is longer than necessary; standard is 15 minutes at these conditions.",
+            "b": "131°C and 21 psi are higher than standard; used for specific high-heat applications but not the norm.",
+            "d": "141°C is excessively high and not the standard for routine autoclaving."
+        },
+        "relatedQuestions": [],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 5,
+        "question": "______ is unique structure to Gram positive bacteria while ______ unique structure to Gram negative bacteria respectively.",
+        "options": [
+            "peptidoglycan, polysaccharide",
+            "Teichoic Acids, outer membrane",
+            "cytoplasmic membrane, outer membrane",
+            "inner membrane, periplasmic space"
+        ],
+        "answer": 1,
+        "correctAnswer": "Teichoic Acids, outer membrane",
+        "explanation": "Gram-positive bacteria have teichoic acids, which are polyol phosphate polymers anchored to the peptidoglycan layer or cytoplasmic membrane, contributing to cell wall maintenance, ion regulation, and pathogenicity. Gram-negative bacteria feature an outer membrane, a lipid bilayer containing lipopolysaccharides (LPS), porins, and proteins, which acts as a permeability barrier and houses endotoxins. These structural differences are fundamental to Gram staining, antibiotic susceptibility, and bacterial physiology.",
+        "whyNotOtherOptions": {
+            "a": "Peptidoglycan is present in both, though thicker in Gram-positive; polysaccharides are not unique.",
+            "c": "Both have a cytoplasmic (inner) membrane; outer membrane is unique to Gram-negative.",
+            "d": "Both have an inner membrane; periplasmic space is characteristic of Gram-negative bacteria but not the most unique paired with inner membrane."
+        },
+        "relatedQuestions": ["9", "16"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 6,
+        "question": "Obligate anaerobes cannot withstand oxygen because of the absence of all enzymes except:",
+        "options": [
+            "Superoxide dismutase",
+            "Catalase",
+            "Peroxidase",
+            "Protease"
+        ],
+        "answer": 2,
+        "correctAnswer": "Peroxidase",
+        "explanation": "Obligate anaerobes are highly sensitive to oxygen due to the lack of key detoxifying enzymes like superoxide dismutase (SOD), which converts superoxide radicals to hydrogen peroxide, and catalase, which breaks down hydrogen peroxide to water and oxygen. Some obligate anaerobes may possess peroxidase, an enzyme that can reduce hydrogen peroxide using a reductant, providing limited protection. However, without SOD and catalase, toxic oxygen species accumulate, leading to cellular damage. Protease is unrelated to oxygen detoxification. This enzymatic deficiency confines obligate anaerobes to oxygen-free environments.",
+        "whyNotOtherOptions": {
+            "a": "Obligate anaerobes lack superoxide dismutase, making them vulnerable to superoxide radicals.",
+            "b": "They also lack catalase, unable to break down hydrogen peroxide effectively.",
+            "d": "Protease is involved in protein degradation, not oxygen tolerance."
+        },
+        "relatedQuestions": ["22"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 7,
+        "question": "Which of the following is incorrect?",
+        "options": [
+            "Peritrichous is a bacteria with flagella all over their surface",
+            "Bacteria could be classified based on the shape and the position of spores",
+            "Spirochetes are a bacteria moves by using a flagellum like structure called the axial filament/endoflagella",
+            "Spheroplast is bacteria without cell wall, derived from gram positive bacteria by the action of lysosome."
+        ],
+        "answer": 3,
+        "correctAnswer": "Spheroplast is bacteria without cell wall, derived from gram positive bacteria by the action of lysosome.",
+        "explanation": "The incorrect statement is about spheroplasts, which are cell wall-deficient forms derived from Gram-negative bacteria through partial removal of the peptidoglycan layer, often using lysozyme (not lysosome, which is an eukaryotic organelle) and EDTA. In Gram-positive bacteria, complete cell wall removal results in protoplasts. Peritrichous flagellation means flagella distributed over the entire surface, bacterial classification includes spore morphology (e.g., central, terminal), and spirochetes use axial filaments (endoflagella) for motility, forming a helical motion.",
+        "whyNotOtherOptions": {
+            "a": "Peritrichous bacteria, like Escherichia coli, have flagella distributed all over the cell surface.",
+            "b": "Bacteria like Bacillus and Clostridium are classified by spore shape (oval, round) and position (central, subterminal).",
+            "c": "Spirochetes, such as Treponema, use endoflagella (axial filaments) for corkscrew motility."
+        },
+        "relatedQuestions": ["5", "9"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 8,
+        "question": "In the nomenclature system of microbes the binomial name of an organism is composed of:",
+        "options": [
+            "Its kingdom and genus names",
+            "Its genus and a strain names",
+            "Its family and class names",
+            "Its genus and species names"
+        ],
+        "answer": 3,
+        "correctAnswer": "Its genus and species names",
+        "explanation": "Binomial nomenclature, established by Carl Linnaeus, assigns each organism a two-part name: the genus (capitalized) and the species epithet (lowercase), both italicized (e.g., Staphylococcus aureus). This system provides a universal, standardized way to name organisms, avoiding confusion from common names. It does not include kingdom, family, class, or strain in the basic binomial name, though strains may be denoted additionally for specific variants.",
+        "whyNotOtherOptions": {
+            "a": "Kingdom is a higher taxonomic rank, not part of the binomial name.",
+            "b": "Strain names are used for subtypes but not in the standard binomial nomenclature.",
+            "c": "Family and class are higher taxonomic levels, not used in the two-part name."
+        },
+        "relatedQuestions": [],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 9,
+        "question": "Which type of bacterial cell wall has high amount peptidoglycan?",
+        "options": [
+            "Gram-negative",
+            "Gram-positive",
+            "Both have the same amount",
+            "None of these"
+        ],
+        "answer": 1,
+        "correctAnswer": "Gram-positive",
+        "explanation": "Gram-positive bacteria possess a thick peptidoglycan layer (up to 90% of the cell wall), consisting of multiple cross-linked layers that retain crystal violet during Gram staining, appearing purple. This thickness provides structural integrity and is a target for antibiotics like penicillin. Gram-negative bacteria have a thin peptidoglycan layer (about 10%) sandwiched between inner and outer membranes, leading to pink staining after counterstain. The difference affects permeability, staining, and susceptibility to treatments.",
+        "whyNotOtherOptions": {
+            "a": "Gram-negative have a thin peptidoglycan layer, not high amounts.",
+            "c": "The amounts differ significantly between Gram-positive (thick) and Gram-negative (thin).",
+            "d": "Gram-positive do have high peptidoglycan content."
+        },
+        "relatedQuestions": ["2", "5"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 10,
+        "question": "Acid-fast bacteria (mycobacterium) are unique because their cell wall contains ______.",
+        "options": [
+            "Peptidoglycan",
+            "Mycolic acid",
+            "Granules",
+            "Lipopolysaccharide"
+        ],
+        "answer": 1,
+        "correctAnswer": "Mycolic acid",
+        "explanation": "Mycobacteria, such as Mycobacterium tuberculosis, have cell walls rich in mycolic acids, long-chain fatty acids that create a waxy, hydrophobic barrier. This makes them resistant to decolorization by acid-alcohol in acid-fast staining (e.g., Ziehl-Neelsen), appearing red. The mycolic acids contribute to pathogenicity by resisting phagocytosis and antibiotics. While peptidoglycan is present, it's the mycolic acids that define acid-fastness. Lipopolysaccharides are in Gram-negative outer membranes, and granules are storage structures.",
+        "whyNotOtherOptions": {
+            "a": "Peptidoglycan is common to most bacteria, not unique to acid-fast.",
+            "c": "Granules are intracellular storage, not cell wall components.",
+            "d": "Lipopolysaccharide is found in Gram-negative bacteria, not mycobacteria."
+        },
+        "relatedQuestions": ["2", "9"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 11,
+        "question": "The bacterial cells that retain the primary stain after undergoing Gram staining will have what color?",
+        "options": [
+            "Colorless",
+            "Purple",
+            "Pink /red",
+            "Green"
+        ],
+        "answer": 1,
+        "correctAnswer": "Purple",
+        "explanation": "In Gram staining, crystal violet (primary stain) is applied, followed by iodine (mordant), decolorizer (alcohol/acetone), and safranin (counterstain). Gram-positive bacteria, with thick peptidoglycan, retain the crystal violet-iodine complex after decolorization, appearing purple under the microscope. Gram-negative bacteria lose the primary stain and take up safranin, appearing pink/red. This differential staining is essential for bacterial identification and guides antibiotic selection.",
+        "whyNotOtherOptions": {
+            "a": "No bacteria remain colorless; they take either primary or counterstain.",
+            "c": "Pink/red is for Gram-negative after counterstaining.",
+            "d": "Green is not a color in standard Gram staining."
+        },
+        "relatedQuestions": ["5", "9"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 12,
+        "question": "This structure in bacteria is responsible for conjugation",
+        "options": [
+            "Capsule",
+            "Cell wall",
+            "Ordinary Pilus",
+            "F Pilus"
+        ],
+        "answer": 3,
+        "correctAnswer": "F Pilus",
+        "explanation": "Conjugation is a mechanism of horizontal gene transfer where DNA is passed directly from one bacterium (donor) to another (recipient) via a physical bridge. The F (fertility) pilus, also called sex pilus, is a specialized appendage encoded by the F plasmid that extends from the donor cell to attach to the recipient, forming a conjugation tube for DNA transfer. Ordinary pili (fimbriae) are for adhesion, not conjugation. Capsule and cell wall provide protection but are not involved in conjugation.",
+        "whyNotOtherOptions": {
+            "a": "Capsule is a protective layer, not involved in gene transfer.",
+            "b": "Cell wall provides structure but does not facilitate conjugation.",
+            "c": "Ordinary pili aid in attachment to surfaces, not specific for conjugation."
+        },
+        "relatedQuestions": ["21"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 13,
+        "question": "What is a plasmid?",
+        "options": [
+            "A bacterial chromosome",
+            "Plasmids are necessary for cellular survival",
+            "Self-replicating extra chromosomal double stranded DNA",
+            "Escaped pieces of mitochondrial DNA"
+        ],
+        "answer": 2,
+        "correctAnswer": "Self-replicating extra chromosomal double stranded DNA",
+        "explanation": "Plasmids are small, circular, double-stranded DNA molecules separate from the bacterial chromosome, capable of autonomous replication. They often carry genes for non-essential but advantageous traits like antibiotic resistance, virulence factors, or metabolic capabilities. Unlike the chromosome, plasmids are not required for basic cellular functions and can be transferred between bacteria via conjugation. They are widely used in genetic engineering as vectors.",
+        "whyNotOtherOptions": {
+            "a": "The bacterial chromosome is the main genomic DNA, not extra-chromosomal.",
+            "b": "Plasmids provide accessory functions but are not essential for survival under normal conditions.",
+            "d": "Mitochondrial DNA is eukaryotic; plasmids are prokaryotic."
+        },
+        "relatedQuestions": ["12"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 14,
+        "question": "A type of bacterial capsule that occurs as a non-uniform, loosely attached and of variable thickness is called:",
+        "options": [
+            "Protoplasm",
+            "Glycocalyx",
+            "Slime layer",
+            "Nucleoid"
+        ],
+        "answer": 2,
+        "correctAnswer": "Slime layer",
+        "explanation": "The glycocalyx is an extracellular polysaccharide layer. When it is organized, tightly attached, and uniform, it is called a capsule. The slime layer is a diffuse, loosely bound variant of the glycocalyx, varying in thickness, aiding in biofilm formation, adhesion, and protection from desiccation and phagocytosis. Protoplasm refers to cellular contents, nucleoid to the DNA region.",
+        "whyNotOtherOptions": {
+            "a": "Protoplasm is the living content of the cell, including cytoplasm and nucleus/nucleoid.",
+            "b": "Glycocalyx is the general term; slime layer is a specific type.",
+            "d": "Nucleoid is the region containing bacterial DNA."
+        },
+        "relatedQuestions": ["23"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 15,
+        "question": "When a specimen is stained with Gram’s stain:",
+        "options": [
+            "Gram positive bacteria resist the decolorization step and retain the color of the primary dye",
+            "Gram negative bacteria would appear violet",
+            "Gram positive bacteria would be decolorized by ethanol-acetone and would take the color of the counterstain",
+            "Gram negative bacteria would take the color of the mordant solution"
+        ],
+        "answer": 0,
+        "correctAnswer": "Gram positive bacteria resist the decolorization step and retain the color of the primary dye",
+        "explanation": "Gram staining differentiates bacteria based on cell wall composition. After applying crystal violet (primary dye) and iodine (mordant), the decolorizer (ethanol-acetone) removes the dye from Gram-negative cells due to their thin peptidoglycan and outer membrane, making them colorless until counterstained with safranin (pink). Gram-positive cells, with thick peptidoglycan, retain the violet complex. Mordant (iodine) enhances dye binding but doesn't provide color.",
+        "whyNotOtherOptions": {
+            "b": "Gram-negative appear pink after counterstain, not violet.",
+            "c": "Gram-positive resist decolorization and stay violet, not taking counterstain.",
+            "d": "Mordant (iodine) is colorless; Gram-negative take safranin."
+        },
+        "relatedQuestions": ["11"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 16,
+        "question": "Which of the following components is present in gram-negative bacteria but not in gram-positive bacteria?",
+        "options": [
+            "Peptidoglycan",
+            "Lipid A",
+            "Capsule",
+            "Pilus"
+        ],
+        "answer": 1,
+        "correctAnswer": "Lipid A",
+        "explanation": "Lipid A is the toxic component of lipopolysaccharide (LPS, endotoxin) in the outer membrane of Gram-negative bacteria, responsible for septic shock symptoms. Gram-positive bacteria lack an outer membrane and thus lack LPS/Lipid A. Peptidoglycan is in both (thicker in positive), capsules and pili can be present in both types.",
+        "whyNotOtherOptions": {
+            "a": "Peptidoglycan is present in both, though differing in amount.",
+            "c": "Capsules can be found in both Gram-positive and Gram-negative bacteria.",
+            "d": "Pili are appendages that can occur in both types."
+        },
+        "relatedQuestions": ["5", "9"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 17,
+        "question": "Which one of the following statements is not true of the bacterial chromosomes?",
+        "options": [
+            "It is located in the nucleoid",
+            "It usually is a single, circular molecule",
+            "Some genes are dominant to others",
+            "It usually is haploid"
+        ],
+        "answer": 2,
+        "correctAnswer": "Some genes are dominant to others",
+        "explanation": "Bacterial chromosomes are typically single, circular DNA molecules located in the nucleoid region, and bacteria are haploid, meaning they have one copy of each gene, eliminating the concept of dominance/recessiveness which applies to diploid organisms with allele pairs. In bacteria, gene expression is regulated differently, such as through operons and environmental signals.",
+        "whyNotOtherOptions": {
+            "a": "The nucleoid is the area where the chromosome resides in bacteria.",
+            "b": "Most bacterial chromosomes are circular and single.",
+            "d": "Bacteria are generally haploid with one gene copy."
+        },
+        "relatedQuestions": ["13"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 18,
+        "question": "The point at which the double-stranded DNA molecule unwinds is called:",
+        "options": [
+            "polymerase",
+            "replication fork",
+            "hydrogen bonding",
+            "ribosome"
+        ],
+        "answer": 1,
+        "correctAnswer": "replication fork",
+        "explanation": "During DNA replication, helicase unwinds the double helix at the origin, creating a Y-shaped replication fork where new strands are synthesized by DNA polymerase. Leading and lagging strands form here, with continuous and discontinuous synthesis respectively. Hydrogen bonds are broken during unwinding, ribosomes are for protein synthesis.",
+        "whyNotOtherOptions": {
+            "a": "Polymerase is the enzyme that synthesizes new DNA strands.",
+            "c": "Hydrogen bonding holds DNA strands together but is not the unwinding point.",
+            "d": "Ribosomes are involved in translation, not DNA replication."
+        },
+        "relatedQuestions": [],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 19,
+        "question": "A component of the cell membrane of most fungi is:",
+        "options": [
+            "Cholesterol",
+            "Chitin",
+            "Ergosterol",
+            "Peptidoglycan"
+        ],
+        "answer": 2,
+        "correctAnswer": "Ergosterol",
+        "explanation": "Fungal cell membranes contain ergosterol, a sterol that maintains membrane fluidity and integrity, similar to cholesterol in animal cells. This difference is exploited by antifungal drugs like amphotericin B and azoles, which target ergosterol. Chitin is in fungal cell walls, peptidoglycan in bacterial walls, cholesterol in animals.",
+        "whyNotOtherOptions": {
+            "a": "Cholesterol is found in animal cell membranes, not fungi.",
+            "b": "Chitin is a component of fungal cell walls, not membranes.",
+            "d": "Peptidoglycan is in bacterial cell walls."
+        },
+        "relatedQuestions": ["2"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 20,
+        "question": "The basic microscopic unit of molds is:",
+        "options": [
+            "Yeast",
+            "Hypha",
+            "Mycelium",
+            "Pseudohypha"
+        ],
+        "answer": 1,
+        "correctAnswer": "Hypha",
+        "explanation": "Molds are filamentous fungi composed of hyphae, which are elongated, tubular structures that grow by apical extension and branch to form a network. A mass of hyphae constitutes the mycelium, the visible mold body. Yeasts are unicellular fungi, pseudohyphae are chains of yeast-like cells.",
+        "whyNotOtherOptions": {
+            "a": "Yeast are unicellular forms of fungi, not the unit of molds.",
+            "c": "Mycelium is the collective mass of hyphae, not the basic unit.",
+            "d": "Pseudohyphae are elongated yeast cells, seen in some fungi like Candida."
+        },
+        "relatedQuestions": [],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 21,
+        "question": "Transmission of genetic information between bacterial cells (e.g. resistance to antibiotic) via virus is named ______.",
+        "options": [
+            "Insertion",
+            "Translation",
+            "Conjugation",
+            "Transduction"
+        ],
+        "answer": 3,
+        "correctAnswer": "Transduction",
+        "explanation": "Transduction involves bacteriophages (viruses) transferring bacterial DNA from one cell to another. During lytic infection, viral particles may package host DNA instead of viral genome (generalized transduction) or specific genes (specialized). This transfers traits like antibiotic resistance. Conjugation is direct cell-to-cell transfer, translation is protein synthesis, insertion is DNA integration.",
+        "whyNotOtherOptions": {
+            "a": "Insertion refers to integrating DNA into a genome, not transfer via virus.",
+            "b": "Translation is the process of synthesizing proteins from mRNA.",
+            "c": "Conjugation is direct DNA transfer between bacteria via pili."
+        },
+        "relatedQuestions": ["12"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 22,
+        "question": "Microorganism that can grow in the presence as well as in the absence of molecular oxygen is",
+        "options": [
+            "Obligate anaerobe",
+            "Obligate aerobe",
+            "Facultative anaerobe",
+            "Facultative aerobe"
+        ],
+        "answer": 2,
+        "correctAnswer": "Facultative anaerobe",
+        "explanation": "Facultative anaerobes, like E. coli, can switch between aerobic respiration (using oxygen for efficient ATP production) and anaerobic processes (fermentation or anaerobic respiration) without oxygen. They prefer oxygen but survive without it. Obligate aerobes require oxygen, obligate anaerobes are killed by it. 'Facultative aerobe' is not standard; the term is facultative anaerobe.",
+        "whyNotOtherOptions": {
+            "a": "Obligate anaerobes cannot tolerate oxygen and grow only in its absence.",
+            "b": "Obligate aerobes require oxygen for growth and cannot survive without it.",
+            "d": "Facultative aerobe is a misnomer; the correct term for oxygen-flexible organisms is facultative anaerobe."
+        },
+        "relatedQuestions": ["6"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 23,
+        "question": "What is the function of bacterial capsule?",
+        "options": [
+            "Protection of organism from phagocytosis",
+            "Helps in adherence of bacteria to surface in its environment",
+            "Prevents the bacteria from desiccation",
+            "All of the above"
+        ],
+        "answer": 3,
+        "correctAnswer": "All of the above",
+        "explanation": "The bacterial capsule, a polysaccharide layer, serves multiple roles as a virulence factor: it inhibits phagocytosis by making the cell slippery to immune cells, promotes adhesion to surfaces for colonization and biofilm formation, and retains water to prevent drying out in harsh environments. These functions enhance survival and pathogenicity in hosts and external settings.",
+        "whyNotOtherOptions": {
+            "a": "This is one function, but not the only one.",
+            "b": "Adherence is a function, but incomplete.",
+            "c": "Protection from desiccation is a function, but not exhaustive."
+        },
+        "relatedQuestions": ["14"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 24,
+        "question": "Psychrophilic would be expected to grow",
+        "options": [
+            "in hot springs",
+            "at refrigeration temperatures",
+            "on the human body",
+            "at low pH."
+        ],
+        "answer": 1,
+        "correctAnswer": "at refrigeration temperatures",
+        "explanation": "Psychrophiles are cold-adapted microorganisms with optimal growth at low temperatures (0-15°C), common in polar regions, oceans, and refrigerators. They have adapted membranes and enzymes for function in cold. Hot springs are for thermophiles, human body (37°C) for mesophiles, low pH for acidophiles.",
+        "whyNotOtherOptions": {
+            "a": "Hot springs are habitats for thermophiles, not psychrophiles.",
+            "c": "Human body temperature suits mesophiles.",
+            "d": "Low pH is for acidophiles; psychrophiles are temperature-specific."
+        },
+        "relatedQuestions": [],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 25,
+        "question": "A virus is made up of ______.",
+        "options": [
+            "Protein coat and nucleic acid",
+            "Protein coat and mitochondria",
+            "Nucleic acid and cell membrane",
+            "Nucleic acid, cell wall and cell membrane"
+        ],
+        "answer": 0,
+        "correctAnswer": "Protein coat and nucleic acid",
+        "explanation": "Viruses are simple entities consisting of genetic material (DNA or RNA) encased in a protein coat (capsid). Some have a lipid envelope derived from host membranes. They lack organelles like mitochondria, cell walls, or membranes of their own, relying on hosts for replication. This minimal structure underscores their obligate parasitic nature.",
+        "whyNotOtherOptions": {
+            "b": "Mitochondria are eukaryotic organelles; viruses lack them.",
+            "c": "Viruses do not have their own cell membrane.",
+            "d": "Viruses lack cell walls and independent cell membranes."
+        },
+        "relatedQuestions": ["3", "26"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 26,
+        "question": "The protein coat of viruses that enclose the genetic material is called ______.",
+        "options": [
+            "Virion",
+            "Capsid",
+            "Peplomers",
+            "Capsomers"
+        ],
+        "answer": 1,
+        "correctAnswer": "Capsid",
+        "explanation": "The capsid is the protective protein shell surrounding the viral nucleic acid, composed of subunits called capsomers. It determines viral shape (helical, icosahedral) and facilitates attachment to host cells. Peplomers are spike proteins on envelopes, virion is the complete particle.",
+        "whyNotOtherOptions": {
+            "a": "Virion refers to the entire infectious virus particle.",
+            "c": "Peplomers are glycoprotein spikes on enveloped viruses.",
+            "d": "Capsomers are the building blocks of the capsid."
+        },
+        "relatedQuestions": ["25", "30"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 27,
+        "question": "Which of the following statements are true about a virion?",
+        "options": [
+            "Lytic phage",
+            "Lysogenic phage",
+            "The viral capsid",
+            "An infectious and fully formed viral particle"
+        ],
+        "answer": 3,
+        "correctAnswer": "An infectious and fully formed viral particle",
+        "explanation": "A virion is the extracellular, infectious form of a virus, comprising the genome, capsid, and possibly an envelope. It is capable of infecting host cells to initiate replication. Lytic and lysogenic refer to phage cycles, capsid is a component.",
+        "whyNotOtherOptions": {
+            "a": "Lytic phage describes a replication cycle, not the particle.",
+            "b": "Lysogenic phage integrates into host DNA, not defining virion.",
+            "c": "Capsid is part of the virion, not the whole."
+        },
+        "relatedQuestions": ["25", "26"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 28,
+        "question": "Which of the following is the genome of the virus?",
+        "options": [
+            "DNA",
+            "RNA",
+            "DNA or RNA",
+            "DNA and RNA"
+        ],
+        "answer": 2,
+        "correctAnswer": "DNA or RNA",
+        "explanation": "Viral genomes are either DNA or RNA, but never both in the same virus. DNA viruses replicate in the nucleus or cytoplasm, RNA viruses typically in cytoplasm. This exclusivity is a defining feature, differing from cellular organisms which use DNA genomes and RNA intermediates.",
+        "whyNotOtherOptions": {
+            "a": "Some viruses have DNA, but not all.",
+            "b": "Some have RNA, but not all.",
+            "d": "No virus contains both DNA and RNA as genome."
+        },
+        "relatedQuestions": ["3"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 29,
+        "question": "Which of the following statements are true about the viruses?",
+        "options": [
+            "Free-living",
+            "Obligate parasites",
+            "Both (a) and (b)",
+            "None of the above"
+        ],
+        "answer": 1,
+        "correctAnswer": "Obligate parasites",
+        "explanation": "Viruses cannot replicate independently; they must infect a host cell to utilize its metabolic and replicative machinery. They lack ribosomes, energy production systems, and are not free-living. This obligate intracellular parasitism distinguishes them from other microorganisms.",
+        "whyNotOtherOptions": {
+            "a": "Viruses are not free-living; they require hosts.",
+            "c": "Only obligate parasites is correct, not both.",
+            "d": "Obligate parasites is true."
+        },
+        "relatedQuestions": ["3"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 30,
+        "question": "Which of the following are the main functions of the capsid?",
+        "options": [
+            "Determines the antigenic specificity of the virus",
+            "Protects genetic material from nuclease attack",
+            "Both A and B",
+            "None of these"
+        ],
+        "answer": 2,
+        "correctAnswer": "Both A and B",
+        "explanation": "The capsid shields the viral genome from environmental nucleases and physical damage, ensuring integrity until infection. It also bears antigenic determinants recognized by the host immune system, influencing vaccine design and immune response. Additionally, it aids in host cell attachment.",
+        "whyNotOtherOptions": {
+            "a": "This is one function, but not the only main one.",
+            "b": "Protection is key, but antigenic specificity is also important.",
+            "d": "Both functions are correct."
+        },
+        "relatedQuestions": ["26"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 31,
+        "question": "Positive stranded RNA viruses have which of the following characteristics?",
+        "options": [
+            "Their genome RNA can be translated directly as mRNA",
+            "They have to transcribe their genome RNA to a mirror image copy as a mRNA",
+            "This genome is circular",
+            "Their RNA genome is segmented"
+        ],
+        "answer": 0,
+        "correctAnswer": "Their genome RNA can be translated directly as mRNA",
+        "explanation": "Positive-sense (+) RNA viruses have genomes that mimic mRNA, with 5' cap and 3' poly-A tail in some, allowing immediate translation by host ribosomes upon entry. Examples include picornaviruses, flaviviruses. Negative-sense (-) RNA viruses require transcription to +RNA first. Most viral RNA genomes are linear, not circular; segmentation occurs in some like influenza.",
+        "whyNotOtherOptions": {
+            "b": "This describes negative-strand RNA viruses.",
+            "c": "Viral RNA genomes are typically linear, not circular (except some like viroids).",
+            "d": "Segmentation is specific to certain viruses, not a general characteristic of +RNA."
+        },
+        "relatedQuestions": ["28"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 32,
+        "question": "A virus obtains its envelope during which of the following phases?",
+        "options": [
+            "attachment",
+            "penetration",
+            "assembly",
+            "release"
+        ],
+        "answer": 3,
+        "correctAnswer": "release",
+        "explanation": "Enveloped viruses acquire their lipid envelope from host membranes (plasma, nuclear, or ER) during release via budding. The capsid assembles inside, then pushes through the membrane, incorporating viral glycoproteins. Attachment is binding to receptors, penetration is entry, assembly is component formation.",
+        "whyNotOtherOptions": {
+            "a": "Attachment is the initial binding to host cell receptors.",
+            "b": "Penetration involves entry of viral contents into the cell.",
+            "c": "Assembly is intracellular formation of virions without envelope acquisition."
+        },
+        "relatedQuestions": ["33"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 33,
+        "question": "What is another name for a non-enveloped virus?",
+        "options": [
+            "enveloped virus",
+            "provirus",
+            "naked virus",
+            "latent virus"
+        ],
+        "answer": 2,
+        "correctAnswer": "naked virus",
+        "explanation": "Non-enveloped (naked) viruses consist only of nucleic acid and capsid, without a lipid envelope. They are more resistant to environmental stresses like heat and detergents but enter cells differently (e.g., endocytosis). Enveloped have lipids, provirus is integrated viral DNA, latent is dormant infection.",
+        "whyNotOtherOptions": {
+            "a": "Enveloped viruses have a lipid coat.",
+            "b": "Provirus refers to viral genome integrated into host DNA.",
+            "d": "Latent virus is in a dormant state within the host."
+        },
+        "relatedQuestions": ["32"],
+        "category": "Microbiology",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 34,
+        "question": "In naming viruses, the family name ends with ______ and genus name ends with ______.",
+        "options": [
+            "-virus; -viridae",
+            "-viridae; -virus",
+            "-virion; virus",
+            "-virus; virion"
+        ],
+        "answer": 1,
+        "correctAnswer": "-viridae; -virus",
+        "explanation": "Viral taxonomy follows ICTV conventions: family names end in -viridae (e.g., Retroviridae), genus in -virus (e.g., Lentivirus). Species are often descriptive. Virion is the particle, not a taxonomic suffix.",
+        "whyNotOtherOptions": {
+            "a": "This reverses the suffixes; -viridae for family, -virus for genus.",
+            "c": "-Virion is not a taxonomic ending; virion is the physical particle.",
+            "d": "Virion is not used in naming conventions this way."
+        },
+        "relatedQuestions": ["8"],
+        "category": "Microbiology",
+        "difficulty": "Medium"
+    }
 ];
 
 // Core application variables

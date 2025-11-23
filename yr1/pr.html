@@ -7,6 +7,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="/protect.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    // Production-ready service worker registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    const swUrl = '/sw.js';
+    
+    navigator.serviceWorker.register(swUrl)
+      .then(function(registration) {
+        console.log('✅ SW registered successfully on scope:', registration.scope);
+        
+        // Check if SW is controlling the page
+        if (navigator.serviceWorker.controller) {
+          console.log('🎯 SW is controlling the page');
+        } else {
+          console.log('⚠️ SW registered but not controlling the page');
+        }
+        
+        // Check cache after registration
+        setTimeout(() => {
+          caches.open('vercel-app-v1').then(cache => {
+            cache.keys().then(requests => {
+              console.log(`📦 Production cache: ${requests.length} files`);
+            });
+          });
+        }, 3000);
+      })
+      .catch(function(error) {
+        console.log('❌ SW registration failed:', error);
+      });
+  });
+}
+</script>
     <style>
         :root {
             --primary: #3b82f6;
@@ -689,7 +720,7 @@
         // Sample data
         const questionSets = [
             { id: 1, year: "1", title: "PARASITOLOGY Exam 2014", type: "exam", examYear: "2014", difficulty: "advanced", description: "2014 Final Exam", questions: 10,  rating: 4.9, featured: true, page: "pr/pre.2014.html" },
-            { id: 2, year: "1", title: "PARASITOLOGY Exam 2015", type: "exam", examYear: "2015", difficulty: "advanced", description: "2015, 2015 Final Exam", questions: 20,  rating: 4.7, page: "pr/pre.2015.html" },
+            { id: 2, year: "1", title: "PARASITOLOGY Exam 2015", type: "exam", examYear: "2015", difficulty: "advanced", description: "2015, 2015 Final Exam", questions: 15,  rating: 4.7, page: "pr/pre.2015.html" },
             { id: 3, year: "1", title: "PARASITOLOGY Exam 2016", type: "exam", examYear: "2016", difficulty: "beginner", description: "2016 FINAL EXAM", questions: 10,  rating: 4.8, page: "pr/pre2016.html" },
             { id: 4, year: "1", title: "PARASITOLOGY Exam waiting...", type: "exam", examYear: "2013", difficulty: "intermediate", description: "waiting", questions: 75, avgScore: 88, rating: 4.6, page: "#" },
             { id: 5, year: "1", title: "PARASITOLOGY Exam waiting...", type: "practice", examYear: "2021", difficulty: "advanced", description: "Brain functions.", questions: 90, avgScore: 70, rating: 4.5, page: "#" },

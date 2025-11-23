@@ -7,6 +7,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="/protect.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    // Production-ready service worker registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    const swUrl = '/sw.js';
+    
+    navigator.serviceWorker.register(swUrl)
+      .then(function(registration) {
+        console.log('✅ SW registered successfully on scope:', registration.scope);
+        
+        // Check if SW is controlling the page
+        if (navigator.serviceWorker.controller) {
+          console.log('🎯 SW is controlling the page');
+        } else {
+          console.log('⚠️ SW registered but not controlling the page');
+        }
+        
+        // Check cache after registration
+        setTimeout(() => {
+          caches.open('vercel-app-v1').then(cache => {
+            cache.keys().then(requests => {
+              console.log(`📦 Production cache: ${requests.length} files`);
+            });
+          });
+        }, 3000);
+      })
+      .catch(function(error) {
+        console.log('❌ SW registration failed:', error);
+      });
+  });
+}
+</script>
     <style>
         :root {
             --primary: #3b82f6;
@@ -571,10 +602,10 @@
             { id: 1, year: "1", title: "pharma Exam 2014", type: "exam", examYear: "2014", difficulty: "advanced", description: "2014 Final Exam", questions: 40, rating: 4.9, featured: true, page: "pc/pce.2014 .html" },
             { id: 2, year: "1", title: "pharma Exam 2015", type: "exam", examYear: "2015", difficulty: "advanced", description: "2015 Final Exam", questions: 60, rating: 4.9, featured: true, page: "pc/pce.2015 .html" },
             { id: 3, year: "1", title: "pharma Exam 2016", type: "exam", examYear: "2016", difficulty: "advanced", description: "2016 Final Exam", questions: 25, rating: 4.7, page: "pc/pce.2016 .html" },
-            { id: 4, year: "1", title: "pharma Exam 2013", type: "exam", examYear: "2014", difficulty: "beginner", description: "Waiting", questions: 32, rating: 4.8, page: "#" },
-            { id: 5, year: "1", title: "pharma Exam waiting...", type: "exam", examYear: "2013", difficulty: "intermediate", description: "waiting", questions: 75, avgScore: 88, rating: 4.6, page: "#" },
-            { id: 6, year: "1", title: "pharma Exam waiting...", type: "practice", examYear: "2021", difficulty: "advanced", description: "Brain functions.", questions: 90, avgScore: 70, rating: 4.5, page: "#" },
-            { id: 7, year: "1", title: "pharma Exam waiting...", type: "quiz", examYear: "2020", difficulty: "intermediate", description: "Heart and vessels.", questions: 60, avgScore: 80, rating: 4.7, page: "#" },
+            { id: 4, year: "1", title: "pharma practice 1", type: "exam", examYear: "2014", difficulty: "beginner", description: "pharma prectice ai prepared 1", questions: 40, rating: 4.8, page: "pc/pharmacokinetics1 .html" },
+            { id: 5, year: "1", title: "pharma practice 2", type: "practice", examYear: "2013", difficulty: "intermediate", description: "pharmacokinetics ai prepared 2", questions: 90, avgScore: 90, rating: 4.6, page: "pc/pharmacokinetics .html" },
+            { id: 6, year: "1", title: "pharma practice 3", type: "practice", examYear: "2021", difficulty: "advanced", description: "pharmacokinetics ai prepared 3", questions: 90, avgScore: 70, rating: 4.5, page: "pc/pharmacokinetics3 .html" },
+            { id: 7, year: "1", title: "pharma Exam waiting...", type: "practice", examYear: "2020", difficulty: "intermediate", description: "Heart and vessels.", questions: 60, avgScore: 80, rating: 4.7, page: "#" },
             { id: 8, year: "1", title: "pharma Exam waiting...", type: "worksheet", examYear: "2019", difficulty: "advanced", description: "Lung functions.", questions: 85, avgScore: 75, rating: 4.4, page: "#" },
             { id: 10, year: "1", title: "pharma Exam waiting...", type: "practice", examYear: "2022", difficulty: "beginner", description: "Kidney functions.", questions: 70, avgScore: 83, rating: 4.6, page: "#" },
             { id: 11, year: "1", title: "pharma Exam waiting...", type: "quiz", examYear: "2023", difficulty: "intermediate", description: "Digestive system.", questions: 95, avgScore: 79, rating: 4.7, page: "#" },
@@ -804,5 +835,4 @@
     </script>
 </body>
 </html>
-
 

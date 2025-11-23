@@ -7,6 +7,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="/protect.js"></script>
+    // Production-ready service worker registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    const swUrl = '/sw.js';
+    
+    navigator.serviceWorker.register(swUrl)
+      .then(function(registration) {
+        console.log('✅ SW registered successfully on scope:', registration.scope);
+        
+        // Check if SW is controlling the page
+        if (navigator.serviceWorker.controller) {
+          console.log('🎯 SW is controlling the page');
+        } else {
+          console.log('⚠️ SW registered but not controlling the page');
+        }
+        
+        // Check cache after registration
+        setTimeout(() => {
+          caches.open('vercel-app-v1').then(cache => {
+            cache.keys().then(requests => {
+              console.log(`📦 Production cache: ${requests.length} files`);
+            });
+          });
+        }, 3000);
+      })
+      .catch(function(error) {
+        console.log('❌ SW registration failed:', error);
+      });
+  });
+}
+</script>
     <style type="text/css">
         /* Import Inter font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -2469,528 +2500,990 @@ document.addEventListener('keydown', function(e) {
 
 // Enhanced quiz data with more questions
 const quizData = [
-{
-"id": 1,
-"question": "The type of immunity that follows the injection of an immunogen is termed",
-"options": [
-"Artificial active",
-"Natural active",
-"Artificial passive",
-"Natural passive"
-],
-"answer": 0,
-"correctAnswer": "Artificial active",
-"explanation": "An immunogen is any substance capable of eliciting an adaptive immune response. Injection of an immunogen (e.g., a vaccine) deliberately introduces the antigen into the body, making it artificial. The body actively produces its own antibodies and memory cells, resulting in long-lasting active immunity. This is distinct from natural active (post-infection), artificial passive (e.g., antiserum injection), and natural passive (e.g., maternal antibodies via placenta).",
-"whyNotOtherOptions": {
-"b": "Natural active immunity occurs after natural exposure to infection, not deliberate injection.",
-"c": "Artificial passive involves transfer of pre-formed antibodies (e.g., anti-tetanus serum), not stimulation of the recipient's immune system.",
-"d": "Natural passive is seen in transfer of maternal IgG across the placenta or IgA in breast milk."
-},
-"relatedQuestions": ["12"],
-"category": "Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 2,
-"question": "A hapten is",
-"options": [
-"Half of an immunoglobulin molecule",
-"A carrier molecule for an antigen that is not antigenic alone",
-"An immunoglobulin functional only in the presence of complement",
-"A determinant capable of stimulating an immune response only when bound to a carrier"
-],
-"answer": 3,
-"correctAnswer": "A determinant capable of stimulating an immune response only when bound to a carrier",
-"explanation": "A hapten is a small molecule (e.g., penicillin, nickel) that can bind to antibodies (antigenic) but cannot by itself activate T-cells or induce an immune response (not immunogenic). When covalently linked to a larger carrier protein, it becomes immunogenic, triggering T-dependent B-cell activation and antibody production. This explains contact dermatitis and drug allergies.",
-"whyNotOtherOptions": {
-"a": "Haptens are not part of immunoglobulin structure.",
-"b": "This describes the carrier, not the hapten itself.",
-"c": "Haptens are not immunoglobulins."
-},
-"relatedQuestions": ["16"],
-"category": "Antigens and Antibodies",
-"difficulty": "Medium"
-},
-{
-"id": 3,
-"question": "The first line of defense in protecting the body from infection includes all of the following components except:",
-"options": [
-"Unbroken skin",
-"Normal microbial flora",
-"Phagocytic leukocytes",
-"Secretions such as mucus"
-],
-"answer": 2,
-"correctAnswer": "Phagocytic leukocytes",
-"explanation": "The first line of defense consists of physical and chemical barriers that prevent pathogen entry: intact skin, mucous membranes, mucus, cilia, lysozyme, normal flora (competitive inhibition), and acidic pH. Phagocytic leukocytes (neutrophils, macrophages) belong to the second line of defense (innate immunity), activated only after pathogens breach the first line.",
-"whyNotOtherOptions": {
-"a": "Skin acts as a mechanical barrier.",
-"b": "Normal flora competes with pathogens for nutrients and space.",
-"d": "Mucus traps pathogens; cilia move them out."
-},
-"relatedQuestions": ["7", "10"],
-"category": "Innate Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 4,
-"question": "Which of the following components of the adaptive immune system causes lysis of virally infected cells and the release of cytokines",
-"options": [
-"Activated B cells(plasma cells)",
-"CD4+ activated T cells",
-"CD8+ cytotoxic T cells(CTL)",
-"Resting lymphocytes(B cells, CD4+T cells, CD8+T cells)"
-],
-"answer": 2,
-"correctAnswer": "CD8+ cytotoxic T cells(CTL)",
-"explanation": "CD8+ cytotoxic T lymphocytes directly recognize viral peptides on MHC class I of infected cells, then induce apoptosis via perforin/granzyme or Fas-FasL pathways (lysis). They also secrete cytokines (IFN-γ, TNF) to amplify antiviral responses and activate macrophages.",
-"whyNotOtherOptions": {
-"a": "Plasma cells secrete antibodies, not cause cell lysis.",
-"b": "CD4+ T cells help coordinate immunity but do not directly lyse cells.",
-"d": "Resting lymphocytes are not activated and lack effector functions."
-},
-"relatedQuestions": ["17"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 5,
-"question": "A single plasma cell secretes:",
-"options": [
-"Antibody of a single specificity related to that on the surface of the parent B-cell",
-"Antibody of two antigen specificities",
-"The antigen it recognizes",
-"Many different types of antibody"
-],
-"answer": 0,
-"correctAnswer": "Antibody of a single specificity related to that on the surface of the parent B-cell",
-"explanation": "Plasma cells arise from clonal expansion of a single activated B-cell. Due to clonal selection, each plasma cell produces antibodies with identical variable regions (same specificity/epitope recognition) as the surface Ig on the original B-cell. One plasma cell secretes thousands of identical antibodies per second.",
-"whyNotOtherOptions": {
-"b": "Allelic exclusion ensures only one specificity.",
-"c": "Plasma cells secrete antibodies, not antigens.",
-"d": "Polyclonal activation would produce many types, but a single cell is monoclonal."
-},
-"relatedQuestions": ["12", "13"],
-"category": "Antibodies",
-"difficulty": "Easy"
-},
-{
-"id": 6,
-"question": "Which of the following is a glycoprotein expressed on the surface of T helper cells, regulatory T cells, monocytes, macrophages and dendritic cells",
-"options": [
-"Cluster of differentiation 4 (CD4+)",
-"Cluster of differentiation 8 (CD8+)",
-"Plasma cells (activated B cells)",
-"Cluster of differentiation 56 (CD56)"
-],
-"answer": 0,
-"correctAnswer": "Cluster of differentiation 4 (CD4+)",
-"explanation": "CD4 is a co-receptor that binds MHC class II. It is expressed on T-helper cells (Th1, Th2, Th17), regulatory T cells (Tregs), and antigen-presenting cells (monocytes, macrophages, dendritic cells). It is the primary receptor for HIV.",
-"whyNotOtherOptions": {
-"b": "CD8 is on cytotoxic T cells and binds MHC I.",
-"c": "Plasma cells do not express CD4.",
-"d": "CD56 is a marker for NK cells."
-},
-"relatedQuestions": ["4", "21"],
-"category": "Immunology Markers",
-"difficulty": "Easy"
-},
-{
-"id": 7,
-"question": "Acute inflammation can be initiated by:",
-"options": [
-"Mast cell activation",
-"Influx of neutrophils",
-"An increase in vascular permeability",
-"C3"
-],
-"answer": 0,
-"correctAnswer": "Mast cell activation",
-"explanation": "Mast cell degranulation (triggered by trauma, IgE, or complement) releases histamine, leukotrienes, and prostaglandins, initiating acute inflammation by causing immediate vasodilation and increased vascular permeability. Neutrophil influx and permeability changes are downstream consequences.",
-"whyNotOtherOptions": {
-"b": "Neutrophil influx occurs after chemotactic signals.",
-"c": "Increased permeability is a result, not the initiator.",
-"d": "C3 activation occurs later in the complement cascade."
-},
-"relatedQuestions": ["3", "10"],
-"category": "Inflammation",
-"difficulty": "Medium"
-},
-{
-"id": 8,
-"question": "In the classical pathway of complement activation",
-"options": [
-"C3 is activated by binding C-reactive protein",
-"The sequence of activation is C1, C2, C3, C4",
-"C1q is activated by the presence of a single Fab region",
-"Activation by antibody requires one IgM or two IgG molecules"
-],
-"answer": 3,
-"correctAnswer": "Activation by antibody requires one IgM or two IgG molecules",
-"explanation": "Classical pathway starts when C1q binds to Fc regions of antibody-antigen complexes. One pentameric IgM provides multiple Fc sites, while two closely spaced IgG molecules are needed for C1q binding and activation. Sequence is C1qrs → C4 → C2 → C3.",
-"whyNotOtherOptions": {
-"a": "CRP activates the classical pathway indirectly, not by binding C3.",
-"b": "Correct sequence: C1, C4, C2, C3.",
-"c": "C1q requires at least two Fc regions, not Fab."
-},
-"relatedQuestions": ["9", "10"],
-"category": "Complement System",
-"difficulty": "Medium"
-},
-{
-"id": 9,
-"question": "The alternative complement pathway",
-"options": [
-"Can be activated by bacterial capsule polysaccharides",
-"Uses C5b as a C3 convertase"
-],
-"answer": 0,
-"correctAnswer": "Can be activated by bacterial capsule polysaccharides",
-"explanation": "The alternative pathway is antibody-independent and part of innate immunity. It is spontaneously activated on microbial surfaces (e.g., bacterial LPS, fungal cell walls, capsule polysaccharides) when factor B, D, and properdin stabilize C3b. C3 convertase is C3bBb.",
-"whyNotOtherOptions": {
-"b": "C5 convertase is C3bBb3b; C5b initiates the membrane attack complex."
-},
-"relatedQuestions": ["8", "10"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 10,
-"question": "After activation of the complement system, leukocytes and macrophages are attracted to the site of complement activation by",
-"options": [
-"C1",
-"C5a",
-"C5bC6C7C8C9",
-"C3b"
-],
-"answer": 1,
-"correctAnswer": "C5a",
-"explanation": "C5a is the most potent anaphylatoxin and chemotactic factor in the complement cascade. It strongly attracts neutrophils, eosinophils, monocytes, and macrophages to the site of activation, enhancing phagocytosis and inflammation.",
-"whyNotOtherOptions": {
-"a": "C1 initiates the cascade but has no chemotactic role.",
-"c": "C5b-9 is the membrane attack complex (MAC) that lyses cells.",
-"d": "C3b opsonizes pathogens for phagocytosis but is not chemotactic."
-},
-"relatedQuestions": ["7", "8", "9"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 11,
-"question": "What is the predominant type of antibody found in the serum of neonates born after full-term gestation?",
-"options": [
-"Infant IgA",
-"Infant IgG",
-"Infant IgM",
-"Maternal IgG"
-],
-"answer": 3,
-"correctAnswer": "Maternal IgG",
-"explanation": "During the third trimester, maternal IgG is selectively transported across the placenta via FcRn receptor, providing passive immunity to the newborn for the first 6–12 months. Neonatal IgG synthesis is low at birth. IgM and IgA are not transferred across the placenta.",
-"whyNotOtherOptions": {
-"a": "IgA is obtained postnatally via breast milk.",
-"b": "Infant begins producing own IgG later.",
-"c": "Elevated IgM at birth suggests intrauterine infection."
-},
-"relatedQuestions": ["1", "12"],
-"category": "Passive Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 12,
-"question": "How does the secondary humoral immune response differ from the primary response?",
-"options": [
-"The lag phase is longer in the secondary immune response",
-"IgM is the predominant antibody class produced in the secondary immune response",
-"The antibody levels produced are higher in the secondary immune response",
-"Cytotoxic T lymphocytes play an important role in the secondary response"
-],
-"answer": 2,
-"correctAnswer": "The antibody levels produced are higher in the secondary immune response",
-"explanation": "Memory B cells formed during the primary response enable a faster (lag 1–3 days vs. 7–10 days), stronger (10–100-fold higher antibody titer), longer-lasting, and predominantly IgG (due to class switching) secondary response upon re-exposure to the same antigen.",
-"whyNotOtherOptions": {
-"a": "Lag phase is shorter in secondary response.",
-"b": "IgG predominates in secondary response.",
-"d": "Cytotoxic T cells are part of cell-mediated, not humoral, immunity."
-},
-"relatedQuestions": ["1", "5", "11"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 13,
-"question": "Which of the following statements about immunoglobulin light chains is true?",
-"options": [
-"Each immunoglobulin monomer has either one kappa or one lambda chain",
-"There are two types: kappa and lambda",
-"They consist of constant regions only",
-"They form part of the Fc fragment"
-],
-"answer": 1,
-"correctAnswer": "There are two types: kappa and lambda",
-"explanation": "Light chains have two isotypes: kappa (κ) and lambda (λ). Each antibody monomer contains two identical light chains (either both κ or both λ) paired with two heavy chains. Light chains have one variable (VL) and one constant (CL) domain.",
-"whyNotOtherOptions": {
-"a": "Each monomer has two identical light chains, not one.",
-"c": "Light chains have both variable and constant regions.",
-"d": "Fc fragment consists of heavy-chain constant regions only."
-},
-"relatedQuestions": ["5", "14"],
-"category": "Antibody Structure",
-"difficulty": "Medium"
-},
-{
-"id": 14,
-"question": "Which of the following statements applies to the Fc fragment of an immunoglobulin molecule?",
-"options": [
-"It consists of the entire heavy chain",
-"It contains the variable region of the heavy chain",
-"It contains the antigen binding sites of the molecule",
-"It is the region of the molecule that binds to receptors on various white blood cells"
-],
-"answer": 3,
-"correctAnswer": "It is the region of the molecule that binds to receptors on various white blood cells",
-"explanation": "The Fc region comprises the constant domains of the heavy chains (CH2 and CH3). It mediates effector functions by binding Fc receptors on phagocytes (opsonization), NK cells (ADCC), mast cells (degranulation), and complement (C1q).",
-"whyNotOtherOptions": {
-"a": "Fc is only the C-terminal half of heavy chains.",
-"b": "Variable region is in Fab.",
-"c": "Antigen binding occurs in Fab regions."
-},
-"relatedQuestions": ["13", "8"],
-"category": "Antibody Structure",
-"difficulty": "Medium"
-},
-{
-"id": 15,
-"question": "The activity of natural killer (NK) cells",
-"options": [
-"Does not require previous exposure to an antigen",
-"Involves phagocytosis and killing of bacteria",
-"Requires interaction with cytotoxic T cells",
-"Requires interaction with B cells"
-],
-"answer": 0,
-"correctAnswer": "Does not require previous exposure to an antigen",
-"explanation": "NK cells are innate lymphocytes that kill virus-infected and tumor cells without prior sensitization or MHC restriction. They detect 'missing self' (low MHC I) and use perforin/granzyme or death ligands. No immunological memory is involved.",
-"whyNotOtherOptions": {
-"b": "Phagocytosis is performed by macrophages/neutrophils.",
-"c": "NK cells act independently.",
-"d": "No interaction with B cells."
-},
-"relatedQuestions": ["4", "17"],
-"category": "Innate Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 16,
-"question": "Interaction between B and T helper cells involves",
-"options": [
-"MHC II molecule on B cell binding to MHC I molecule on the T cell",
-"MHC II molecule on B cell binding to CD3 on the T cell",
-"Foreign antigen on B cell binding to T cell receptor",
-"CD3 molecule on B cell binding to T cell receptor"
-],
-"answer": 2,
-"correctAnswer": "Foreign antigen on B cell binding to T cell receptor",
-"explanation": "For T-dependent antigens, B cells internalize antigen via surface Ig, process it, and present peptides on MHC II. The CD4+ T-helper cell’s TCR recognizes the peptide-MHC II complex. Co-stimulatory signals (CD40-CD40L, cytokines) then activate the B cell for proliferation and differentiation.",
-"whyNotOtherOptions": {
-"a": "MHC II on B cell binds TCR+CD4, not MHC I.",
-"b": "CD3 is part of TCR complex on T cell.",
-"d": "B cells do not express CD3."
-},
-"relatedQuestions": ["2", "17", "22"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 17,
-"question": "A target cell is typically killed when",
-"options": [
-"A CD4+ T cell recognizes a peptide bound to MHC class I on the target cell",
-"A CD4+ T cell recognizes a peptide bound to MHC class II on the target cell",
-"A CD8+ T cell produces IL-4 in close proximity to the target cell",
-"A CD8+ T cell recognizes a peptide bound to MHC class I on the target cell"
-],
-"answer": 3,
-"correctAnswer": "A CD8+ T cell recognizes a peptide bound to MHC class I on the target cell",
-"explanation": "CD8+ cytotoxic T cells recognize viral or tumor peptides presented on MHC class I (present on all nucleated cells). Recognition triggers release of perforin/granzyme or FasL, inducing apoptosis in the target cell.",
-"whyNotOtherOptions": {
-"a": "CD4+ cells recognize MHC II (on APCs), not MHC I.",
-"b": "CD4+ cells do not kill targets directly.",
-"c": "IL-4 is produced by Th2 cells; CD8+ cells produce IFN-γ."
-},
-"relatedQuestions": ["4", "15", "22"],
-"category": "Cell-Mediated Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 18,
-"question": "Primary immunodeficiency producing susceptibility to infection by viruses and fungus is caused by:",
-"options": [
-"B-cell deficiency",
-"T-cell deficiency",
-"Phagocyte deficiency",
-"Complement deficiency"
-],
-"answer": 1,
-"correctAnswer": "T-cell deficiency",
-"explanation": "T-cells (especially CD4+ Th1) coordinate antiviral and antifungal responses by activating macrophages and cytotoxic T cells. Pure T-cell defects (e.g., DiGeorge syndrome, SCID with T-cell involvement) lead to severe viral (HSV, CMV) and fungal (Candida, Pneumocystis) infections.",
-"whyNotOtherOptions": {
-"a": "B-cell defects cause bacterial infections.",
-"c": "Phagocyte defects (e.g., CGD) cause bacterial and fungal abscesses.",
-"d": "Complement defects cause encapsulated bacterial infections."
-},
-"relatedQuestions": ["21", "23"],
-"category": "Immunodeficiency",
-"difficulty": "Medium"
-},
-{
-"id": 19,
-"question": "Incompatible blood transfusions are examples of",
-"options": [
-"Type I hypersensitivity reactions",
-"Type II hypersensitivity reactions",
-"Type III hypersensitivity reactions",
-"Type IV hypersensitivity reactions"
-],
-"answer": 1,
-"correctAnswer": "Type II hypersensitivity reactions",
-"explanation": "Type II (cytotoxic) hypersensitivity involves IgM/IgG antibodies binding cell-surface antigens, leading to complement activation and cell lysis. In ABO incompatibility, anti-A/B IgM binds donor RBCs, activates complement, and causes acute hemolytic transfusion reaction.",
-"whyNotOtherOptions": {
-"a": "Type I is immediate (IgE, anaphylaxis).",
-"c": "Type III is immune complex (e.g., serum sickness).",
-"d": "Type IV is delayed (T-cell mediated)."
-},
-"relatedQuestions": ["8"],
-"category": "Hypersensitivity",
-"difficulty": "Easy"
-},
-{
-"id": 20,
-"question": "The single best chance of a tissue graft being accepted in a human recipient is if it is:",
-"options": [
-"An isograft",
-"An allograft given under the cover of potent immunosuppression",
-"A xenograft from a pig",
-"From a living sibling donor"
-],
-"answer": 0,
-"correctAnswer": "An isograft",
-"explanation": "An isograft (syngeneic graft) is between genetically identical individuals (identical twins). There is complete MHC matching, so no alloantigens are recognized, and no rejection occurs without immunosuppression.",
-"whyNotOtherOptions": {
-"b": "Allografts still carry risk of rejection despite immunosuppression.",
-"c": "Xenografts have major antigenic differences and hyperacute rejection.",
-"d": "Sibling donors may share only some HLA; still an allograft."
-},
-"relatedQuestions": ["none"],
-"category": "Transplantation",
-"difficulty": "Easy"
-},
-{
-"id": 21,
-"question": "In patients with human immunodeficiency virus infection, immune status can be monitored by measuring the ratio of",
-"options": [
-"CD3+ cells to CD8+ cells",
-"CD4+ cells to CD8+ cells",
-"Lymphocytes to monocytes",
-"T cells to B cells"
-],
-"answer": 1,
-"correctAnswer": "CD4+ cells to CD8+ cells",
-"explanation": "HIV infects CD4+ cells via gp120-CD4 binding. Progressive loss of CD4+ T-helper cells leads to inversion of the normal CD4:CD8 ratio (normally ~2:1). CD4 count <200/μL defines AIDS; ratio is a key prognostic marker.",
-"whyNotOtherOptions": {
-"a": "CD3 marks all T cells; not specific.",
-"c": "Not used in HIV monitoring.",
-"d": "HIV primarily affects T-helper cells, not B cells."
-},
-"relatedQuestions": ["6", "18"],
-"category": "HIV/AIDS",
-"difficulty": "Easy"
-},
-{
-"id": 22,
-"question": "What is the structure recognized by the αβ T-cell receptor on the cell surface of an antigen–presenting cell?",
-"options": [
-"Soluble native protein antigen plus MHC molecule",
-"Processed (peptide) antigen plus MHC",
-"Processed peptide antigen",
-"Cell surface native antigen"
-],
-"answer": 1,
-"correctAnswer": "Processed (peptide) antigen plus MHC",
-"explanation": "The αβ TCR recognizes only linear peptide fragments (8–20 amino acids) bound in the groove of MHC molecules. Native proteins are processed intracellularly into peptides before presentation. This is the basis of MHC restriction.",
-"whyNotOtherOptions": {
-"a": "TCR does not recognize soluble native antigen.",
-"c": "Peptide alone is not recognized without MHC.",
-"d": "Native antigen on surface is recognized by B-cell receptor, not TCR."
-},
-"relatedQuestions": ["16", "17"],
-"category": "Antigen Presentation",
-"difficulty": "Medium"
-},
-{
-"id": 23,
-"question": "Your patient is a child who has no detectable T or B cells. This is most probably the result of a defect in",
-"options": [
-"The thymus",
-"The bursal equivalent",
-"T cell-B cell interaction",
-"Stem cells originating in the bone marrow"
-],
-"answer": 3,
-"correctAnswer": "Stem cells originating in the bone marrow",
-"explanation": "Severe Combined Immunodeficiency (SCID) with absent T and B cells results from defects in common lymphoid progenitor cells in the bone marrow (e.g., ADA deficiency, RAG mutations). Both T-cell (thymus-dependent) and B-cell lineages fail to develop.",
-"whyNotOtherOptions": {
-"a": "Thymus defect (DiGeorge) affects only T cells.",
-"b": "B-cell maturation occurs in bone marrow in humans.",
-"c": "Interaction defect would not abolish both cell types."
-},
-"relatedQuestions": ["18"],
-"category": "Immunodeficiency",
-"difficulty": "Medium"
-},
-{
-"id": 24,
-"question": "A patient is admitted with multiple bacterial infections and is found to have a complete absence of Complement. Which complement-mediated function would remain intact in such a patient?",
-"options": [
-"Lysis of bacteria",
-"Opsonization of bacteria",
-"Generation of anaphylatoxins",
-"None"
-],
-"answer": 3,
-"correctAnswer": "None",
-"explanation": "All major functions of complement require intact complement proteins: lysis (MAC: C5b-9), opsonization (C3b), chemotaxis/anaphylaxis (C3a, C5a). Complete absence (e.g., hereditary C3 deficiency) abolishes all these effector mechanisms, leading to severe bacterial infections.",
-"whyNotOtherOptions": {
-"a": "Lysis requires MAC.",
-"b": "Opsonization requires C3b.",
-"c": "Anaphylatoxins are C3a and C5a."
-},
-"relatedQuestions": ["8", "9", "10"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 25,
-"question": "For vaccination against mycobacterial diseases such as tuberculosis, what is the most important facet of the immune response to be stimulated?",
-"options": [
-"A high titer of antibody",
-"Macrophage-activating cell-mediated immunity",
-"Cytotoxic T-cells",
-"Antibody in the gut lumen"
-],
-"answer": 1,
-"correctAnswer": "Macrophage-activating cell-mediated immunity",
-"explanation": "Mycobacterium tuberculosis is an intracellular pathogen surviving inside macrophages. Effective immunity requires Th1-mediated cell-mediated immunity: IFN-γ from CD4+ T cells activates macrophages to form granulomas and kill intracellular bacteria. BCG vaccine aims to induce this response. Antibodies are ineffective against intracellular pathogens.",
-"whyNotOtherOptions": {
-"a": "Antibodies cannot access intracellular mycobacteria.",
-"c": "Cytotoxic T cells help but are secondary to macrophage activation.",
-"d": "Gut IgA is irrelevant for pulmonary TB."
-},
-"relatedQuestions": ["4", "17"],
-"category": "Vaccination",
-"difficulty": "Medium"
-}
-];
+    {
+        "id": 1,
+        "question": "Hepatitis viruses can be acquired via",
+        "options": [
+            "Genetic disorders",
+            "Alcohol/drug abuse",
+            "Autoimmune diseases",
+            "Microbial infection",
+            "All of the above"
+        ],
+        "answer": 3,
+        "correctAnswer": "Microbial infection",
+        "explanation": "Hepatitis viruses specifically refer to a group of viruses (HAV, HBV, HCV, HDV, HEV) that cause viral hepatitis through microbial infection. These are transmitted via fecal-oral route (HAV, HEV), parenteral/sexual/perinatal (HBV, HCV, HDV). While genetic disorders (e.g., Wilson's disease), alcohol/drug abuse (alcoholic hepatitis), and autoimmune diseases (autoimmune hepatitis) can cause liver inflammation, they do not involve 'hepatitis viruses' as infectious agents. The term 'hepatitis viruses' limits the acquisition to microbial (viral) infection.",
+        "whyNotOtherOptions": {
+            "a": "Genetic disorders cause non-infectious hepatitis-like conditions but not via hepatitis viruses.",
+            "b": "Alcohol/drug abuse leads to toxic hepatitis, not viral infection.",
+            "c": "Autoimmune diseases cause immune-mediated liver damage, unrelated to viral acquisition.",
+            "e": "Not all options involve hepatitis viruses; only microbial infection does."
+        },
+        "relatedQuestions": [],
+        "category": "Virology - Hepatitis",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 2,
+        "question": "Roseola infantum, also known as exanthem subitum or sixth disease, typically presents in children between six and twelve months of age is caused by",
+        "options": [
+            "Varicella zoster virus",
+            "Rubella virus",
+            "Measles virus",
+            "Herpes simplex virus",
+            "Human herpes virus 6"
+        ],
+        "answer": 4,
+        "correctAnswer": "Human herpes virus 6",
+        "explanation": "Roseola infantum (sixth disease) is a common childhood illness caused primarily by Human Herpesvirus 6 (HHV-6), and less commonly HHV-7. It presents with high fever (3-5 days) followed by a maculopapular rash as fever resolves. Peak incidence is 6-24 months. According to Robbins Basic Pathology and standard virology texts (e.g., Fields Virology), HHV-6 integrates into host DNA and establishes latency.",
+        "whyNotOtherOptions": {
+            "a": "Varicella zoster virus causes chickenpox (third disease) and shingles.",
+            "b": "Rubella virus causes German measles (rubella, not typically in infants under 6 months).",
+            "c": "Measles virus causes measles (first disease) with Koplik spots and more severe symptoms.",
+            "d": "Herpes simplex virus causes oral/genital herpes, not roseola."
+        },
+        "relatedQuestions": [],
+        "category": "Virology - Pediatric Infections",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 3,
+        "question": "One of the following is correct about prions that leads to spongiform encephalopathies which are characterized by a loss of muscle control, myoclonic jerks, loss of coordination, and rapidly progressive dementia",
+        "options": [
+            "They're proteins lacking nucleic acid",
+            "They've either DNA or RNA",
+            "They've both type of nucleic acid",
+            "A and B",
+            "A and C"
+        ],
+        "answer": 0,
+        "correctAnswer": "They're proteins lacking nucleic acid",
+        "explanation": "Prions are infectious proteinaceous particles (PrP^Sc) composed solely of misfolded prion protein without any nucleic acid (DNA/RNA). They cause transmissible spongiform encephalopathies (TSEs) like CJD, scrapie by inducing normal PrP^C to misfold, leading to neuronal vacuolation (spongiform change), astrogliosis, and clinical features: myoclonus, ataxia, dementia. Confirmed by WHO and Robbins Basic Pathology (Chapter 28: Nervous System).",
+        "whyNotOtherOptions": {
+            "b": "Prions lack nucleic acids entirely, unlike viruses.",
+            "c": "No nucleic acid present.",
+            "d": "Incorrect combination; only A is true.",
+            "e": "Incorrect combination."
+        },
+        "relatedQuestions": ["6"],
+        "category": "Prion Diseases",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 4,
+        "question": "Clinical syndromes associated with Coxsackie A virus infection",
+        "options": [
+            "Herpangina",
+            "Herpes",
+            "Pleurodynia",
+            "Smallpox",
+            "All of the above"
+        ],
+        "answer": 0,
+        "correctAnswer": "Herpangina",
+        "explanation": "Coxsackie A viruses (enteroviruses, Picornaviridae) commonly cause herpangina: febrile illness with painful vesicular ulcers on posterior oropharynx (soft palate, uvula, tonsils). Other syndromes: hand-foot-mouth disease (A16), aseptic meningitis. Per Mandell’s Principles of Infectious Diseases and Robbins, herpangina is classic for Coxsackie A.",
+        "whyNotOtherOptions": {
+            "b": "Herpes is caused by HSV (herpesviruses).",
+            "c": "Pleurodynia (Bornholm disease) is classic for Coxsackie B.",
+            "d": "Smallpox is caused by variola virus (poxvirus, eradicated).",
+            "e": "Only herpangina is associated with Coxsackie A."
+        },
+        "relatedQuestions": ["5"],
+        "category": "Virology - Enteroviruses",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 5,
+        "question": "Clinical diseases associated with Coxsackie B virus infection",
+        "options": [
+            "Herpangina",
+            "Herpes",
+            "Pleurodynia",
+            "Ocular infection",
+            "All except C"
+        ],
+        "answer": 2,
+        "correctAnswer": "Pleurodynia",
+        "explanation": "Coxsackie B viruses cause pleurodynia (devil’s grip): paroxysmal spasmodic pain in chest/abdomen due to myositis of intercostal/diaphragmatic muscles. Also: myocarditis, pericarditis, aseptic meningitis, pancreatitis. Per CDC and virology texts, pleurodynia is hallmark of Coxsackie B.",
+        "whyNotOtherOptions": {
+            "a": "Herpangina is primarily Coxsackie A.",
+            "b": "Herpes is HSV.",
+            "d": "Ocular infections not typical for Coxsackie B.",
+            "e": "Incorrect; C is the correct association."
+        },
+        "relatedQuestions": ["4"],
+        "category": "Virology - Enteroviruses",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 6,
+        "question": "Disease conditions caused by prion that appears in animals includes:",
+        "options": [
+            "Kuru",
+            "Creutzfeldt-Jakob disease",
+            "Scrapie",
+            "A and B",
+            "A and C"
+        ],
+        "answer": 2,
+        "correctAnswer": "Scrapie",
+        "explanation": "Scrapie is a prion disease affecting sheep and goats, causing itching, ataxia, wasting. First recognized TSE in animals. Kuru and CJD are human prion diseases (Kuru: cannibalism in Papua New Guinea; CJD: sporadic/familial/iatrogenic). Per WHO Prion Disease guidelines.",
+        "whyNotOtherOptions": {
+            "a": "Kuru is human, transmitted via ritualistic cannibalism.",
+            "b": "CJD is human prion disease.",
+            "d": "Both A and B are human diseases.",
+            "e": "A is human, C is animal."
+        },
+        "relatedQuestions": ["3"],
+        "category": "Prion Diseases",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 7,
+        "question": "The mode of transmission for hepatitis A and hepatitis B viruses, respectively",
+        "options": [
+            "Fecal-oral, parenteral",
+            "Parenteral, Fecal-oral",
+            "Fecal-oral, sexual",
+            "A and C",
+            "All of the above"
+        ],
+        "answer": 3,
+        "correctAnswer": "A and C",
+        "explanation": "HAV: fecal-oral (contaminated food/water, poor hygiene). HBV: parenteral (blood, needles), sexual, perinatal. Option A: correct for HAV and one mode for HBV. Option C: correct for HAV and another mode for HBV. Thus D (A and C) covers both primary modes accurately. Per CDC Pink Book and Robbins (Chapter 18: Liver).",
+        "whyNotOtherOptions": {
+            "b": "Reversed; incorrect for both.",
+            "e": "B is wrong, so not all."
+        },
+        "relatedQuestions": ["8", "12", "20"],
+        "category": "Virology - Hepatitis",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 8,
+        "question": "Primary Hepatocellular carcinoma could be caused by",
+        "options": [
+            "Hepatitis C virus",
+            "Hepatitis B virus",
+            "Hepatitis A virus",
+            "A and B",
+            "B and C"
+        ],
+        "answer": 3,
+        "correctAnswer": "A and B",
+        "explanation": "Chronic HBV and HCV infections cause persistent inflammation, cirrhosis, and integrate/promote oncogenesis leading to HCC (70-80% of cases worldwide). HBV integrates into genome; HCV via chronic inflammation. HAV causes only acute infection, no chronicity/cancer. Per WHO and Robbins Basic Pathology (Chapter 18: Liver).",
+        "whyNotOtherOptions": {
+            "c": "HAV does not cause chronic infection or HCC.",
+            "e": "C is incorrect."
+        },
+        "relatedQuestions": ["7", "20", "39"],
+        "category": "Oncology - Viral Carcinogenesis",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 9,
+        "question": "One of the following clinical features could not be attributed to hepatitis viral infection",
+        "options": [
+            "Abdominal pain",
+            "Jaundice",
+            "Dark urine",
+            "Diarrhea",
+            "All are found during hepatitis"
+        ],
+        "answer": 3,
+        "correctAnswer": "Diarrhea",
+        "explanation": "Viral hepatitis (acute) presents with RUQ pain, jaundice (conjugated hyperbilirubinemia), dark urine (bilirubinuria), nausea, anorexia, fatigue. Diarrhea is not typical; GI upset is more nausea/vomiting. Chronic hepatitis may be asymptomatic. Per Harrison’s Principles of Internal Medicine.",
+        "whyNotOtherOptions": {
+            "a": "Common in acute hepatitis.",
+            "b": "Hallmark sign.",
+            "c": "Due to bilirubin excretion.",
+            "e": "Diarrhea is not typical."
+        },
+        "relatedQuestions": [],
+        "category": "Virology - Hepatitis",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 10,
+        "question": "Chemokine receptors involved during attachment of HIV viruses to T3 target cell",
+        "options": [
+            "CD4",
+            "CCR5",
+            "CXCR4",
+            "A and B",
+            "B and C"
+        ],
+        "answer": 4,
+        "correctAnswer": "B and C",
+        "explanation": "HIV entry requires CD4 receptor (primary) and co-receptor: CCR5 (macrophage-tropic, R5 strains, early infection) or CXCR4 (T-cell-tropic, X4 strains, late). Question specifies 'chemokine receptors'—CCR5 and CXCR4 are G-protein-coupled chemokine receptors. CD4 is not. Per Fields Virology and Robbins (Chapter 8: HIV).",
+        "whyNotOtherOptions": {
+            "a": "CD4 is the primary receptor, not chemokine.",
+            "d": "Includes CD4, which is not chemokine receptor."
+        },
+        "relatedQuestions": ["11", "14", "15"],
+        "category": "Virology - HIV",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 11,
+        "question": "HIV infection could lead to",
+        "options": [
+            "Opportunistic infection",
+            "Creutzfeldt-Jakob disease",
+            "AIDS",
+            "A and B",
+            "All of the above"
+        ],
+        "answer": 2,
+        "correctAnswer": "A and C",
+        "explanation": "HIV progresses to AIDS (CD4 <200, opportunistic infections like PCP, toxoplasmosis). CJD is prion disease, unrelated. Note: Options lack 'A and C'; closest logical is opportunistic infections and AIDS. Per CDC and Robbins.",
+        "whyNotOtherOptions": {
+            "b": "CJD unrelated to HIV.",
+            "d": "Includes unrelated CJD.",
+            "e": "Includes CJD."
+        },
+        "relatedQuestions": ["10", "14", "15"],
+        "category": "Virology - HIV",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 12,
+        "question": "Which of the following hepatitis viruses causes serious infections especially in pregnant women?",
+        "options": [
+            "Hepatitis A virus",
+            "Hepatitis B virus",
+            "Hepatitis C virus",
+            "Hepatitis D virus",
+            "Hepatitis E virus"
+        ],
+        "answer": 4,
+        "correctAnswer": "Hepatitis E virus",
+        "explanation": "HEV (genotypes 1,2) causes fulminant hepatitis in pregnancy (3rd trimester), mortality 20-30% due to acute liver failure. HBV can cause perinatal transmission but not higher maternal mortality. Per WHO HEV Fact Sheet.",
+        "whyNotOtherOptions": {
+            "a": "HAV acute, self-limited.",
+            "b": "HBV chronic risk, but not fulminant in pregnancy.",
+            "c": "HCV chronic, not acute fulminant.",
+            "d": "HDV requires HBV, not specific pregnancy risk."
+        },
+        "relatedQuestions": ["7", "8"],
+        "category": "Virology - Hepatitis",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 13,
+        "question": "Which of the following virus family contains double stranded RNA viruses",
+        "options": [
+            "Reoviridae",
+            "Herpesviridae",
+            "Baculoviridae",
+            "Bunyaviridae",
+            "All of the above"
+        ],
+        "answer": 0,
+        "correctAnswer": "Reoviridae",
+        "explanation": "Reoviridae (e.g., rotavirus, reovirus) have segmented dsRNA genome. Herpesviridae: dsDNA. Baculoviridae: dsDNA (insect). Bunyaviridae: ssRNA (negative/ambisense). Per ICTV classification.",
+        "whyNotOtherOptions": {
+            "b": "dsDNA.",
+            "c": "dsDNA.",
+            "d": "ssRNA.",
+            "e": "Only Reoviridae."
+        },
+        "relatedQuestions": [],
+        "category": "Virology - Classification",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 14,
+        "question": "Oral Hairy Leukoplakia can be caused by",
+        "options": [
+            "Epstein-Barr Virus",
+            "Cytomegalovirus",
+            "Human herpes virus-8",
+            "B and C",
+            "All of the above"
+        ],
+        "answer": 0,
+        "correctAnswer": "Epstein-Barr Virus",
+        "explanation": "Oral hairy leukoplakia (OHL): white, corrugated plaques on lateral tongue in immunocompromised (HIV). Caused by EBV replication in epithelial cells. Confirmed by in situ hybridization. Per Robbins and Mandell.",
+        "whyNotOtherOptions": {
+            "b": "CMV causes retinitis, not OHL.",
+            "c": "HHV-8 causes Kaposi sarcoma.",
+            "d": "Incorrect.",
+            "e": "Only EBV."
+        },
+        "relatedQuestions": ["15", "39"],
+        "category": "Virology - Herpesviruses",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 15,
+        "question": "Kaposi's sarcomas are associated with",
+        "options": [
+            "HIV-1",
+            "HIV-2",
+            "HHV-6",
+            "A and B",
+            "All of the above"
+        ],
+        "answer": 3,
+        "correctAnswer": "A and B",
+        "explanation": "Kaposi sarcoma caused by HHV-8 (KSHV). AIDS-associated KS seen in HIV-1 and HIV-2 due to immunosuppression. HHV-6 causes roseola, not KS. Per CDC and Robbins (Chapter 7).",
+        "whyNotOtherOptions": {
+            "c": "HHV-6 unrelated.",
+            "e": "Includes HHV-6."
+        },
+        "relatedQuestions": ["14", "39"],
+        "category": "Oncology - Viral",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 16,
+        "question": "Immature cells in the erythroid lineage are the principal targets for",
+        "options": [
+            "Human papilloma virus",
+            "Rotavirus",
+            "Human parvovirus B19",
+            "A and B",
+            "A and C"
+        ],
+        "answer": 2,
+        "correctAnswer": "Human parvovirus B19",
+        "explanation": "Parvovirus B19 (Parvoviridae, ssDNA) binds P antigen on erythroid precursors (CFU-E, proerythroblasts), causing apoptosis, transient aplastic crisis (sickle cell), hydrops fetalis, fifth disease. Per Fields Virology.",
+        "whyNotOtherOptions": {
+            "a": "HPV targets squamous epithelium.",
+            "b": "Rotavirus targets enterocytes.",
+            "d": "Incorrect.",
+            "e": "A incorrect."
+        },
+        "relatedQuestions": [],
+        "category": "Virology - Parvovirus",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 17,
+        "question": "Major antigenic changes in influenza viruses are",
+        "options": [
+            "Resolved in a new subtype",
+            "Due to antigenic drift",
+            "Due to genetic reassortment",
+            "A and B",
+            "None of the above"
+        ],
+        "answer": 2,
+        "correctAnswer": "Due to genetic reassortment",
+        "explanation": "Antigenic shift (major change) creates new subtype via reassortment of segmented genome (e.g., human-avian in pigs), causing pandemics (H1N1 2009). Drift: minor mutations. Per CDC Influenza Manual.",
+        "whyNotOtherOptions": {
+            "a": "Result of shift, not cause.",
+            "b": "Drift is minor change.",
+            "d": "Incorrect.",
+            "e": "C is correct."
+        },
+        "relatedQuestions": ["18"],
+        "category": "Virology - Influenza",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 18,
+        "question": "Pandemic of influenza is caused by",
+        "options": [
+            "Influenza virus type B",
+            "Influenza virus type C",
+            "Influenza virus type A",
+            "All of the above",
+            "A and B"
+        ],
+        "answer": 2,
+        "correctAnswer": "Influenza virus type A",
+        "explanation": "Only Influenza A has animal reservoirs, undergoes antigenic shift, causes pandemics (1918 H1N1, 1957 H2N2, 1968 H3N2). B: seasonal epidemics. C: mild. Per WHO.",
+        "whyNotOtherOptions": {
+            "a": "No shift.",
+            "b": "Mild, no pandemics.",
+            "d": "Only A.",
+            "e": "No."
+        },
+        "relatedQuestions": ["17"],
+        "category": "Virology - Influenza",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 19,
+        "question": "Hepatitis Type C Virus is classified under the family",
+        "options": [
+            "Adenoviridae",
+            "Picornaviridae",
+            "Hepadnaviridae",
+            "Arenaviridae",
+            "Bunyaviridae"
+        ],
+        "answer": -1,
+        "correctAnswer": "None of the above (Flaviviridae)",
+        "explanation": "HCV is a positive-sense ssRNA virus in Flaviviridae (with yellow fever, dengue). Hepadnaviridae: HBV (DNA). Picornaviridae: HAV. None listed. Per ICTV.",
+        "whyNotOtherOptions": {
+            "a": "dsDNA, adenoviruses.",
+            "b": "HAV.",
+            "c": "HBV.",
+            "d": "ssRNA, arenaviruses.",
+            "e": "ssRNA, bunyaviruses."
+        },
+        "relatedQuestions": ["7", "8"],
+        "category": "Virology - Classification",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 20,
+        "question": "Chronicity has been observed in",
+        "options": [
+            "Hepatitis type B virus infection",
+            "Hepatitis type A virus infection",
+            "Hepatitis type C virus infection",
+            "A and C",
+            "All of the above"
+        ],
+        "answer": 3,
+        "correctAnswer": "A and C",
+        "explanation": "HBV (5-10% adults chronic), HCV (75-85% chronic). HAV: always acute, clears in weeks. Chronicity leads to cirrhosis/HCC. Per CDC.",
+        "whyNotOtherOptions": {
+            "b": "No chronic HAV.",
+            "e": "Includes B."
+        },
+        "relatedQuestions": ["8", "12"],
+        "category": "Virology - Hepatitis",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 21,
+        "question": "Yellow fever is transmitted by",
+        "options": [
+            "Anopheles mosquito bite",
+            "Aedes mosquito bite",
+            "Fecal-oral",
+            "Sexual",
+            "Parenteral"
+        ],
+        "answer": 1,
+        "correctAnswer": "Aedes mosquito bite",
+        "explanation": "Yellow fever virus (Flavivirus) transmitted by Aedes aegypti (urban) or Haemagogus (sylvatic) mosquitoes. Arboviral. Per WHO.",
+        "whyNotOtherOptions": {
+            "a": "Anopheles: malaria.",
+            "c": "Fecal-oral: HAV.",
+            "d": "Sexual: HBV.",
+            "e": "Parenteral: HBV/HCV."
+        },
+        "relatedQuestions": [],
+        "category": "Virology - Arboviruses",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 22,
+        "question": "A disease condition characterized by runny nose, sneezing, skin rash, conjunctivitis, dry cough, diarrhoea, headache, Koplik's spots, photophobia, sore throat, or swollen lymph nodes is caused by:",
+        "options": [
+            "Influenza virus type A",
+            "SARS-CoV-2 virus",
+            "Varicella-zoster virus",
+            "Mumps virus",
+            "Measles virus"
+        ],
+        "answer": 4,
+        "correctAnswer": "Measles virus",
+        "explanation": "Measles (rubeola): prodrome (3C: cough, coryza, conjunctivitis), Koplik spots (pathognomonic), maculopapular rash. Complications: diarrhea, pneumonia. Per CDC Pink Book.",
+        "whyNotOtherOptions": {
+            "a": "Influenza: no rash/Koplik.",
+            "b": "COVID: no Koplik/rash typically.",
+            "c": "VZV: vesicular rash.",
+            "d": "Mumps: parotitis."
+        },
+        "relatedQuestions": [],
+        "category": "Virology - Paramyxoviruses",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 23,
+        "question": "Incorrect statement about Dengue",
+        "options": [
+            "Transmitted by Aedes",
+            "May result in Break-bone fever",
+            "May result in DHF/DSS",
+            "May result in microcephaly",
+            "All except D"
+        ],
+        "answer": 3,
+        "correctAnswer": "May result in microcephaly",
+        "explanation": "Dengue (Flavivirus, Aedes): break-bone fever (myalgia), can progress to DHF/DSS. Microcephaly: Zika (also Aedes). Per WHO Dengue Guidelines.",
+        "whyNotOtherOptions": {
+            "a": "Correct.",
+            "b": "Correct.",
+            "c": "Correct.",
+            "e": "D is incorrect."
+        },
+        "relatedQuestions": ["21"],
+        "category": "Virology - Arboviruses",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 24,
+        "question": "Ophthalmia neonatorum is caused by",
+        "options": [
+            "Neisseria gonorrhoeae",
+            "Haemophilus ducreyi",
+            "Leptospira interrogans",
+            "Treponema pallidum"
+        ],
+        "answer": 0,
+        "correctAnswer": "Neisseria gonorrhoeae",
+        "explanation": "Ophthalmia neonatorum: purulent conjunctivitis in newborns, classically N. gonorrhoeae (gonococcal, severe, corneal ulcer risk) from maternal genital tract. Also Chlamydia (not listed). Per AAP Red Book.",
+        "whyNotOtherOptions": {
+            "b": "H. ducreyi: chancroid.",
+            "c": "Leptospira: leptospirosis.",
+            "d": "T. pallidum: congenital syphilis (interstitial keratitis later)."
+        },
+        "relatedQuestions": ["29"],
+        "category": "Bacteriology - Neonatal Infections",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 25,
+        "question": "How is TB diagnosed?",
+        "options": [
+            "Chest X-ray",
+            "Sputum microscopy",
+            "Skin test",
+            "All of the above"
+        ],
+        "answer": 3,
+        "correctAnswer": "All of the above",
+        "explanation": "TB diagnosis: TST/IGRA (latent), sputum AFB/culture/NAAT (active pulmonary), CXR (cavities, infiltrates). Multimodal. Per WHO TB Guidelines.",
+        "whyNotOtherOptions": {
+            "a": "Supportive, not definitive.",
+            "b": "Gold standard for pulmonary.",
+            "c": "For latent infection."
+        },
+        "relatedQuestions": ["26"],
+        "category": "Bacteriology - Mycobacteria",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 26,
+        "question": "What are the symptoms of active Tuberculosis?",
+        "options": [
+            "Weight loss",
+            "Night sweats",
+            "Loss of appetite",
+            "Persistent cough",
+            "All of the above"
+        ],
+        "answer": 4,
+        "correctAnswer": "All of the above",
+        "explanation": "Active TB: chronic cough (± hemoptysis), fever, night sweats, weight loss, anorexia. Constitutional symptoms. Per CDC.",
+        "whyNotOtherOptions": {
+            "a": "Common.",
+            "b": "Classic.",
+            "c": "Common.",
+            "d": "Hallmark."
+        },
+        "relatedQuestions": ["25"],
+        "category": "Bacteriology - Mycobacteria",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 27,
+        "question": "Orientia tsutsugamushi which causes scrub typhus, also known as Japanese river fever is transmitted by arthropod vector",
+        "options": [
+            "Tick",
+            "Mite",
+            "Louse",
+            "All of the above"
+        ],
+        "answer": 1,
+        "correctAnswer": "Mite",
+        "explanation": "Scrub typhus: Orientia tsutsugamushi, transmitted by Leptotrombidium (chigger) mite larvae. Eschar at bite. Per Mandell.",
+        "whyNotOtherOptions": {
+            "a": "Ticks: rickettsia, babesia.",
+            "c": "Louse: epidemic typhus (R. prowazekii).",
+            "d": "Only mite."
+        },
+        "relatedQuestions": [],
+        "category": "Bacteriology - Rickettsia",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 28,
+        "question": "Trachoma which is spread by the transfer of infected discharge from the eye of one person to another by flies or contaminated hands, clothing, or towels is caused by serovars",
+        "options": [
+            "Serovars A, B, Ba, C",
+            "Serovars D to K",
+            "Serovars L1 to L3",
+            "All of the above"
+        ],
+        "answer": 0,
+        "correctAnswer": "Serovars A, B, Ba, C",
+        "explanation": "Trachoma: blinding eye disease by C. trachomatis serovars A, B, Ba, C. Fly-borne, poor hygiene. Per WHO Trachoma Elimination.",
+        "whyNotOtherOptions": {
+            "b": "D-K: genital, inclusion conjunctivitis.",
+            "c": "L1-L3: LGV.",
+            "d": "Only A-C."
+        },
+        "relatedQuestions": ["29"],
+        "category": "Bacteriology - Chlamydia",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 29,
+        "question": "Lymphogranuloma venereum which is characterized by transient papules on the external genitalia, followed by painful swelling of inguinal and perirectal lymphnodes is caused by",
+        "options": [
+            "Neisseria gonorrhoeae",
+            "Haemophilus ducreyi",
+            "Chlamydia trachomatis",
+            "Treponema pallidum"
+        ],
+        "answer": 2,
+        "correctAnswer": "Chlamydia trachomatis",
+        "explanation": "LGV: invasive C. trachomatis serovars L1-L3. Buboes, proctitis. STI. Per CDC STI Guidelines.",
+        "whyNotOtherOptions": {
+            "a": "Gonorrhea: urethritis.",
+            "b": "Chancroid: painful ulcer.",
+            "d": "Syphilis: chancre."
+        },
+        "relatedQuestions": ["28"],
+        "category": "Bacteriology - Chlamydia",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 30,
+        "question": "One of the following statement is incorrect about Mycoplasmas",
+        "options": [
+            "Lack a rigid cell wall",
+            "Comparatively very small in size",
+            "Resistant to penicillins, cephalosporins, and vancomycin",
+            "None of the above"
+        ],
+        "answer": 3,
+        "correctAnswer": "None of the above",
+        "explanation": "Mycoplasma: smallest free-living bacteria, no cell wall (pleomorphic), resistant to beta-lactams/vancomycin. M. pneumoniae, Ureaplasma. Per Jawetz Medical Microbiology.",
+        "whyNotOtherOptions": {
+            "a": "True.",
+            "b": "True (0.1-0.3 μm).",
+            "c": "True."
+        },
+        "relatedQuestions": [],
+        "category": "Bacteriology - Mollicutes",
+        "difficulty": "Easy"
+    },
+    {
+         "id": 31,
+        "question": "The type of syphilis that produces many maculopapular lesions that cover most of the body",
+        "options": [
+            "Primary syphilis",
+            "Secondary syphilis",
+            "Tertiary syphilis",
+            "Cong, Congenital syphilis"
+        ],
+        "answer": 1,
+        "correctAnswer": "Secondary syphilis",
+        "explanation": "Secondary syphilis: systemic T. pallidum dissemination, maculopapular rash (palms/soles), condyloma lata, mucous patches. 6-8 weeks post-chancre. Per CDC STI.",
+        "whyNotOtherOptions": {
+            "a": "Chancre.",
+            "c": "Gummas, neurosyphilis.",
+            "d": "Hutchinson teeth, saber shins."
+        },
+        "relatedQuestions": [],
+        "category": "Bacteriology - Spirochetes",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 32,
+        "question": "Epidemic relapsing fever which is characterized by several cycles of apparent recovery, each followed by a relapse is caused by",
+        "options": [
+            "Borrelia burgdorferi",
+            "Borrelia recurrentis",
+            "Borrelia duttoni",
+            "Borrelia afzelii"
+        ],
+        "answer": 1,
+        "correctAnswer": "Borrelia recurrentis",
+        "explanation": "Louse-borne relapsing fever: B. recurrentis, Pediculus humanus. Antigenic variation causes relapses. Per Mandell.",
+        "whyNotOtherOptions": {
+            "a": "Lyme (tick).",
+            "c": "Tick-borne relapsing.",
+            "d": "Lyme."
+        },
+        "relatedQuestions": ["33"],
+        "category": "Bacteriology - Spirochetes",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 33,
+        "question": "Tick-borne relapsing fever is transmitted by soft ticks of the genus Ornithodoros is",
+        "options": [
+            "Epidemic relapsing fever",
+            "Endemic relapsing fever",
+            "Lyme borreliosis",
+            "All of the above"
+        ],
+        "answer": 1,
+        "correctAnswer": "Endemic relapsing fever",
+        "explanation": "Endemic (tick-borne) relapsing fever: Ornithodoros soft ticks, species like B. hermsii, B. duttoni. Night bites. Per CDC.",
+        "whyNotOtherOptions": {
+            "a": "Louse-borne.",
+            "c": "Ixodes hard ticks.",
+            "d": "Only endemic."
+        },
+        "relatedQuestions": ["32"],
+        "category": "Bacteriology - Spirochetes",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 34,
+        "question": "The most appropriate sample used for detection of relapsing fever is",
+        "options": [
+            "Blood",
+            "Sputum",
+            "Urine",
+            "CSF"
+        ],
+        "answer": 0,
+        "correctAnswer": "Blood",
+        "explanation": "Borrelia spirochetes in high numbers in blood during fever. Giemsa-stained thick/thin smears. Per WHO.",
+        "whyNotOtherOptions": {
+            "b": "Not respiratory.",
+            "c": "Rarely.",
+            "d": "If meningitis."
+        },
+        "relatedQuestions": ["32", "33"],
+        "category": "Bacteriology - Diagnosis",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 35,
+        "question": "A zoonotic disease with humans becoming infected following direct or indirect contact with urine from infected animals and is a slender, tightly coiled, and hooked ends; is caused by",
+        "options": [
+            "Leptospira interrogans",
+            "Borrelia recurrentis",
+            "Treponema pallidum",
+            "None of the above"
+        ],
+        "answer": 0,
+        "correctAnswer": "Leptospira interrogans",
+        "explanation": "Leptospirosis: L. interrogans, spirochete with hooked ends, urine-contaminated water/soil (rodents). Weil disease. Per CDC.",
+        "whyNotOtherOptions": {
+            "b": "Louse-borne.",
+            "c": "STI.",
+            "d": "A is correct."
+        },
+        "relatedQuestions": [],
+        "category": "Bacteriology - Spirochetes",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 36,
+        "question": "A Gram negative coccobacillus which is a major cause of epiglottitis, otitis media, sinusitis, and primarily in children",
+        "options": [
+            "Bordetella pertussis",
+            "Brucella melitensis",
+            "Pasteurella multocida",
+            "Haemophilus influenza"
+        ],
+        "answer": 3,
+        "correctAnswer": "Haemophilus influenza",
+        "explanation": "H. influenzae type b (Hib): encapsulated, caused epiglottitis, meningitis, otitis pre-vaccine. X/V factors. Per Red Book.",
+        "whyNotOtherOptions": {
+            "a": "Pertussis: whooping cough.",
+            "b": "Brucellosis.",
+            "c": "Animal bites."
+        },
+        "relatedQuestions": [],
+        "category": "Bacteriology - Haemophilus",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 37,
+        "question": "The first disease which are eradicated through successful immunization campaign",
+        "options": [
+            "Smallpox",
+            "Polio",
+            "Ringworm",
+            "Measles"
+        ],
+        "answer": 0,
+        "correctAnswer": "Smallpox",
+        "explanation": "Smallpox eradicated 1980 via ring vaccination (variola). Only human disease eradicated. Per WHO.",
+        "whyNotOtherOptions": {
+            "b": "Near eradication.",
+            "c": "Fungal.",
+            "d": "Controlled but not eradicated."
+        },
+        "relatedQuestions": [],
+        "category": "Public Health - Eradication",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 38,
+        "question": "Psittacosis is transmissible to man via contact with",
+        "options": [
+            "Insects",
+            "Birds",
+            "Cattle",
+            "Dogs"
+        ],
+        "answer": 1,
+        "correctAnswer": "Birds",
+        "explanation": "Psittacosis: Chlamydia psittaci, inhaled from bird droppings (psittacine, poultry). Pneumonia. Per CDC.",
+        "whyNotOtherOptions": {
+            "a": "Not vector.",
+            "c": "Brucella, Q fever.",
+            "d": "Rabies."
+        },
+        "relatedQuestions": [],
+        "category": "Bacteriology - Chlamydia",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 39,
+        "question": "All of the following viruses may be associated with cancer except",
+        "options": [
+            "Hepatitis B virus",
+            "Hepatitis C virus",
+            "Epstein-Barr virus",
+            "Ebola virus"
+        ],
+        "answer": 3,
+        "correctAnswer": "Ebola virus",
+        "explanation": "HBV/HCV: HCC. EBV: Burkitt, nasopharyngeal. Ebola: hemorrhagic fever, no oncogenesis. Per IARC.",
+        "whyNotOtherOptions": {
+            "a": "HCC.",
+            "b": "HCC.",
+            "c": "Lymphomas."
+        },
+        "relatedQuestions": ["8", "14", "15"],
+        "category": "Oncology - Viral",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 40,
+        "question": "Polio virus infection acquired with",
+        "options": [
+            "Drinking contaminated water",
+            "Tick bite",
+            "Flea bite",
+            "Sexual contact"
+        ],
+        "answer": 0,
+        "correctAnswer": "Drinking contaminated water",
+        "explanation": "Poliovirus (enterovirus): fecal-oral, contaminated water/food. Per WHO Polio.",
+        "whyNotOtherOptions": {
+            "b": "Arboviruses.",
+            "c": "Plague.",
+            "d": "HIV, HBV."
+        },
+        "relatedQuestions": [],
+        "category": "Virology - Enteroviruses",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 41,
+        "question": "Serotypes of papillomavirus most commonly associated with cervical cancer",
+        "options": [
+            "Serotypes 6 and 11",
+            "Serotypes 61 and 81",
+            "Serotypes 26 and 28",
+            "Serotypes 16 and 18"
+        ],
+        "answer": 3,
+        "correctAnswer": "Serotypes 16 and 18",
+        "explanation": "HPV 16/18: high-risk, 70% cervical cancer (E6/E7 oncoproteins). 6/11: low-risk, warts. Per WHO HPV.",
+        "whyNotOtherOptions": {
+            "a": "Warts.",
+            "b": "Low-risk.",
+            "c": "Low-risk."
+        },
+        "relatedQuestions": [],
+        "category": "Oncology - HPV",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 42,
+        "question": "A bacteria which its infection resulted in the formation of renal stones",
+        "options": [
+            "Proteus mirabilis",
+            "Escherichia coli",
+            "Staphylococcus saprophyticus",
+            "All of the above"
+        ],
+        "answer": 0,
+        "correctAnswer": "Proteus mirabilis",
+        "explanation": "P. mirabilis: urease+, alkalinizes urine, struvite stones (staghorn). Per Urology texts.",
+        "whyNotOtherOptions": {
+            "b": "E. coli: UTI, no urease.",
+            "c": "S. saprophyticus: UTI, no stones.",
+            "d": "Only Proteus."
+        },
+        "relatedQuestions": ["43"],
+        "category": "Bacteriology - UTI",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 43,
+        "question": "The most common cause of Urinary tract infections (UTI)",
+        "options": [
+            "Proteus mirabilis",
+            "Escherichia coli",
+            "Staphylococcus saprophyticus",
+            "All of the above"
+        ],
+        "answer": 1,
+        "correctAnswer": "Escherichia coli",
+        "explanation": "E. coli: 75-90% community UTI (UPEC, fimbriae). Per IDSA Guidelines.",
+        "whyNotOtherOptions": {
+            "a": "Complicated UTI, stones.",
+            "c": "Young women, 5-10%.",
+            "d": "E. coli dominant."
+        },
+        "relatedQuestions": ["42"],
+        "category": "Bacteriology - UTI",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 44,
+        "question": "Diagnosis of viral infection can be done with",
+        "options": [
+            "Detecting CPE",
+            "Electron microscope",
+            "Cell culture",
+            "All of the above"
+        ],
+        "answer": 3,
+        "correctAnswer": "All of the above",
+        "explanation": "Viral dx: cell culture (isolation), CPE (morphologic change), EM (visualization, e.g., rotavirus). Also PCR now standard. Per virology labs.",
+        "whyNotOtherOptions": {
+            "a": "Part.",
+            "b": "Part.",
+            "c": "Part."
+        },
+        "relatedQuestions": [],
+        "category": "Virology - Diagnosis",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 45,
+        "question": "Point out the Shigella species that cause most severe form of bacillary dysentery;",
+        "options": [
+            "Shigella flexneri",
+            "Shigella boydii",
+            "Shigella dysenteriae",
+            "Shigella sonnei"
+        ],
+        "answer": 2,
+        "correctAnswer": "Shigella dysenteriae",
+        "explanation": "S. dysenteriae type 1: Shiga toxin, severe dysentery, HUS. Most virulent. Per WHO Shigella.",
+        "whyNotOtherOptions": {
+            "a": "Milder, common in developing.",
+            "b": "Rare.",
+            "d": "Mildest, developed countries."
+        },
+        "relatedQuestions": [],
+        "category": "Bacteriology - Enterobacteriaceae",
+        "difficulty": "Medium"
+    }
+]
 
 // Core application variables
 const overlay = document.getElementById('overlay');

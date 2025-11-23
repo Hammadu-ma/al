@@ -7,6 +7,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="/protect.js"></script>
+    // Production-ready service worker registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    const swUrl = '/sw.js';
+    
+    navigator.serviceWorker.register(swUrl)
+      .then(function(registration) {
+        console.log('✅ SW registered successfully on scope:', registration.scope);
+        
+        // Check if SW is controlling the page
+        if (navigator.serviceWorker.controller) {
+          console.log('🎯 SW is controlling the page');
+        } else {
+          console.log('⚠️ SW registered but not controlling the page');
+        }
+        
+        // Check cache after registration
+        setTimeout(() => {
+          caches.open('vercel-app-v1').then(cache => {
+            cache.keys().then(requests => {
+              console.log(`📦 Production cache: ${requests.length} files`);
+            });
+          });
+        }, 3000);
+      })
+      .catch(function(error) {
+        console.log('❌ SW registration failed:', error);
+      });
+  });
+}
+</script>
     <style type="text/css">
         /* Import Inter font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -2469,527 +2500,528 @@ document.addEventListener('keydown', function(e) {
 
 // Enhanced quiz data with more questions
 const quizData = [
-{
-"id": 1,
-"question": "The type of immunity that follows the injection of an immunogen is termed",
-"options": [
-"Artificial active",
-"Natural active",
-"Artificial passive",
-"Natural passive"
-],
-"answer": 0,
-"correctAnswer": "Artificial active",
-"explanation": "An immunogen is any substance capable of eliciting an adaptive immune response. Injection of an immunogen (e.g., a vaccine) deliberately introduces the antigen into the body, making it artificial. The body actively produces its own antibodies and memory cells, resulting in long-lasting active immunity. This is distinct from natural active (post-infection), artificial passive (e.g., antiserum injection), and natural passive (e.g., maternal antibodies via placenta).",
-"whyNotOtherOptions": {
-"b": "Natural active immunity occurs after natural exposure to infection, not deliberate injection.",
-"c": "Artificial passive involves transfer of pre-formed antibodies (e.g., anti-tetanus serum), not stimulation of the recipient's immune system.",
-"d": "Natural passive is seen in transfer of maternal IgG across the placenta or IgA in breast milk."
-},
-"relatedQuestions": ["12"],
-"category": "Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 2,
-"question": "A hapten is",
-"options": [
-"Half of an immunoglobulin molecule",
-"A carrier molecule for an antigen that is not antigenic alone",
-"An immunoglobulin functional only in the presence of complement",
-"A determinant capable of stimulating an immune response only when bound to a carrier"
-],
-"answer": 3,
-"correctAnswer": "A determinant capable of stimulating an immune response only when bound to a carrier",
-"explanation": "A hapten is a small molecule (e.g., penicillin, nickel) that can bind to antibodies (antigenic) but cannot by itself activate T-cells or induce an immune response (not immunogenic). When covalently linked to a larger carrier protein, it becomes immunogenic, triggering T-dependent B-cell activation and antibody production. This explains contact dermatitis and drug allergies.",
-"whyNotOtherOptions": {
-"a": "Haptens are not part of immunoglobulin structure.",
-"b": "This describes the carrier, not the hapten itself.",
-"c": "Haptens are not immunoglobulins."
-},
-"relatedQuestions": ["16"],
-"category": "Antigens and Antibodies",
-"difficulty": "Medium"
-},
-{
-"id": 3,
-"question": "The first line of defense in protecting the body from infection includes all of the following components except:",
-"options": [
-"Unbroken skin",
-"Normal microbial flora",
-"Phagocytic leukocytes",
-"Secretions such as mucus"
-],
-"answer": 2,
-"correctAnswer": "Phagocytic leukocytes",
-"explanation": "The first line of defense consists of physical and chemical barriers that prevent pathogen entry: intact skin, mucous membranes, mucus, cilia, lysozyme, normal flora (competitive inhibition), and acidic pH. Phagocytic leukocytes (neutrophils, macrophages) belong to the second line of defense (innate immunity), activated only after pathogens breach the first line.",
-"whyNotOtherOptions": {
-"a": "Skin acts as a mechanical barrier.",
-"b": "Normal flora competes with pathogens for nutrients and space.",
-"d": "Mucus traps pathogens; cilia move them out."
-},
-"relatedQuestions": ["7", "10"],
-"category": "Innate Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 4,
-"question": "Which of the following components of the adaptive immune system causes lysis of virally infected cells and the release of cytokines",
-"options": [
-"Activated B cells(plasma cells)",
-"CD4+ activated T cells",
-"CD8+ cytotoxic T cells(CTL)",
-"Resting lymphocytes(B cells, CD4+T cells, CD8+T cells)"
-],
-"answer": 2,
-"correctAnswer": "CD8+ cytotoxic T cells(CTL)",
-"explanation": "CD8+ cytotoxic T lymphocytes directly recognize viral peptides on MHC class I of infected cells, then induce apoptosis via perforin/granzyme or Fas-FasL pathways (lysis). They also secrete cytokines (IFN-γ, TNF) to amplify antiviral responses and activate macrophages.",
-"whyNotOtherOptions": {
-"a": "Plasma cells secrete antibodies, not cause cell lysis.",
-"b": "CD4+ T cells help coordinate immunity but do not directly lyse cells.",
-"d": "Resting lymphocytes are not activated and lack effector functions."
-},
-"relatedQuestions": ["17"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 5,
-"question": "A single plasma cell secretes:",
-"options": [
-"Antibody of a single specificity related to that on the surface of the parent B-cell",
-"Antibody of two antigen specificities",
-"The antigen it recognizes",
-"Many different types of antibody"
-],
-"answer": 0,
-"correctAnswer": "Antibody of a single specificity related to that on the surface of the parent B-cell",
-"explanation": "Plasma cells arise from clonal expansion of a single activated B-cell. Due to clonal selection, each plasma cell produces antibodies with identical variable regions (same specificity/epitope recognition) as the surface Ig on the original B-cell. One plasma cell secretes thousands of identical antibodies per second.",
-"whyNotOtherOptions": {
-"b": "Allelic exclusion ensures only one specificity.",
-"c": "Plasma cells secrete antibodies, not antigens.",
-"d": "Polyclonal activation would produce many types, but a single cell is monoclonal."
-},
-"relatedQuestions": ["12", "13"],
-"category": "Antibodies",
-"difficulty": "Easy"
-},
-{
-"id": 6,
-"question": "Which of the following is a glycoprotein expressed on the surface of T helper cells, regulatory T cells, monocytes, macrophages and dendritic cells",
-"options": [
-"Cluster of differentiation 4 (CD4+)",
-"Cluster of differentiation 8 (CD8+)",
-"Plasma cells (activated B cells)",
-"Cluster of differentiation 56 (CD56)"
-],
-"answer": 0,
-"correctAnswer": "Cluster of differentiation 4 (CD4+)",
-"explanation": "CD4 is a co-receptor that binds MHC class II. It is expressed on T-helper cells (Th1, Th2, Th17), regulatory T cells (Tregs), and antigen-presenting cells (monocytes, macrophages, dendritic cells). It is the primary receptor for HIV.",
-"whyNotOtherOptions": {
-"b": "CD8 is on cytotoxic T cells and binds MHC I.",
-"c": "Plasma cells do not express CD4.",
-"d": "CD56 is a marker for NK cells."
-},
-"relatedQuestions": ["4", "21"],
-"category": "Immunology Markers",
-"difficulty": "Easy"
-},
-{
-"id": 7,
-"question": "Acute inflammation can be initiated by:",
-"options": [
-"Mast cell activation",
-"Influx of neutrophils",
-"An increase in vascular permeability",
-"C3"
-],
-"answer": 0,
-"correctAnswer": "Mast cell activation",
-"explanation": "Mast cell degranulation (triggered by trauma, IgE, or complement) releases histamine, leukotrienes, and prostaglandins, initiating acute inflammation by causing immediate vasodilation and increased vascular permeability. Neutrophil influx and permeability changes are downstream consequences.",
-"whyNotOtherOptions": {
-"b": "Neutrophil influx occurs after chemotactic signals.",
-"c": "Increased permeability is a result, not the initiator.",
-"d": "C3 activation occurs later in the complement cascade."
-},
-"relatedQuestions": ["3", "10"],
-"category": "Inflammation",
-"difficulty": "Medium"
-},
-{
-"id": 8,
-"question": "In the classical pathway of complement activation",
-"options": [
-"C3 is activated by binding C-reactive protein",
-"The sequence of activation is C1, C2, C3, C4",
-"C1q is activated by the presence of a single Fab region",
-"Activation by antibody requires one IgM or two IgG molecules"
-],
-"answer": 3,
-"correctAnswer": "Activation by antibody requires one IgM or two IgG molecules",
-"explanation": "Classical pathway starts when C1q binds to Fc regions of antibody-antigen complexes. One pentameric IgM provides multiple Fc sites, while two closely spaced IgG molecules are needed for C1q binding and activation. Sequence is C1qrs → C4 → C2 → C3.",
-"whyNotOtherOptions": {
-"a": "CRP activates the classical pathway indirectly, not by binding C3.",
-"b": "Correct sequence: C1, C4, C2, C3.",
-"c": "C1q requires at least two Fc regions, not Fab."
-},
-"relatedQuestions": ["9", "10"],
-"category": "Complement System",
-"difficulty": "Medium"
-},
-{
-"id": 9,
-"question": "The alternative complement pathway",
-"options": [
-"Can be activated by bacterial capsule polysaccharides",
-"Uses C5b as a C3 convertase"
-],
-"answer": 0,
-"correctAnswer": "Can be activated by bacterial capsule polysaccharides",
-"explanation": "The alternative pathway is antibody-independent and part of innate immunity. It is spontaneously activated on microbial surfaces (e.g., bacterial LPS, fungal cell walls, capsule polysaccharides) when factor B, D, and properdin stabilize C3b. C3 convertase is C3bBb.",
-"whyNotOtherOptions": {
-"b": "C5 convertase is C3bBb3b; C5b initiates the membrane attack complex."
-},
-"relatedQuestions": ["8", "10"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 10,
-"question": "After activation of the complement system, leukocytes and macrophages are attracted to the site of complement activation by",
-"options": [
-"C1",
-"C5a",
-"C5bC6C7C8C9",
-"C3b"
-],
-"answer": 1,
-"correctAnswer": "C5a",
-"explanation": "C5a is the most potent anaphylatoxin and chemotactic factor in the complement cascade. It strongly attracts neutrophils, eosinophils, monocytes, and macrophages to the site of activation, enhancing phagocytosis and inflammation.",
-"whyNotOtherOptions": {
-"a": "C1 initiates the cascade but has no chemotactic role.",
-"c": "C5b-9 is the membrane attack complex (MAC) that lyses cells.",
-"d": "C3b opsonizes pathogens for phagocytosis but is not chemotactic."
-},
-"relatedQuestions": ["7", "8", "9"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 11,
-"question": "What is the predominant type of antibody found in the serum of neonates born after full-term gestation?",
-"options": [
-"Infant IgA",
-"Infant IgG",
-"Infant IgM",
-"Maternal IgG"
-],
-"answer": 3,
-"correctAnswer": "Maternal IgG",
-"explanation": "During the third trimester, maternal IgG is selectively transported across the placenta via FcRn receptor, providing passive immunity to the newborn for the first 6–12 months. Neonatal IgG synthesis is low at birth. IgM and IgA are not transferred across the placenta.",
-"whyNotOtherOptions": {
-"a": "IgA is obtained postnatally via breast milk.",
-"b": "Infant begins producing own IgG later.",
-"c": "Elevated IgM at birth suggests intrauterine infection."
-},
-"relatedQuestions": ["1", "12"],
-"category": "Passive Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 12,
-"question": "How does the secondary humoral immune response differ from the primary response?",
-"options": [
-"The lag phase is longer in the secondary immune response",
-"IgM is the predominant antibody class produced in the secondary immune response",
-"The antibody levels produced are higher in the secondary immune response",
-"Cytotoxic T lymphocytes play an important role in the secondary response"
-],
-"answer": 2,
-"correctAnswer": "The antibody levels produced are higher in the secondary immune response",
-"explanation": "Memory B cells formed during the primary response enable a faster (lag 1–3 days vs. 7–10 days), stronger (10–100-fold higher antibody titer), longer-lasting, and predominantly IgG (due to class switching) secondary response upon re-exposure to the same antigen.",
-"whyNotOtherOptions": {
-"a": "Lag phase is shorter in secondary response.",
-"b": "IgG predominates in secondary response.",
-"d": "Cytotoxic T cells are part of cell-mediated, not humoral, immunity."
-},
-"relatedQuestions": ["1", "5", "11"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 13,
-"question": "Which of the following statements about immunoglobulin light chains is true?",
-"options": [
-"Each immunoglobulin monomer has either one kappa or one lambda chain",
-"There are two types: kappa and lambda",
-"They consist of constant regions only",
-"They form part of the Fc fragment"
-],
-"answer": 1,
-"correctAnswer": "There are two types: kappa and lambda",
-"explanation": "Light chains have two isotypes: kappa (κ) and lambda (λ). Each antibody monomer contains two identical light chains (either both κ or both λ) paired with two heavy chains. Light chains have one variable (VL) and one constant (CL) domain.",
-"whyNotOtherOptions": {
-"a": "Each monomer has two identical light chains, not one.",
-"c": "Light chains have both variable and constant regions.",
-"d": "Fc fragment consists of heavy-chain constant regions only."
-},
-"relatedQuestions": ["5", "14"],
-"category": "Antibody Structure",
-"difficulty": "Medium"
-},
-{
-"id": 14,
-"question": "Which of the following statements applies to the Fc fragment of an immunoglobulin molecule?",
-"options": [
-"It consists of the entire heavy chain",
-"It contains the variable region of the heavy chain",
-"It contains the antigen binding sites of the molecule",
-"It is the region of the molecule that binds to receptors on various white blood cells"
-],
-"answer": 3,
-"correctAnswer": "It is the region of the molecule that binds to receptors on various white blood cells",
-"explanation": "The Fc region comprises the constant domains of the heavy chains (CH2 and CH3). It mediates effector functions by binding Fc receptors on phagocytes (opsonization), NK cells (ADCC), mast cells (degranulation), and complement (C1q).",
-"whyNotOtherOptions": {
-"a": "Fc is only the C-terminal half of heavy chains.",
-"b": "Variable region is in Fab.",
-"c": "Antigen binding occurs in Fab regions."
-},
-"relatedQuestions": ["13", "8"],
-"category": "Antibody Structure",
-"difficulty": "Medium"
-},
-{
-"id": 15,
-"question": "The activity of natural killer (NK) cells",
-"options": [
-"Does not require previous exposure to an antigen",
-"Involves phagocytosis and killing of bacteria",
-"Requires interaction with cytotoxic T cells",
-"Requires interaction with B cells"
-],
-"answer": 0,
-"correctAnswer": "Does not require previous exposure to an antigen",
-"explanation": "NK cells are innate lymphocytes that kill virus-infected and tumor cells without prior sensitization or MHC restriction. They detect 'missing self' (low MHC I) and use perforin/granzyme or death ligands. No immunological memory is involved.",
-"whyNotOtherOptions": {
-"b": "Phagocytosis is performed by macrophages/neutrophils.",
-"c": "NK cells act independently.",
-"d": "No interaction with B cells."
-},
-"relatedQuestions": ["4", "17"],
-"category": "Innate Immunity",
-"difficulty": "Easy"
-},
-{
-"id": 16,
-"question": "Interaction between B and T helper cells involves",
-"options": [
-"MHC II molecule on B cell binding to MHC I molecule on the T cell",
-"MHC II molecule on B cell binding to CD3 on the T cell",
-"Foreign antigen on B cell binding to T cell receptor",
-"CD3 molecule on B cell binding to T cell receptor"
-],
-"answer": 2,
-"correctAnswer": "Foreign antigen on B cell binding to T cell receptor",
-"explanation": "For T-dependent antigens, B cells internalize antigen via surface Ig, process it, and present peptides on MHC II. The CD4+ T-helper cell’s TCR recognizes the peptide-MHC II complex. Co-stimulatory signals (CD40-CD40L, cytokines) then activate the B cell for proliferation and differentiation.",
-"whyNotOtherOptions": {
-"a": "MHC II on B cell binds TCR+CD4, not MHC I.",
-"b": "CD3 is part of TCR complex on T cell.",
-"d": "B cells do not express CD3."
-},
-"relatedQuestions": ["2", "17", "22"],
-"category": "Adaptive Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 17,
-"question": "A target cell is typically killed when",
-"options": [
-"A CD4+ T cell recognizes a peptide bound to MHC class I on the target cell",
-"A CD4+ T cell recognizes a peptide bound to MHC class II on the target cell",
-"A CD8+ T cell produces IL-4 in close proximity to the target cell",
-"A CD8+ T cell recognizes a peptide bound to MHC class I on the target cell"
-],
-"answer": 3,
-"correctAnswer": "A CD8+ T cell recognizes a peptide bound to MHC class I on the target cell",
-"explanation": "CD8+ cytotoxic T cells recognize viral or tumor peptides presented on MHC class I (present on all nucleated cells). Recognition triggers release of perforin/granzyme or FasL, inducing apoptosis in the target cell.",
-"whyNotOtherOptions": {
-"a": "CD4+ cells recognize MHC II (on APCs), not MHC I.",
-"b": "CD4+ cells do not kill targets directly.",
-"c": "IL-4 is produced by Th2 cells; CD8+ cells produce IFN-γ."
-},
-"relatedQuestions": ["4", "15", "22"],
-"category": "Cell-Mediated Immunity",
-"difficulty": "Medium"
-},
-{
-"id": 18,
-"question": "Primary immunodeficiency producing susceptibility to infection by viruses and fungus is caused by:",
-"options": [
-"B-cell deficiency",
-"T-cell deficiency",
-"Phagocyte deficiency",
-"Complement deficiency"
-],
-"answer": 1,
-"correctAnswer": "T-cell deficiency",
-"explanation": "T-cells (especially CD4+ Th1) coordinate antiviral and antifungal responses by activating macrophages and cytotoxic T cells. Pure T-cell defects (e.g., DiGeorge syndrome, SCID with T-cell involvement) lead to severe viral (HSV, CMV) and fungal (Candida, Pneumocystis) infections.",
-"whyNotOtherOptions": {
-"a": "B-cell defects cause bacterial infections.",
-"c": "Phagocyte defects (e.g., CGD) cause bacterial and fungal abscesses.",
-"d": "Complement defects cause encapsulated bacterial infections."
-},
-"relatedQuestions": ["21", "23"],
-"category": "Immunodeficiency",
-"difficulty": "Medium"
-},
-{
-"id": 19,
-"question": "Incompatible blood transfusions are examples of",
-"options": [
-"Type I hypersensitivity reactions",
-"Type II hypersensitivity reactions",
-"Type III hypersensitivity reactions",
-"Type IV hypersensitivity reactions"
-],
-"answer": 1,
-"correctAnswer": "Type II hypersensitivity reactions",
-"explanation": "Type II (cytotoxic) hypersensitivity involves IgM/IgG antibodies binding cell-surface antigens, leading to complement activation and cell lysis. In ABO incompatibility, anti-A/B IgM binds donor RBCs, activates complement, and causes acute hemolytic transfusion reaction.",
-"whyNotOtherOptions": {
-"a": "Type I is immediate (IgE, anaphylaxis).",
-"c": "Type III is immune complex (e.g., serum sickness).",
-"d": "Type IV is delayed (T-cell mediated)."
-},
-"relatedQuestions": ["8"],
-"category": "Hypersensitivity",
-"difficulty": "Easy"
-},
-{
-"id": 20,
-"question": "The single best chance of a tissue graft being accepted in a human recipient is if it is:",
-"options": [
-"An isograft",
-"An allograft given under the cover of potent immunosuppression",
-"A xenograft from a pig",
-"From a living sibling donor"
-],
-"answer": 0,
-"correctAnswer": "An isograft",
-"explanation": "An isograft (syngeneic graft) is between genetically identical individuals (identical twins). There is complete MHC matching, so no alloantigens are recognized, and no rejection occurs without immunosuppression.",
-"whyNotOtherOptions": {
-"b": "Allografts still carry risk of rejection despite immunosuppression.",
-"c": "Xenografts have major antigenic differences and hyperacute rejection.",
-"d": "Sibling donors may share only some HLA; still an allograft."
-},
-"relatedQuestions": ["none"],
-"category": "Transplantation",
-"difficulty": "Easy"
-},
-{
-"id": 21,
-"question": "In patients with human immunodeficiency virus infection, immune status can be monitored by measuring the ratio of",
-"options": [
-"CD3+ cells to CD8+ cells",
-"CD4+ cells to CD8+ cells",
-"Lymphocytes to monocytes",
-"T cells to B cells"
-],
-"answer": 1,
-"correctAnswer": "CD4+ cells to CD8+ cells",
-"explanation": "HIV infects CD4+ cells via gp120-CD4 binding. Progressive loss of CD4+ T-helper cells leads to inversion of the normal CD4:CD8 ratio (normally ~2:1). CD4 count <200/μL defines AIDS; ratio is a key prognostic marker.",
-"whyNotOtherOptions": {
-"a": "CD3 marks all T cells; not specific.",
-"c": "Not used in HIV monitoring.",
-"d": "HIV primarily affects T-helper cells, not B cells."
-},
-"relatedQuestions": ["6", "18"],
-"category": "HIV/AIDS",
-"difficulty": "Easy"
-},
-{
-"id": 22,
-"question": "What is the structure recognized by the αβ T-cell receptor on the cell surface of an antigen–presenting cell?",
-"options": [
-"Soluble native protein antigen plus MHC molecule",
-"Processed (peptide) antigen plus MHC",
-"Processed peptide antigen",
-"Cell surface native antigen"
-],
-"answer": 1,
-"correctAnswer": "Processed (peptide) antigen plus MHC",
-"explanation": "The αβ TCR recognizes only linear peptide fragments (8–20 amino acids) bound in the groove of MHC molecules. Native proteins are processed intracellularly into peptides before presentation. This is the basis of MHC restriction.",
-"whyNotOtherOptions": {
-"a": "TCR does not recognize soluble native antigen.",
-"c": "Peptide alone is not recognized without MHC.",
-"d": "Native antigen on surface is recognized by B-cell receptor, not TCR."
-},
-"relatedQuestions": ["16", "17"],
-"category": "Antigen Presentation",
-"difficulty": "Medium"
-},
-{
-"id": 23,
-"question": "Your patient is a child who has no detectable T or B cells. This is most probably the result of a defect in",
-"options": [
-"The thymus",
-"The bursal equivalent",
-"T cell-B cell interaction",
-"Stem cells originating in the bone marrow"
-],
-"answer": 3,
-"correctAnswer": "Stem cells originating in the bone marrow",
-"explanation": "Severe Combined Immunodeficiency (SCID) with absent T and B cells results from defects in common lymphoid progenitor cells in the bone marrow (e.g., ADA deficiency, RAG mutations). Both T-cell (thymus-dependent) and B-cell lineages fail to develop.",
-"whyNotOtherOptions": {
-"a": "Thymus defect (DiGeorge) affects only T cells.",
-"b": "B-cell maturation occurs in bone marrow in humans.",
-"c": "Interaction defect would not abolish both cell types."
-},
-"relatedQuestions": ["18"],
-"category": "Immunodeficiency",
-"difficulty": "Medium"
-},
-{
-"id": 24,
-"question": "A patient is admitted with multiple bacterial infections and is found to have a complete absence of Complement. Which complement-mediated function would remain intact in such a patient?",
-"options": [
-"Lysis of bacteria",
-"Opsonization of bacteria",
-"Generation of anaphylatoxins",
-"None"
-],
-"answer": 3,
-"correctAnswer": "None",
-"explanation": "All major functions of complement require intact complement proteins: lysis (MAC: C5b-9), opsonization (C3b), chemotaxis/anaphylaxis (C3a, C5a). Complete absence (e.g., hereditary C3 deficiency) abolishes all these effector mechanisms, leading to severe bacterial infections.",
-"whyNotOtherOptions": {
-"a": "Lysis requires MAC.",
-"b": "Opsonization requires C3b.",
-"c": "Anaphylatoxins are C3a and C5a."
-},
-"relatedQuestions": ["8", "9", "10"],
-"category": "Complement System",
-"difficulty": "Easy"
-},
-{
-"id": 25,
-"question": "For vaccination against mycobacterial diseases such as tuberculosis, what is the most important facet of the immune response to be stimulated?",
-"options": [
-"A high titer of antibody",
-"Macrophage-activating cell-mediated immunity",
-"Cytotoxic T-cells",
-"Antibody in the gut lumen"
-],
-"answer": 1,
-"correctAnswer": "Macrophage-activating cell-mediated immunity",
-"explanation": "Mycobacterium tuberculosis is an intracellular pathogen surviving inside macrophages. Effective immunity requires Th1-mediated cell-mediated immunity: IFN-γ from CD4+ T cells activates macrophages to form granulomas and kill intracellular bacteria. BCG vaccine aims to induce this response. Antibodies are ineffective against intracellular pathogens.",
-"whyNotOtherOptions": {
-"a": "Antibodies cannot access intracellular mycobacteria.",
-"c": "Cytotoxic T cells help but are secondary to macrophage activation.",
-"d": "Gut IgA is irrelevant for pulmonary TB."
-},
-"relatedQuestions": ["4", "17"],
-"category": "Vaccination",
-"difficulty": "Medium"
-}
+    {
+        "id": 1,
+        "question": "Dermatophytosis of the scalp that presents as yellowish, cup-shaped scutula which have peculiar \"mousy\" odour is:",
+        "options": [
+            "Tinea favosa",
+            "Tinea capitis",
+            "Tinea corporis",
+            "Tinea unguium"
+        ],
+        "answer": 0,
+        "correctAnswer": "Tinea favosa",
+        "explanation": "Tinea favosa (favus) is a chronic dermatophyte infection primarily affecting the scalp, caused predominantly by *Trichophyton schoenleinii*. It manifests with distinctive yellowish, cup-shaped crusts known as scutula, formed by dense fungal hyphae, debris, and neutrophils. These scutula emit a characteristic 'mousy' odor due to volatile compounds produced by the fungus. If untreated, it leads to scarring alopecia. This presentation is pathognomonic and differentiates it from other forms of tinea capitis.",
+        "whyNotOtherOptions": {
+            "b": "Tinea capitis is a broad term encompassing all ringworm infections of the scalp, including favus, but lacks the specific scutula and mousy odor.",
+            "c": "Tinea corporis refers to ringworm of the glabrous (smooth) skin of the body, presenting with annular, scaly plaques, not scalp involvement or scutula.",
+            "d": "Tinea unguium (onychomycosis) affects the nails, causing thickening, discoloration, and dystrophy, without scalp lesions or odor."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Dermatophytes",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 2,
+        "question": "Involvement of the entire thickness of the nail plate with eventual destruction of the entire nail is associated with the dermatophytic fungus:",
+        "options": [
+            "Trichophyton rubrum",
+            "Trichophyton mentagrophytes",
+            "Epidermophyton floccosum",
+            "Microsporum gypseum"
+        ],
+        "answer": 0,
+        "correctAnswer": "Trichophyton rubrum",
+        "explanation": "*Trichophyton rubrum* is the most common anthropophilic dermatophyte causing onychomycosis, particularly the total dystrophic type. It invades the nail plate via distal subungual route, leading to hyperkeratosis, onycholysis, and complete nail destruction over time. This fungus prefers keratin-rich environments and causes chronic, persistent infections due to its ability to evade host immunity and produce proteases that degrade nail keratin extensively.",
+        "whyNotOtherOptions": {
+            "b": "*Trichophyton mentagrophytes* typically causes inflammatory tinea pedis or superficial onychomycosis but rarely total nail destruction.",
+            "c": "*Epidermophyton floccosum* infects skin and nails but seldom causes severe total dystrophy; more common in tinea cruris/pedis.",
+            "d": "*Microsporum gypseum* is geophilic and rarely involves nails; primarily causes tinea corporis with inflammatory lesions."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Dermatophytes",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 3,
+        "question": "The classic type of tinea cruris:",
+        "options": [
+            "Is caused by species of Trichophyton",
+            "Is characterized by lesions that are always symmetrical",
+            "Is caused by Epidermophyton floccosum",
+            "Is caused by Microsporum gypseum"
+        ],
+        "answer": 2,
+        "correctAnswer": "Is caused by Epidermophyton floccosum",
+        "explanation": "Tinea cruris ('jock itch') classically presents as pruritic, erythematous, sharply demarcated plaques in the groin, extending to thighs. *Epidermophyton floccosum* is the predominant anthropophilic cause, thriving in moist, warm areas. It produces characteristic club-shaped macroconidia in culture. The infection spreads via fomites or autoinoculation from tinea pedis.",
+        "whyNotOtherOptions": {
+            "a": "Trichophyton species (e.g., *T. rubrum*) can cause tinea cruris but are not the 'classic' agent; more chronic and less inflammatory.",
+            "b": "Lesions are often bilateral but not always perfectly symmetrical; asymmetry can occur due to clothing friction or scratching.",
+            "d": "*Microsporum gypseum* is geophilic and rarely causes groin infections; typically inflammatory tinea corporis."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Dermatophytes",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 4,
+        "question": "Dermatophytosis of glabrous skin that presents with kerion-like lesions is called:",
+        "options": [
+            "Tinea capitis",
+            "Tinea interdigitalis",
+            "Tinea profunda",
+            "Dermatophytosis furfuracea"
+        ],
+        "answer": 2,
+        "correctAnswer": "Tinea profunda",
+        "explanation": "Tinea profunda (also known as Majocchi's granuloma or deep dermatophytosis) involves dermal invasion by dermatophytes, often in immunocompromised hosts or via trauma/folliculitis. On glabrous skin, it manifests as boggy, pustular, kerion-like nodules due to intense suppurative inflammation. Zoophilic species like *T. mentagrophytes* are common culprits.",
+        "whyNotOtherOptions": {
+            "a": "Tinea capitis affects the scalp; kerion is common but not on glabrous skin.",
+            "b": "Tinea interdigitalis is athlete's foot, presenting with maceration and scaling between toes.",
+            "d": "No such term exists; may confuse with pityriasis versicolor (malassezia)."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Dermatophytes",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 5,
+        "question": "The clinical variety of tinea corporis that presents with small vesicular lesions studded with numerous micro papules and vesicles is:",
+        "options": [
+            "Annular type",
+            "Herpetiform type",
+            "Follicular type",
+            "Plaque type"
+        ],
+        "answer": 1,
+        "correctAnswer": "Herpetiform type",
+        "explanation": "Herpetiform (vesicular) tinea corporis features clusters of tiny vesicles and papules at the active border, mimicking herpes simplex (hence 'herpetiform'). Caused by zoophilic dermatophytes like *M. canis* or *T. mentagrophytes*, it reflects a strong host inflammatory response to fungal antigens, leading to epidermal spongiosis and vesicle formation.",
+        "whyNotOtherOptions": {
+            "a": "Annular type shows classic ring-shaped plaques with central clearing and peripheral scaling.",
+            "c": "Follicular type involves hair follicles, presenting as pustular folliculitis.",
+            "d": "Plaque type is elevated, scaly patches without prominent vesicles."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Dermatophytes",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 6,
+        "question": "Tinea capitis caused by Trichophyton mentagrophytes is called:",
+        "options": [
+            "Black-dot ringworm",
+            "Inflammatory ringworm",
+            "Grey-patch ringworm",
+            "Alopecia"
+        ],
+        "answer": 1,
+        "correctAnswer": "Inflammatory ringworm",
+        "explanation": "*Trichophyton mentagrophytes* (zoophilic) elicits a robust T-cell mediated immune response, resulting in pustular, boggy swellings (kerion) with purulent discharge and potential scarring. This 'inflammatory' or 'kerion' type contrasts with non-inflammatory forms. It often follows animal contact.",
+        "whyNotOtherOptions": {
+            "a": "Black-dot ringworm is endothrix infection by *T. tonsurans* or *T. violaceum*, where broken hairs appear as black dots.",
+            "c": "Grey-patch ringworm is ectothrix by *Microsporum* species, with patchy scaling and hair loss.",
+            "d": "Alopecia is a symptom, not a specific type."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Dermatophytes",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 7,
+        "question": "Endothrix infection of the hairs due to Trichophyton species shows:",
+        "options": [
+            "Arthrospores arranged in parallel rows outside the hair",
+            "Chlamydospores thick-walled, with the spore much larger than macroconidia",
+            "Clavate, smooth-walled, and sessile, attached by base",
+            "Arthrospores arranged inside the hair shaft"
+        ],
+        "answer": 3,
+        "correctAnswer": "Arthrospores arranged inside the hair shaft",
+        "explanation": "Endothrix infections (*T. tonsurans*, *T. violaceum*) feature fungal hyphae fragmenting into arthroconidia entirely within the hair shaft, weakening it and causing breakage at the scalp surface. Under microscopy (KOH prep), hairs show packed arthrospores inside, no external sheath. This contrasts with ectothrix patterns.",
+        "whyNotOtherOptions": {
+            "a": "Describes ectothrix (e.g., *Microsporum*), with mosaic spore sheath outside the hair.",
+            "b": "Chlamydospores are terminal resting spores in culture, not in hair infections.",
+            "c": "Describes microconidia morphology in culture, not hair invasion."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Dermatophytes",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 8,
+        "question": "Asexual sporulation in fungi:",
+        "options": [
+            "Is initiated by fusion of haploid nuclei",
+            "Is a meiotic process",
+            "Gives rise to the formation of fruiting bodies",
+            "Is a mitotic process"
+        ],
+        "answer": 3,
+        "correctAnswer": "Is a mitotic process",
+        "explanation": "Asexual reproduction (anamorph) in fungi occurs via mitosis, producing genetically identical conidia, arthrospores, or blastospores from hyphae or specialized structures (conidiophores). No nuclear fusion or reduction division occurs. This rapid process aids dissemination and survival in diverse environments.",
+        "whyNotOtherOptions": {
+            "a": "Fusion of haploid nuclei (karyogamy) initiates sexual reproduction.",
+            "b": "Meiosis occurs in sexual phase (teleomorph), producing recombinant ascospores/basidiospores.",
+            "c": "Fruiting bodies (ascocarps, basidiocarps) are for sexual spores."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - General",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 9,
+        "question": "Fungal recovery in a specimen can be improved by:",
+        "options": [
+            "Deep freezing",
+            "Pooling",
+            "Filtering through a membrane",
+            "Staining"
+        ],
+        "answer": 2,
+        "correctAnswer": "Filtering through a membrane",
+        "explanation": "Membrane filtration concentrates fungi from large-volume liquids (e.g., CSF, bronchial washings) by trapping organisms on a 0.45-0.8 μm pore filter, which is then cultured. This enhances sensitivity for low-burden specimens, reducing contaminants and improving isolation rates for dimorphic or fastidious fungi.",
+        "whyNotOtherOptions": {
+            "a": "Deep freezing kills many fungi; used for storage, not recovery.",
+            "b": "Pooling multiple specimens may dilute low counts or introduce inhibitors.",
+            "d": "Staining is for visualization, not culture recovery."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Laboratory",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 10,
+        "question": "A component of the cell membrane of most fungi is:",
+        "options": [
+            "Cholesterol",
+            "Chitin",
+            "Ergosterol",
+            "Keratin"
+        ],
+        "answer": 2,
+        "correctAnswer": "Ergosterol",
+        "explanation": "Ergosterol is the predominant sterol in fungal plasma membranes, maintaining fluidity and integrity analogous to cholesterol in mammals. Its biosynthesis pathway is targeted by azoles (inhibit lanosterol demethylase) and polyenes (bind ergosterol, forming pores). This distinction enables selective antifungal therapy.",
+        "whyNotOtherOptions": {
+            "a": "Cholesterol is in animal membranes; absent in fungi.",
+            "b": "Chitin is a polysaccharide in the cell wall, providing rigidity.",
+            "d": "Keratin is a host protein, degraded by dermatophytes."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - General",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 11,
+        "question": "One of the following is true:",
+        "options": [
+            "Sexual spores are agents of human disease",
+            "The sexual stage of fungi is the anamorph",
+            "The asexual stage of fungi is the teleomorph",
+            "Deuteromycetes have no known sexual phase"
+        ],
+        "answer": 3,
+        "correctAnswer": "Deuteromycetes have no known sexual phase",
+        "explanation": "Deuteromycetes (Fungi Imperfecti) are classified based on asexual morphology only, as no teleomorph (sexual state) has been observed. Many medically important fungi (e.g., *Candida*, dermatophytes) fall here. Molecular studies link some to Ascomycota/Basidiomycota, but traditionally, lack of meiosis defines the group.",
+        "whyNotOtherOptions": {
+            "a": "Asexual conidia are primary infectious agents; sexual spores rarely cause disease.",
+            "b": "Anamorph is asexual; teleomorph is sexual.",
+            "c": "Reversed: teleomorph is sexual, anamorph asexual."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - General",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 12,
+        "question": "Lactophenol cotton blue:",
+        "options": [
+            "Binds to fungal ergosterol",
+            "Is a negative stain",
+            "Gives pink colour to fungal structures",
+            "Imparts blue colour to fungal cell wall"
+        ],
+        "answer": 3,
+        "correctAnswer": "Imparts blue colour to fungal cell wall",
+        "explanation": "Lactophenol cotton blue (LPCB) is a wet mount preparation: phenol kills organisms, lactic acid preserves, cotton blue (aniline blue) stains chitin and cellulose in fungal cell walls blue, enhancing contrast under microscopy. Glycerol prevents drying. Essential for observing hyphae, spores, and conidiogenesis.",
+        "whyNotOtherOptions": {
+            "a": "Binds to chitin/polysaccharides, not ergosterol (membrane).",
+            "b": "Positive stain; negative would leave background dark.",
+            "c": "Blue, not pink; calcofluor white fluoresces but not pink."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Laboratory",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 13,
+        "question": "Mycosel agar:",
+        "options": [
+            "Is a differential medium",
+            "Contains cycloheximide",
+            "Is appropriate for cultivation of C. neoformans",
+            "Is used in the isolation of dermatophytes"
+        ],
+        "answer": 1,
+        "correctAnswer": "Contains cycloheximide",
+        "explanation": "Mycosel (or Mycobiotic) agar is selective for dermatophytes, containing cycloheximide (actidione) to inhibit saprophytic molds and chloramphenicol to suppress bacteria. Dermatophytes are resistant, allowing isolation from contaminated specimens like skin scrapings.",
+        "whyNotOtherOptions": {
+            "a": "Selective, not differential (no color change for identification).",
+            "c": "*C. neoformans* is inhibited by cycloheximide; use birdseed agar.",
+            "d": "Used for dermatophytes, but the key feature is cycloheximide."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Laboratory",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 14,
+        "question": "The fungal medium that is used for the differentiation of yeasts based on the production of chlamydospores, pseudohyphae and arthroconidia is:",
+        "options": [
+            "SDA",
+            "BHI agar",
+            "Cotton seed agar",
+            "Cornmeal-tween 80 agar"
+        ],
+        "answer": 3,
+        "correctAnswer": "Cornmeal-tween 80 agar",
+        "explanation": "Cornmeal-Tween 80 agar is nutritionally sparse, stimulating morphogenetic forms in yeasts: *C. albicans* produces thick-walled chlamydospores terminally; pseudohyphae and blastoconidia at septa. Tween 80 enhances sporulation. Dalmau plate technique allows microscopic observation without overgrowth.",
+        "whyNotOtherOptions": {
+            "a": "Sabouraud dextrose agar (SDA) supports growth but not specific morphology.",
+            "b": "Brain heart infusion (BHI) is rich, promotes yeast phase but not diagnostic structures.",
+            "c": "Cottonseed agar used for *Blastomyces* conversion, not yeasts."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Laboratory",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 15,
+        "question": "The carbohydrate assimilation test:",
+        "options": [
+            "Requires inoculation of specimen suspected of having yeast to carbohydrate-free agar",
+            "Uses carbohydrate-rich medium for identification of yeasts",
+            "Growth of yeasts is indicated by zone of inhibition around carbohydrate disks",
+            "Is done on medium with indicator dye"
+        ],
+        "answer": 0,
+        "correctAnswer": "Requires inoculation of specimen suspected of having yeast to carbohydrate-free agar",
+        "explanation": "Assimilation tests determine yeast ability to use specific carbohydrates as sole carbon source. Yeast suspension is inoculated into molten carbohydrate-free yeast nitrogen base agar, then poured or disks added. Turbidity/growth in tubes or around wells indicates positive assimilation. Auxanographic or API 20C systems utilize this principle.",
+        "whyNotOtherOptions": {
+            "b": "Medium is carbohydrate-free basal; test carbs added individually.",
+            "c": "Inhibition is for fermentation/antifungals; assimilation shows growth.",
+            "d": "No pH indicator; fermentation tests use Durham tubes/bromothymol blue."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Laboratory",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 16,
+        "question": "One of the following is not a form of cutaneous candidiasis:",
+        "options": [
+            "Balanoposthitis",
+            "Erosio interdigitalis",
+            "Vulvovaginitis",
+            "Onychomycosis",
+            "Angular cheilitis"
+        ],
+        "answer": 3,
+        "correctAnswer": "Onychomycosis",
+        "explanation": "Cutaneous candidiasis involves skin/mucosal surfaces colonized by *Candida*: balanoposthitis (glans/foreskin), erosio interdigitalis blastomycetica (web spaces), vulvovaginitis, perleche (angular cheilitis). Onychomycosis broadly means fungal nail infection; while *Candida* causes candidal onycholysis/paronychia, the term classically denotes dermatophyte etiology.",
+        "whyNotOtherOptions": {
+            "a": "Candidal balanoposthitis: erythematous plaques on genitals.",
+            "b": "Erosio interdigitalis: macerated erosion between fingers/toes.",
+            "c": "Vulvovaginitis: common mucosal candidiasis with discharge.",
+            "e": "Angular cheilitis: fissured commissures from *Candida*."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Candidiasis",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 17,
+        "question": "Microscopic examination of scrapings from cheese-like lesions of oral thrush would reveal:",
+        "options": [
+            "Pigmented hyphae",
+            "Budding yeast cells and pseudohyphae",
+            "Only septate hyphae",
+            "Cigar-shaped yeast cells",
+            "Metula bodies"
+        ],
+        "answer": 1,
+        "correctAnswer": "Budding yeast cells and pseudohyphae",
+        "explanation": "Oral thrush (*C. albicans* primarily) shows white, curd-like plaques. KOH or Gram stain of scrapings reveals oval budding yeasts (3-6 μm) and elongated pseudohyphae (chains of yeast cells with constrictions, not true hyphae). 'Spaghetti and meatballs' appearance is diagnostic.",
+        "whyNotOtherOptions": {
+            "a": "Pigmented hyphae in chromoblastomycosis or tinea nigra.",
+            "c": "Septate hyphae in dermatophytes; *Candida* shows pseudohyphae.",
+            "d": "Cigar-shaped yeasts in sporotrichosis (tissue).",
+            "e": "Metulae are Aspergillus conidiophore branches."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Candidiasis",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 18,
+        "question": "Cryptococcus neoformans:",
+        "options": [
+            "Is characterized by the presence of a large gelatinous carbohydrate capsule",
+            "Is a dimorphic fungus",
+            "Is a mold",
+            "Cannot be visualized in Giemsa-stained specimens",
+            "Is acquired by the host through trauma of the skin"
+        ],
+        "answer": 0,
+        "correctAnswer": "Is characterized by the presence of a large gelatinous carbohydrate capsule",
+        "explanation": "*Cryptococcus neoformans* is an encapsulated yeast; the polysaccharide capsule (glucuronoxylomannan) is antiphagocytic and diagnostic. India ink shows halo; mucicarmine stains capsule red. Inhaled from environment (pigeon droppings), causes pulmonary/meningeal disease in immunocompromised.",
+        "whyNotOtherOptions": {
+            "b": "Monomorphic yeast at 25°C and 37°C.",
+            "c": "Yeast form; no mold phase.",
+            "d": "Visible in Giemsa (yeast stains purple); capsule clear unless counterstained.",
+            "e": "Inhalation primary route; cutaneous rare."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Cryptococcosis",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 19,
+        "question": "The trophic form of Pneumocystis jirovecii:",
+        "options": [
+            "Contains up to eight oval intra-cystic bodies",
+            "Is the form that is inhaled into the lungs from the environment",
+            "Is larger than the cystic form",
+            "Adheres to host epithelial cell surfaces",
+            "Is an intracellular stage"
+        ],
+        "answer": 3,
+        "correctAnswer": "Adheres to host epithelial cell surfaces",
+        "explanation": "*P. jirovecii* life cycle: trophic forms (small, amoeboid, 1-5 μm) predominate, adhering to type I pneumocytes via glycoproteins, impairing gas exchange. Cysts (5-8 μm) contain up to 8 intracystic bodies (sporozoites). Trophic forms replicate by binary fission; not intracellular.",
+        "whyNotOtherOptions": {
+            "a": "Cysts contain 8 intracystic bodies.",
+            "b": "Cysts thought infectious; trophic not inhaled.",
+            "c": "Trophic smaller than cysts.",
+            "e": "Extracellular; adheres but does not invade cells."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Pneumocystis",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 20,
+        "question": "All of the following fungal infections are caused by dimorphic fungi except:",
+        "options": [
+            "Histoplasmosis",
+            "Blastomycosis",
+            "Sporotrichosis",
+            "Zygomycosis",
+            "Coccidioidomycosis"
+        ],
+        "answer": 3,
+        "correctAnswer": "Zygomycosis",
+        "explanation": "Dimorphic fungi: mold at 25°C (environment), yeast/spherule at 37°C (host). *Histoplasma* (yeast), *Blastomyces* (broad-based budding yeast), *Sporothrix* (cigar bodies), *Coccidioides* (spherules). Zygomycetes (*Mucor*, *Rhizopus*) aseptate molds in both phases; rapid angioinvasion in diabetics/ketoacidosis.",
+        "whyNotOtherOptions": {
+            "a": "*Histoplasma capsulatum*: intracellular yeasts in macrophages.",
+            "b": "*Blastomyces dermatitidis*: thick-walled yeasts.",
+            "c": "*Sporothrix schenckii*: lymphocutaneous from trauma.",
+            "e": "*Coccidioides immitis*: endosporulating spherules."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Systemic",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 21,
+        "question": "Grain in a patient with mycetoma have all of the following characteristics except:",
+        "options": [
+            "Visible to the naked eye",
+            "Best specimens for diagnosis",
+            "Assorted various sizes and colours based on the causative fungal species.",
+            "Are vesicopustular lesions",
+            "Composed of mycelia of causative fungi"
+        ],
+        "answer": 3,
+        "correctAnswer": "Are vesicopustular lesions",
+        "explanation": "Mycetoma grains (drusen) are compact colonies of fungus/bacteria discharged from sinus tracts. Macroscopic (0.2-5 mm), color/size species-specific (black for *Madurella*, white for *Pseudallescheria*). Composed of cemented hyphae/filaments; crushed for Gram/H&E/GMS staining and culture—gold standard for etiology.",
+        "whyNotOtherOptions": {
+            "a": "Visible in pus; collected with sterile loop.",
+            "b": "Direct exam and culture from grains most reliable.",
+            "c": "Color key: black (*Madurella*), yellow (*Streptomyces*), etc.",
+            "e": "Aggregates of mycelia or bacterial filaments."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Subcutaneous",
+        "difficulty": "Easy"
+    },
+    {
+        "id": 22,
+        "question": "The four fungal agents of mycetoma foot in order of the frequency of their occurrence are:",
+        "options": [
+            "*Madurella mycetomatis, Leptosphaeria senegalensis, Pseudallescheria boydii,* and *Madurella grisea*",
+            "*Madurella mycetomatis, Pseudallescheria boydii, Leptosphaeria senegalensis,* and *Madurella grisea*",
+            "*Madurella grisea, Scedosporium apiospermum, Leptosphaeria senegalensis* and *Madurella mycetomatis*",
+            "*Scedosporium apiospermum, Madurella grisea, Leptosphaeria senegalensis* and *Madurella mycetomatis*",
+            "*Madurella mycetomatis, Madurella grisea, Leptosphaeria senegalensis, Pseudallescheria boydii*"
+        ],
+        "answer": 4,
+        "correctAnswer": "*Madurella mycetomatis, Madurella grisea, Leptosphaeria senegalensis, Pseudallescheria boydii*",
+        "explanation": "Eumycetoma global epidemiology: *Madurella mycetomatis* (black-grain, most common worldwide, especially Sudan), followed by *Madurella grisea* (black-grain), *Leptosphaeria senegalensis* (black-grain, Africa), *Pseudallescheria boydii/Scedosporium apiospermum* (white-grain, versatile hyalohyphomycosis). Frequency based on large case series from endemic areas.",
+        "whyNotOtherOptions": {
+            "a": "Incorrect order; *M. grisea* > *L. senegalensis* > *P. boydii*.",
+            "b": "*P. boydii* less common than *L. senegalensis*.",
+            "c": "*M. grisea* not most common; *Scedosporium* is *P. boydii* teleomorph.",
+            "d": "*Scedosporium* least common among listed."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Subcutaneous",
+        "difficulty": "Hard"
+    },
+    {
+        "id": 23,
+        "question": "Black granules in discharged fluid are observed in mycetoma caused by:",
+        "options": [
+            "*Pseudallescheria boydii*",
+            "*Acremonium* species",
+            "*Actinomadura pelletieri*",
+            "*Madurella grisea*",
+            "*Nocardia* species"
+        ],
+        "answer": 3,
+        "correctAnswer": "*Madurella grisea*",
+        "explanation": "Grain color in eumycetoma: black grains from melanin-like pigments in fungal hyphae. *Madurella grisea* classically produces hard, black grains; *M. mycetomatis* also black but softer. Histology shows cemented hyphae. *P. boydii* white/pale; actinomycetomas (*Actinomadura*, *Nocardia*) red/yellow/white.",
+        "whyNotOtherOptions": {
+            "a": "*P. boydii*: white to yellow grains.",
+            "b": "*Acremonium*: white grains, rare.",
+            "c": "*A. pelletieri*: red/pink grains (actinomycetoma).",
+            "e": "*Nocardia*: white-yellow, filamentous bacteria."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Subcutaneous",
+        "difficulty": "Medium"
+    },
+    {
+        "id": 24,
+        "question": "The underlying predisposing factor in opportunistic fungal infections is:",
+        "options": [
+            "Traumatic inoculation associated with occupation",
+            "Hyper reactive immune response of the host",
+            "Immunosuppression as a result of disease or medical treatment",
+            "The presence of primary bacterial infection",
+            "All are correct"
+        ],
+        "answer": 2,
+        "correctAnswer": "Immunosuppression as a result of disease or medical treatment",
+        "explanation": "Opportunistic mycoses (*Candida*, *Aspergillus*, *Cryptococcus*, *Mucor*, *Pneumocystis*) occur in hosts with impaired immunity: neutropenia (chemo), T-cell defects (HIV, transplants), corticosteroids, diabetes. Normal hosts clear ubiquitous fungi; immunosuppression allows invasion from endogenous flora or environment.",
+        "whyNotOtherOptions": {
+            "a": "Trauma for subcutaneous mycoses (e.g., sporotrichosis) in immunocompetent.",
+            "b": "Hyperreactivity causes inflammation in primary pathogens (e.g., dermatophytes).",
+            "d": "Bacterial co-infection secondary, not predisposing.",
+            "e": "Only immunosuppression central to opportunism."
+        },
+        "relatedQuestions": [],
+        "category": "Mycology - Opportunistic",
+        "difficulty": "Easy"
+    }
 ];
 
 // Core application variables
